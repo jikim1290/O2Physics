@@ -12,8 +12,8 @@ void Create_single_normalisation_histogram(Int_t scan, Int_t opt)
 {
   // get the branches with intensity information (also, set the name of the
   // output file)
-  char *file_name = new char[kg_string_size];
-  TFile *NormFile = NULL;
+  char* file_name = new char[kg_string_size];
+  TFile* NormFile = NULL;
   g_vdm_Tree->ResetBranchAddresses();
   Double_t timerel;
   g_vdm_Tree->SetBranchAddress("timerel", &timerel);
@@ -26,7 +26,7 @@ void Create_single_normalisation_histogram(Int_t scan, Int_t opt)
 
   // --> set up tree with info on normalisation
   NormFile = new TFile(file_name);
-  TTree *norm_tree = (TTree *)NormFile->Get("Beam_Normalisation");
+  TTree* norm_tree = (TTree*)NormFile->Get("Beam_Normalisation");
   Double_t cf_dcct_1 = 0;
   Double_t cf_dcct_2 = 0;
   norm_tree->ResetBranchAddresses();
@@ -34,7 +34,7 @@ void Create_single_normalisation_histogram(Int_t scan, Int_t opt)
   norm_tree->SetBranchAddress("cf_dcct_2", &cf_dcct_2);
 
   // get indices for start and end of scan
-  Int_t *indices = new Int_t[2];
+  Int_t* indices = new Int_t[2];
   indices[0] = indices[1] = -1;
   FindIdicesOfScanStartEnd(scan, indices);
 
@@ -43,11 +43,11 @@ void Create_single_normalisation_histogram(Int_t scan, Int_t opt)
   Double_t t0 = timerel;
   g_vdm_Tree->GetEntry(indices[1]);
   Double_t t1 = timerel;
-  char *histo_name = new char[kg_string_size];
+  char* histo_name = new char[kg_string_size];
   sprintf(histo_name, "Norm1_%d_%d_%d", g_vdm_Fill, scan, opt);
-  TH1D *h1 = new TH1D(histo_name, histo_name, ((Int_t)(t1 - t0)), t0, t1);
+  TH1D* h1 = new TH1D(histo_name, histo_name, ((Int_t)(t1 - t0)), t0, t1);
   sprintf(histo_name, "Norm2_%d_%d_%d", g_vdm_Fill, scan, opt);
-  TH1D *h2 = new TH1D(histo_name, histo_name, ((Int_t)(t1 - t0)), t0, t1);
+  TH1D* h2 = new TH1D(histo_name, histo_name, ((Int_t)(t1 - t0)), t0, t1);
 
   // loop over tree to normalise each timerel
   Double_t min = 1e6;
@@ -84,7 +84,7 @@ void Create_single_normalisation_histogram(Int_t scan, Int_t opt)
 
   // plot canvas
   sprintf(histo_name, "Fill%d_opt%d_scan%d", g_vdm_Fill, opt, scan);
-  TCanvas *c = new TCanvas(histo_name, histo_name, 900, 600);
+  TCanvas* c = new TCanvas(histo_name, histo_name, 900, 600);
   c->Divide(1, 2);
   c->cd(1);
   h1->SetTitle(";timerel;correction for beam 1");

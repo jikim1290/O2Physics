@@ -5,7 +5,8 @@
 //-------------------------------------------------------
 
 //-------------------------------------------------------
-void ProcessFill6012(Int_t Fill) {
+void ProcessFill6012(Int_t Fill)
+{
   // time borders of individual scans
   // obtained using QA_print_timestamps.C
   Long_t time_start_x0 = 1501171527;
@@ -18,13 +19,13 @@ void ProcessFill6012(Int_t Fill) {
   Long_t time_end_y1 = 1501176496;
 
   // open the file with the canvas and get the graphs
-  TFile *Input = new TFile("../Fill-6012/OrbitDriftCorrection_6012.root");
-  TCanvas *canvas = (TCanvas *)Input->Get("c1_n3");
-  TList *ObjectsInCanvas = canvas->GetListOfPrimitives();
+  TFile* Input = new TFile("../Fill-6012/OrbitDriftCorrection_6012.root");
+  TCanvas* canvas = (TCanvas*)Input->Get("c1_n3");
+  TList* ObjectsInCanvas = canvas->GetListOfPrimitives();
   // this prints the objects in the canvas
   // ObjectsInCanvas->ls();
-  TGraph *gr_hor = (TGraph *)ObjectsInCanvas->At(2);
-  TGraph *gr_ver = (TGraph *)ObjectsInCanvas->At(3);
+  TGraph* gr_hor = (TGraph*)ObjectsInCanvas->At(2);
+  TGraph* gr_ver = (TGraph*)ObjectsInCanvas->At(3);
 
   // loop over the graphs and and create new graph
   // with points outside the scan time
@@ -34,8 +35,8 @@ void ProcessFill6012(Int_t Fill) {
   Double_t drift_hor;
   Double_t drift_ver;
   // --> new graphs to stored selected infor
-  TGraph *gr_hor_new = new TGraph();
-  TGraph *gr_ver_new = new TGraph();
+  TGraph* gr_hor_new = new TGraph();
+  TGraph* gr_ver_new = new TGraph();
   // --> variables to define the drawing frame
   Double_t min_time = 1e12;
   Double_t max_time = 0;
@@ -83,7 +84,7 @@ void ProcessFill6012(Int_t Fill) {
     gr_ver_new->SetPoint(gr_ver_new->GetN(), timeL, drift_ver);
   }
 
-  TCanvas *c1 = new TCanvas("c1", "ODC fit", 1600, 600 * 3);
+  TCanvas* c1 = new TCanvas("c1", "ODC fit", 1600, 600 * 3);
   c1->Divide(1, 3);
 
   // draw data
@@ -91,8 +92,8 @@ void ProcessFill6012(Int_t Fill) {
   max_drift *= 1.5;
   // TCanvas *cgr = new TCanvas("cgr","cgr",0,0,900,600);
   c1->cd(1);
-  TH1F *fr =
-      gPad->DrawFrame(min_time - 100, min_drift, max_time + 100, max_drift);
+  TH1F* fr =
+    gPad->DrawFrame(min_time - 100, min_drift, max_time + 100, max_drift);
   fr->SetTitle(Form("Fill %i;time (s);drift (#mum)", Fill));
   // original data
   gr_hor->SetMarkerStyle(20);
@@ -114,9 +115,9 @@ void ProcessFill6012(Int_t Fill) {
   // fit horizontal
   //  TF1 *f_hor = new
   //  TF1("f_hor","[1]+[2]*(x-[0])+[3]*pow(x-[0],2)+[4]*pow(x-[0],3)+[5]*pow(x-[0],4)",
-  TF1 *f_hor =
-      new TF1("f_hor", "[1]+[2]*(x-[0])+[3]*pow(x-[0],3)+[4]*pow(x-[0],4)",
-              min_time, time_end_y1 + 200);
+  TF1* f_hor =
+    new TF1("f_hor", "[1]+[2]*(x-[0])+[3]*pow(x-[0],3)+[4]*pow(x-[0],4)",
+            min_time, time_end_y1 + 200);
   f_hor->SetLineColor(2);
   f_hor->SetParameter(0, time_start_x1);
   f_hor->SetParLimits(0, min_time, time_end_y1 + 200);
@@ -128,15 +129,15 @@ void ProcessFill6012(Int_t Fill) {
   // plot horizontal fit
   // TCanvas *ch = new TCanvas("ch","ch",0,0,900,600);
   c1->cd(2);
-  TH1F *frh =
-      gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
+  TH1F* frh =
+    gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
   frh->SetTitle("Horizontal;time (s);drift (#mum)");
   gr_hor->Draw("p,same");
   gr_hor_new->Draw("p,same");
   cout << " hor p0 = " << ((Long_t)f_hor->GetParameter(0)) << endl;
 
   // fit vertical
-  TF1 *f_ver = new TF1("f_ver", "[1]+[2]*(x-[0])", min_time, time_end_y1 + 200);
+  TF1* f_ver = new TF1("f_ver", "[1]+[2]*(x-[0])", min_time, time_end_y1 + 200);
   f_ver->SetLineColor(4);
   f_ver->SetParameter(0, time_start_x1);
   f_ver->SetParLimits(0, min_time, time_end_y1 + 200);
@@ -149,8 +150,8 @@ void ProcessFill6012(Int_t Fill) {
   gStyle->SetOptFit(1);
   // TCanvas *cv = new TCanvas("cv","cv",0,0,900,600);
   c1->cd(3);
-  TH1F *frv =
-      gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
+  TH1F* frv =
+    gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
   frv->SetTitle("Vertical;time (s);drift (#mum)");
   gr_ver->Draw("p,same");
   gr_ver_new->Draw("p,same");
@@ -161,7 +162,8 @@ void ProcessFill6012(Int_t Fill) {
 }
 
 //-------------------------------------------------------
-void ProcessFill6864(Int_t Fill) {
+void ProcessFill6864(Int_t Fill)
+{
   // time borders of individual scans
   // obtained using QA_print_timestamps.C
   Long_t time_start_x0 = 1530314417;
@@ -174,13 +176,13 @@ void ProcessFill6864(Int_t Fill) {
   Long_t time_end_y1 = 1530319344;
 
   // open the file with the canvas and get the graphs
-  TFile *Input = new TFile("../Fill-6864/OrbitDriftCorrection_6864.root");
-  TCanvas *canvas = (TCanvas *)Input->Get("c1_n3");
-  TList *ObjectsInCanvas = canvas->GetListOfPrimitives();
+  TFile* Input = new TFile("../Fill-6864/OrbitDriftCorrection_6864.root");
+  TCanvas* canvas = (TCanvas*)Input->Get("c1_n3");
+  TList* ObjectsInCanvas = canvas->GetListOfPrimitives();
   // this prints the objects in the canvas
   // ObjectsInCanvas->ls();
-  TGraph *gr_hor = (TGraph *)ObjectsInCanvas->At(2);
-  TGraph *gr_ver = (TGraph *)ObjectsInCanvas->At(3);
+  TGraph* gr_hor = (TGraph*)ObjectsInCanvas->At(2);
+  TGraph* gr_ver = (TGraph*)ObjectsInCanvas->At(3);
 
   // loop over the graphs and and create new graph
   // with points outside the scan time
@@ -190,8 +192,8 @@ void ProcessFill6864(Int_t Fill) {
   Double_t drift_hor;
   Double_t drift_ver;
   // --> new graphs to stored selected infor
-  TGraph *gr_hor_new = new TGraph();
-  TGraph *gr_ver_new = new TGraph();
+  TGraph* gr_hor_new = new TGraph();
+  TGraph* gr_ver_new = new TGraph();
   // --> variables to define the drawing frame
   Double_t min_time = 1e12;
   Double_t max_time = 0;
@@ -237,7 +239,7 @@ void ProcessFill6864(Int_t Fill) {
     //  cout << timeL << " " << drift_hor << " " << drift_ver << endl;
   }
 
-  TCanvas *c1 = new TCanvas("c1", "ODC fit", 1600, 600 * 3);
+  TCanvas* c1 = new TCanvas("c1", "ODC fit", 1600, 600 * 3);
   c1->Divide(1, 3);
 
   // draw data
@@ -245,8 +247,8 @@ void ProcessFill6864(Int_t Fill) {
   max_drift *= 1.5;
   // TCanvas *cgr = new TCanvas("cgr","cgr",0,0,900,600); //kimc
   c1->cd(1);
-  TH1F *fr =
-      gPad->DrawFrame(min_time - 100, min_drift, max_time + 100, max_drift);
+  TH1F* fr =
+    gPad->DrawFrame(min_time - 100, min_drift, max_time + 100, max_drift);
   fr->SetTitle(Form("Fill %i;time (s);drift (#mum)", Fill));
   // original data
   gr_hor->SetMarkerStyle(20);
@@ -266,10 +268,10 @@ void ProcessFill6864(Int_t Fill) {
   gr_ver_new->Draw("p,same");
 
   // fit horizontal
-  TF1 *f_hor = new TF1(
-      "f_hor",
-      "[1]+[2]*(x-[0])+[3]*pow(x-[0],2)+[4]*pow(x-[0],3)+[5]*pow(x-[0],4)",
-      min_time, time_end_y1 + 200);
+  TF1* f_hor = new TF1(
+    "f_hor",
+    "[1]+[2]*(x-[0])+[3]*pow(x-[0],2)+[4]*pow(x-[0],3)+[5]*pow(x-[0],4)",
+    min_time, time_end_y1 + 200);
   f_hor->SetLineColor(2);
   f_hor->SetParameter(0, time_start_x1);
   f_hor->SetParLimits(0, min_time, time_end_y1 + 200);
@@ -281,15 +283,15 @@ void ProcessFill6864(Int_t Fill) {
   // plot horizontal fit
   // TCanvas *ch = new TCanvas("ch","ch",0,0,900,600);
   c1->cd(2);
-  TH1F *frh =
-      gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
+  TH1F* frh =
+    gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
   frh->SetTitle("Horizontal;time (s);drift (#mum)");
   gr_hor->Draw("p,same");
   gr_hor_new->Draw("p,same");
   cout << " hor p0 = " << ((Long_t)f_hor->GetParameter(0)) << endl;
 
   // fit vertical
-  TF1 *f_ver = new TF1("f_ver", "[1]+[2]*(x-[0])+[3]*pow(x-[0],2)", min_time,
+  TF1* f_ver = new TF1("f_ver", "[1]+[2]*(x-[0])+[3]*pow(x-[0],2)", min_time,
                        time_end_y1 + 200);
   f_ver->SetLineColor(4);
   f_ver->SetParameter(0, time_start_x1);
@@ -303,8 +305,8 @@ void ProcessFill6864(Int_t Fill) {
   gStyle->SetOptFit(1);
   // TCanvas *cv = new TCanvas("cv","cv",0,0,900,600); //kimc
   c1->cd(3);
-  TH1F *frv =
-      gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
+  TH1F* frv =
+    gPad->DrawFrame(min_time - 100, min_drift, time_end_y1 + 200, max_drift);
   frv->SetTitle("Vertical;time (s);drift (#mum)");
   gr_ver->Draw("p,same");
   gr_ver_new->Draw("p,same");
@@ -316,7 +318,8 @@ void ProcessFill6864(Int_t Fill) {
 
 //-------------------------------------------------------
 
-void QA_FitOrbitDriftData(Int_t Fill) {
+void QA_FitOrbitDriftData(Int_t Fill)
+{
   if (Fill == 6012)
     ProcessFill6012(Fill);
   if (Fill == 6864)

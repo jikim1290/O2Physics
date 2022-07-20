@@ -13,11 +13,11 @@ void get_single_intensities(Int_t Fill, Int_t opt, Int_t bc)
 {
   // get the branches with intensity information
   // (also, set the name of the output file)
-  char *file_name = new char[kg_string_size];
-  TFile *NormFile = NULL;
+  char* file_name = new char[kg_string_size];
+  TFile* NormFile = NULL;
   g_vdm_Tree->ResetBranchAddresses();
-  Double_t *bunch1 = new Double_t[3564];
-  Double_t *bunch2 = new Double_t[3564];
+  Double_t* bunch1 = new Double_t[3564];
+  Double_t* bunch2 = new Double_t[3564];
   Double_t timerel;
   g_vdm_Tree->SetBranchAddress("timerel", &timerel);
   if (opt == 0) {
@@ -33,7 +33,7 @@ void get_single_intensities(Int_t Fill, Int_t opt, Int_t bc)
 
   // --> set up tree with info on normalisation
   NormFile = new TFile(file_name);
-  TTree *norm_tree = (TTree *)NormFile->Get("Beam_Normalisation");
+  TTree* norm_tree = (TTree*)NormFile->Get("Beam_Normalisation");
   Double_t cf_dcct_1 = 0;
   Double_t cf_dcct_2 = 0;
   norm_tree->ResetBranchAddresses();
@@ -42,7 +42,7 @@ void get_single_intensities(Int_t Fill, Int_t opt, Int_t bc)
 
   // -- bunch indices
   Int_t nIBC = GetNumberInteractingBunchCrossings();
-  Int_t *bunches = new Int_t[nIBC];
+  Int_t* bunches = new Int_t[nIBC];
   GetBunchIndices(bunches);
   // Int_t *BucketA = new Int_t [nIBC];
   // Int_t *BucketC = new Int_t [nIBC];
@@ -55,9 +55,9 @@ void get_single_intensities(Int_t Fill, Int_t opt, Int_t bc)
 
   // storage space
   Int_t ngr = g_vdm_Tree->GetEntries();
-  Double_t *beam1 = new Double_t[ngr];
-  Double_t *beam2 = new Double_t[ngr];
-  Double_t *time = new Double_t[ngr];
+  Double_t* beam1 = new Double_t[ngr];
+  Double_t* beam2 = new Double_t[ngr];
+  Double_t* time = new Double_t[ngr];
 
   // loop over tree to print intensity
   Double_t imax = 0;
@@ -86,18 +86,18 @@ void get_single_intensities(Int_t Fill, Int_t opt, Int_t bc)
   }
 
   // graphs
-  TGraph *gr1 = new TGraph(ngr, time, beam1);
-  TGraph *gr2 = new TGraph(ngr, time, beam2);
+  TGraph* gr1 = new TGraph(ngr, time, beam1);
+  TGraph* gr2 = new TGraph(ngr, time, beam2);
   gr1->SetMarkerStyle(20);
   gr1->SetMarkerColor(kRed);
   gr2->SetMarkerStyle(20);
   gr2->SetMarkerColor(kBlue);
 
   // plot
-  TCanvas *cx = new TCanvas("cx", "cx", 1200, 600);
+  TCanvas* cx = new TCanvas("cx", "cx", 1200, 600);
   cx->Divide(1, 1);
   cx->cd(1);
-  TH1F *frame1 = gPad->DrawFrame(-1, 0.1 * imin, ngr + 1, 10 * imax);
+  TH1F* frame1 = gPad->DrawFrame(-1, 0.1 * imin, ngr + 1, 10 * imax);
   frame1->GetYaxis()->SetTitleOffset(1.3);
   frame1->GetYaxis()->SetLabelSize(0.025);
   frame1->SetTitle("beam1 (red), beam2 (blue); timerel; beam intensity");

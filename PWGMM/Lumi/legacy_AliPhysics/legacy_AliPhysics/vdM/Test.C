@@ -3,7 +3,8 @@
 #include "InputFromUser.h"
 #include "vdmUtilities.h"
 
-void TestOrbits(Int_t Fill) {
+void TestOrbits(Int_t Fill)
+{
   // get name of files and set pointers to trees
   Set_input_file_names(Fill);
   Set_pointers_to_input_files_and_trees();
@@ -41,7 +42,8 @@ void TestOrbits(Int_t Fill) {
   cout << " AQ equal " << n_eq << endl;
 }
 
-void TestBCnumbering(Int_t Fill) {
+void TestBCnumbering(Int_t Fill)
+{
   // get name of files and set pointers to trees
   Set_input_file_names(Fill);
   Set_pointers_to_input_files_and_trees();
@@ -51,7 +53,7 @@ void TestBCnumbering(Int_t Fill) {
   Int_t nIBC = GetNumberInteractingBunchCrossings();
 
   // -- bunch indices
-  Int_t *bunches = new Int_t[nIBC];
+  Int_t* bunches = new Int_t[nIBC];
   GetBunchIndices(bunches);
 
   // -- bucket info
@@ -80,7 +82,8 @@ void TestBCnumbering(Int_t Fill) {
   // delete [] BucketC;
 }
 
-void Test(Int_t Fill) {
+void Test(Int_t Fill)
+{
   // TestOrbits(Fill);
   TestBCnumbering(Fill);
 }

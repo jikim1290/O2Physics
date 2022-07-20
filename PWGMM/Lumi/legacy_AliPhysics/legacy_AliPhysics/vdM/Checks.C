@@ -7,7 +7,8 @@
 // Check that the input trees have the same number of entries
 //-------------------------------------------------------
 
-void Check_size_of_input_trees(Int_t Fill) {
+void Check_size_of_input_trees(Int_t Fill)
+{
   cout << " Comparing number of entries in the different trees " << endl;
 
   // get name of files and set pointers to trees
@@ -36,7 +37,8 @@ void Check_size_of_input_trees(Int_t Fill) {
 //-------------------------------------------------------
 // Check that the input tree is ordered in time
 //-------------------------------------------------------
-void Check_time_order_of_input_tree(Int_t Fill) {
+void Check_time_order_of_input_tree(Int_t Fill)
+{
   cout << " Checking time ordering in input tree " << endl;
   // get name of files and set pointers to trees
   Set_input_file_names(Fill);
@@ -71,7 +73,8 @@ void Check_time_order_of_input_tree(Int_t Fill) {
     cout << " Time order in tree corresponds to order of entries " << endl;
 }
 
-void Checks(Int_t Fill, Int_t opt = 0) {
+void Checks(Int_t Fill, Int_t opt = 0)
+{
   if (opt == 0)
     Check_size_of_input_trees(Fill);
   if (opt == 1)

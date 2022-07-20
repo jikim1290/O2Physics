@@ -8,7 +8,7 @@
 // global variables
 //-------------------------------------------------------
 
-const char *g_fit_model_name[] = {"GP2", "GP6", "G", "NUM", "DG"};
+const char* g_fit_model_name[] = {"GP2", "GP6", "G", "NUM", "DG"};
 
 // these are needed by minuit ... ugly, but that is the way it is ...
 Int_t n_minuit;
@@ -24,7 +24,8 @@ Int_t fit_type_minuit = -1;
 // Model of a gaussian
 //-------------------------------------------------------
 
-Double_t fit_G(Double_t *x, Double_t *p) {
+Double_t fit_G(Double_t* x, Double_t* p)
+{
   Double_t dx = x[0] - p[1];
   Double_t dx2 = dx * dx;
   Double_t Gx = TMath::Exp(-dx2 / (2.0 * p[2] * p[2]));
@@ -35,7 +36,8 @@ Double_t fit_G(Double_t *x, Double_t *p) {
 // Model of a double gaussian
 //-------------------------------------------------------
 
-Double_t fit_DG(Double_t *x, Double_t *p) {
+Double_t fit_DG(Double_t* x, Double_t* p)
+{
   const Double_t sqrt2pi_inv = 1.0 / TMath::Sqrt(TMath::TwoPi());
   Double_t dx = x[0] - p[1]; // p[1] = center
   Double_t dx2 = dx * dx;
@@ -43,17 +45,18 @@ Double_t fit_DG(Double_t *x, Double_t *p) {
   Double_t G1 = N1 * TMath::Exp(-dx2 / (2.0 * p[2] * p[2]));
   Double_t N2 = sqrt2pi_inv / p[3];
   Double_t G2 =
-      N2 * TMath::Exp(-dx2 / (2.0 * p[3] *
-                              p[3])); // p[2], p[3] = width of each Gaussian
-  return p[0] * (G1 + p[4] * G2); // kimc: p[0]/p[0]*p[4]: height, p[1]: common
-                                  // center, p[2]/p[3]: width
+    N2 * TMath::Exp(-dx2 / (2.0 * p[3] *
+                            p[3])); // p[2], p[3] = width of each Gaussian
+  return p[0] * (G1 + p[4] * G2);   // kimc: p[0]/p[0]*p[4]: height, p[1]: common
+                                    // center, p[2]/p[3]: width
 }
 
 //-------------------------------------------------------
 // Model of a gaussian and pol2 term
 //-------------------------------------------------------
 
-Double_t fit_GP2(Double_t *x, Double_t *p) {
+Double_t fit_GP2(Double_t* x, Double_t* p)
+{
   Double_t dx = x[0] - p[1];
   Double_t dx2 = dx * dx;
   Double_t Gx = TMath::Exp(-dx2 / (2.0 * p[2] * p[2]));
@@ -64,7 +67,8 @@ Double_t fit_GP2(Double_t *x, Double_t *p) {
 // Model of a gaussian and up to  pol6 terms
 //-------------------------------------------------------
 
-Double_t fit_GP6(Double_t *x, Double_t *p) {
+Double_t fit_GP6(Double_t* x, Double_t* p)
+{
   Double_t dx = x[0] - p[1];
   Double_t dx2 = dx * dx;
   Double_t dx4 = dx2 * dx2;
@@ -77,7 +81,8 @@ Double_t fit_GP6(Double_t *x, Double_t *p) {
 // return number of parameters of a given model
 //-------------------------------------------------------
 
-Int_t Get_number_par(Int_t fit_type) {
+Int_t Get_number_par(Int_t fit_type)
+{
   if (fit_type == 0)
     return 4; // GP2
   else if (fit_type == 1)
@@ -96,7 +101,8 @@ Int_t Get_number_par(Int_t fit_type) {
 // Initialize the fit model
 //-------------------------------------------------------
 
-void Fit_model_init(Int_t fit_type, Double_t r_max, TF1 *model) {
+void Fit_model_init(Int_t fit_type, Double_t r_max, TF1* model)
+{
   const Double_t width_max = 0.5; // the maximum width of the gaussian term
 
   if (fit_type == 0) // GP2
@@ -130,12 +136,13 @@ void Fit_model_init(Int_t fit_type, Double_t r_max, TF1 *model) {
   return;
 }
 
-Double_t Do_Numeric_Integration(Int_t n, Double_t *sep, Double_t *rate,
-                                Double_t *rate_err, Double_t *area,
-                                Double_t *rate_zero, Double_t *par,
-                                Double_t *par_err) {
+Double_t Do_Numeric_Integration(Int_t n, Double_t* sep, Double_t* rate,
+                                Double_t* rate_err, Double_t* area,
+                                Double_t* rate_zero, Double_t* par,
+                                Double_t* par_err)
+{
   // compute bin widths
-  Double_t *widths = new Double_t[n];
+  Double_t* widths = new Double_t[n];
   widths[0] = TMath::Abs(sep[0] - sep[1]);
   for (Int_t i = 1; i < n - 1; i++)
     widths[i] = 0.5 * TMath::Abs(sep[i - 1] - sep[i]) +
@@ -176,7 +183,8 @@ Double_t Do_Numeric_Integration(Int_t n, Double_t *sep, Double_t *rate,
 // https://en.wikipedia.org/wiki/Stirling%27s_approximation
 //-------------------------------------------------------
 
-Double_t ApproxLogGamma(Double_t x) {
+Double_t ApproxLogGamma(Double_t x)
+{
   Double_t a = 0.5 * (TMath::Log(2.0 * TMath::Pi()) - TMath::Log(x));
   Double_t b = 12.0 * x - (1.0 / (10 * x));
   Double_t c = TMath::Log(x + (1.0 / b));
@@ -189,8 +197,9 @@ Double_t ApproxLogGamma(Double_t x) {
 // negative log-likelihood function as required by minuit
 //-------------------------------------------------------
 
-void negative_log_likelihood(Int_t &npar, Double_t *gin, Double_t &nll,
-                             Double_t *par, Int_t iflag) {
+void negative_log_likelihood(Int_t& npar, Double_t* gin, Double_t& nll,
+                             Double_t* par, Int_t iflag)
+{
   Double_t sum = 0;
   for (Int_t i = 0; i < n_minuit; i++) {
     // get the model prediction for the current parameters
@@ -255,10 +264,10 @@ void negative_log_likelihood(Int_t &npar, Double_t *gin, Double_t &nll, Double_t
 // when using minuit
 //-------------------------------------------------------
 
-Double_t Fit_rate_separation_minuit(Int_t n, Double_t *sep, Double_t *rate,
-                                    Double_t *rate_err, Int_t fit_type,
-                                    Double_t *area, Double_t *rate_zero,
-                                    Double_t *par, Double_t *par_err,
+Double_t Fit_rate_separation_minuit(Int_t n, Double_t* sep, Double_t* rate,
+                                    Double_t* rate_err, Int_t fit_type,
+                                    Double_t* area, Double_t* rate_zero,
+                                    Double_t* par, Double_t* par_err,
                                     Int_t scan, Int_t scan_type, Int_t bc)
 // fit n points of rate(sep) using model given by fit_type
 // output area and error, rate at zero and error, parameters and error
@@ -291,7 +300,7 @@ Double_t Fit_rate_separation_minuit(Int_t n, Double_t *sep, Double_t *rate,
   }
 
   // set up the fit model
-  TF1 *fit_model = NULL;
+  TF1* fit_model = NULL;
   Int_t nPar = 0;
   if (fit_type == 0) {
     nPar = Get_number_par(fit_type);
@@ -371,8 +380,8 @@ Double_t Fit_rate_separation_minuit(Int_t n, Double_t *sep, Double_t *rate,
   for (Int_t i = 0; i < n; i++) {
     Double_t rate_model = (fit_model->Eval(x_minuit[i])) / scale_minuit;
     Double_t pull = ((y_minuit[i] < 1e-6 || ye_minuit[i] < 1e-6)
-                         ? 0
-                         : (y_minuit[i] - rate_model) / ye_minuit[i]);
+                       ? 0
+                       : (y_minuit[i] - rate_model) / ye_minuit[i]);
     chi2 += (pull * pull);
   }
   Double_t ndf = n_minuit - nPar;
@@ -382,11 +391,11 @@ Double_t Fit_rate_separation_minuit(Int_t n, Double_t *sep, Double_t *rate,
   Double_t epsilon = 0.1; //  Double_t epsilon = 0.001;
   area[0] = fit_model->Integral(sep_min, sep_max, epsilon);
   area[1] =
-      fit_model->IntegralError(sep_min, sep_max, fit_model->GetParameters(),
-                               cov.GetMatrixArray(), epsilon);
+    fit_model->IntegralError(sep_min, sep_max, fit_model->GetParameters(),
+                             cov.GetMatrixArray(), epsilon);
   rate_zero[0] = fit_model->Eval(fit_model->GetParameter(1));
   rate_zero[1] =
-      rate_zero[0] * (fit_model->GetParError(0)) / (fit_model->GetParameter(0));
+    rate_zero[0] * (fit_model->GetParError(0)) / (fit_model->GetParameter(0));
   for (Int_t i = 0; i < 2; i++) {
     area[i] /= scale_minuit;
     rate_zero[i] /= scale_minuit;
@@ -408,13 +417,13 @@ Double_t Fit_rate_separation_minuit(Int_t n, Double_t *sep, Double_t *rate,
   // plot if a particular bc is chosen
   if (bc > -1) {
     gStyle->SetOptFit(1);
-    TGraphErrors *gr = new TGraphErrors(n, sep, rate, NULL, rate_err);
+    TGraphErrors* gr = new TGraphErrors(n, sep, rate, NULL, rate_err);
     char name[120];
     if (scan_type == 1)
       sprintf(name, "Scan_%d_x_bc_%d", scan, bc);
     if (scan_type == 2)
       sprintf(name, "Scan_%d_y_bc_%d", scan, bc);
-    TCanvas *c = new TCanvas(name, name, 800, 600);
+    TCanvas* c = new TCanvas(name, name, 800, 600);
     c->cd();
     gr->SetMarkerStyle(20);
     gr->Draw("ap");
@@ -436,10 +445,10 @@ Double_t Fit_rate_separation_minuit(Int_t n, Double_t *sep, Double_t *rate,
 // using TGraphErrors for a chi2 fit
 //-------------------------------------------------------
 
-Double_t Fit_rate_separation(Int_t n, Double_t *sep, Double_t *rate,
-                             Double_t *rate_err, Int_t fit_type, Double_t *area,
-                             Double_t *rate_zero, Double_t *par,
-                             Double_t *par_err, const char *cName)
+Double_t Fit_rate_separation(Int_t n, Double_t* sep, Double_t* rate,
+                             Double_t* rate_err, Int_t fit_type, Double_t* area,
+                             Double_t* rate_zero, Double_t* par,
+                             Double_t* par_err, const char* cName)
 // fit n points of rate(sep) using model given by fit_type
 // output area and error, rate at zero and error, parameters and error
 // returns chi2/dof ... returns -1 if fit does not converge
@@ -461,7 +470,7 @@ Double_t Fit_rate_separation(Int_t n, Double_t *sep, Double_t *rate,
   }
 
   // set up the model fit
-  TF1 *fit_model = NULL;
+  TF1* fit_model = NULL;
   if (fit_type == 0) {
     fit_model = new TF1("fit_model", fit_GP2, sep_min, sep_max,
                         Get_number_par(fit_type));
@@ -470,7 +479,7 @@ Double_t Fit_rate_separation(Int_t n, Double_t *sep, Double_t *rate,
                         Get_number_par(fit_type));
   } else if (fit_type == 2) {
     fit_model =
-        new TF1("fit_model", fit_G, sep_min, sep_max, Get_number_par(fit_type));
+      new TF1("fit_model", fit_G, sep_min, sep_max, Get_number_par(fit_type));
   } else if (fit_type == 4) {
     fit_model = new TF1("fit_model", fit_DG, sep_min, sep_max,
                         Get_number_par(fit_type));
@@ -491,13 +500,13 @@ Double_t Fit_rate_separation(Int_t n, Double_t *sep, Double_t *rate,
   Fit_model_init(fit_type, rate_max, fit_model);
 
   // define a TGraph to perform the fit
-  TGraphErrors *gr = new TGraphErrors(n, sep, rate, NULL, rate_err);
+  TGraphErrors* gr = new TGraphErrors(n, sep, rate, NULL, rate_err);
 
   // fit and check
   TFitResultPtr r = gr->Fit("fit_model", "Q0RS");
   Double_t fitQuality =
-      fit_model->GetChisquare() / ((Double_t)fit_model->GetNDF()); // kimc
-  string dName = cName; // Temporal copy, to prevent contamination (kimc)
+    fit_model->GetChisquare() / ((Double_t)fit_model->GetNDF()); // kimc
+  string dName = cName;                                          // Temporal copy, to prevent contamination (kimc)
 
   //-------------------------------------------
 
@@ -511,8 +520,8 @@ Double_t Fit_rate_separation(Int_t n, Double_t *sep, Double_t *rate,
   if (!gMinuit->fCstatu.Contains("CONVERGED") || (fitQuality < fitQuality_TL) ||
       (fitQuality > fitQuality_TU)) {
     // Temporary TH1 for pit parameters
-    TH1F *H1Temp =
-        new TH1F(Form("%s_temp", dName.c_str()), "", n, sep[0], sep[n - 1]);
+    TH1F* H1Temp =
+      new TH1F(Form("%s_temp", dName.c_str()), "", n, sep[0], sep[n - 1]);
     H1Temp->Sumw2();
     for (int a = 0; a < n; a++) {
       const int xBin = H1Temp->GetXaxis()->FindBin(sep[a]);
@@ -554,7 +563,7 @@ Double_t Fit_rate_separation(Int_t n, Double_t *sep, Double_t *rate,
 
       r = gr->Fit("fit_model", "Q0RS");
       fitQuality =
-          fit_model->GetChisquare() / ((Double_t)fit_model->GetNDF()); // kimc
+        fit_model->GetChisquare() / ((Double_t)fit_model->GetNDF()); // kimc
       if (gMinuit->fCstatu.Contains("CONVERGED") &&
           fitQuality > fitQuality_TL && fitQuality < fitQuality_TU)
         break; // Converged: stop
@@ -587,7 +596,7 @@ c->Print(Form("../Fill-%d/QA_fits/%s.%s", g_vdm_Fill, dName.c_str(), FFormat));
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(0);
 
-  TCanvas *c1 = new TCanvas(dName.c_str(), dName.c_str(), 800, 600);
+  TCanvas* c1 = new TCanvas(dName.c_str(), dName.c_str(), 800, 600);
   c1->cd()->SetLogy();
 
   /*
@@ -605,7 +614,7 @@ c->Print(Form("../Fill-%d/QA_fits/%s.%s", g_vdm_Fill, dName.c_str(), FFormat));
   T1.ReplaceAll("_y", "), vertical");
   */
 
-  TH1F *H1 = (TH1F *)gr->GetHistogram();
+  TH1F* H1 = (TH1F*)gr->GetHistogram();
   H1->GetXaxis()->SetTitleOffset(1.1);
   H1->GetXaxis()->SetRangeUser(-0.65, 0.65);
   H1->GetYaxis()->SetRangeUser(0.1, H1->GetMaximum() * 2.0);
@@ -617,12 +626,12 @@ c->Print(Form("../Fill-%d/QA_fits/%s.%s", g_vdm_Fill, dName.c_str(), FFormat));
   fit_model->SetLineStyle(2);
   fit_model->Draw("same");
 
-  TLegend *L1 = new TLegend(0.4, 0.2, 0.6, 0.35);
+  TLegend* L1 = new TLegend(0.4, 0.2, 0.6, 0.35);
   L1->SetMargin(0);
   L1->SetBorderSize(0);
   L1->SetTextAlign(13);
-  L1->AddEntry((TObject *)0, "ALICE", "");
-  L1->AddEntry((TObject *)0, "pp #sqrt{s} = 13 TeV", "");
+  L1->AddEntry((TObject*)0, "ALICE", "");
+  L1->AddEntry((TObject*)0, "pp #sqrt{s} = 13 TeV", "");
   L1->Draw();
 
   c1->Print(Form("%s.eps", c1->GetName()));
@@ -657,7 +666,7 @@ c->Print(Form("../Fill-%d/QA_fits/%s.%s", g_vdm_Fill, dName.c_str(), FFormat));
                                      epsilon);
   rate_zero[0] = fit_model->Eval(fit_model->GetParameter(1));
   rate_zero[1] =
-      rate_zero[0] * (fit_model->GetParError(0)) / (fit_model->GetParameter(0));
+    rate_zero[0] * (fit_model->GetParError(0)) / (fit_model->GetParameter(0));
 
   // check if integral gives 'reasonable' value
   const Double_t lim = 10.0;

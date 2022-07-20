@@ -6,14 +6,15 @@
 // to be used as input for the analysis
 //-------------------------------------------------------
 
-void Set_input_file_names(Int_t Fill) {
+void Set_input_file_names(Int_t Fill)
+{
   if (Fill == 4937) // pp @ 13 TeV May 17, 2016
   {
     // set fill and number of scans in the fill
     g_vdm_Fill = Fill;
     g_n_Scans_in_Fill = 2;
 
-    const char *CUT = "5.5m11.5_11.5p17.5";
+    const char* CUT = "5.5m11.5_11.5p17.5";
     // cout <<" Following V0/T0 timing cut is being used: " <<CUT <<endl;
     //  set name of input files
     sprintf(g_Input_vdm_File, "../Fill-%d/vdm_time_4937_%s_1_v3.root",
@@ -47,7 +48,7 @@ void Set_input_file_names(Int_t Fill) {
     g_vdm_Fill = Fill;
     g_n_Scans_in_Fill = 2;
 
-    const char *CUT = "5.5m11.5_11.5p17.5";
+    const char* CUT = "5.5m11.5_11.5p17.5";
     // cout <<" Following V0/T0 timing cut is being used: " <<CUT <<endl;
     sprintf(g_Input_vdm_File, "../Fill-%d/vdm_time_6012_%s_1_v3.root",
             g_vdm_Fill, CUT);
@@ -65,8 +66,8 @@ void Set_input_file_names(Int_t Fill) {
     g_vdm_Fill = Fill;
     g_n_Scans_in_Fill = 2;
 
-    const char *CUT1 = "5.5m11.5";
-    const char *CUT2 = "11.5p17.5";
+    const char* CUT1 = "5.5m11.5";
+    const char* CUT2 = "11.5p17.5";
     // cout <<"Following V0/T0 timing cut is being used: " <<CUT1 <<", " <<CUT2
     // <<endl;
     sprintf(g_Input_vdm_File, "../Fill-%d/vdm_time_6864_%s_%s_1_v3.root",

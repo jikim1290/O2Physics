@@ -13,9 +13,10 @@
 // the cross section
 //-------------------------------------------------------
 
-void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
-                const char *sep_type, const char *intensity_type,
-                Int_t fit_type, Int_t scan) {
+void QA_xs_N1N2(Int_t Fill, const char* rate_name, const char* rate_type,
+                const char* sep_type, const char* intensity_type,
+                Int_t fit_type, Int_t scan)
+{
   // initialize
   Set_input_file_names(Fill);
   Set_pointers_to_input_files_and_trees();
@@ -34,15 +35,15 @@ void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
   // open the correct file
   char filename[120];
   sprintf(filename, "../Fill-%d/%s_Scan_%d.root", Fill, intensity_type, scan);
-  TFile *IntensityFile = new TFile(filename);
+  TFile* IntensityFile = new TFile(filename);
 
   // get the info from the tree
-  Double_t *bunch_intensity_1 = new Double_t[nIBC];
-  Double_t *bunch_intensity_2 = new Double_t[nIBC];
+  Double_t* bunch_intensity_1 = new Double_t[nIBC];
+  Double_t* bunch_intensity_2 = new Double_t[nIBC];
   Double_t cf_dcct_1;
   Double_t cf_dcct_2;
 
-  TTree *intensity_tree = (TTree *)IntensityFile->Get("Bunch_Intensity");
+  TTree* intensity_tree = (TTree*)IntensityFile->Get("Bunch_Intensity");
   intensity_tree->ResetBranchAddresses();
   intensity_tree->SetBranchAddress("cf_dcct_1", &cf_dcct_1);
   intensity_tree->SetBranchAddress("cf_dcct_2", &cf_dcct_2);
@@ -53,12 +54,12 @@ void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
   // --------------------
   // get xs file and tree
   //---------------------
-  char *xs_file_name = new char[kg_string_size];
+  char* xs_file_name = new char[kg_string_size];
   sprintf(xs_file_name, "../Fill-%d/xs_%sRate_%s_%sSep_%s_Scan_%d_Fit_%s.root",
           g_vdm_Fill, rate_type, rate_name, sep_type, intensity_type, scan,
           g_fit_model_name[fit_type]);
-  TFile *xs_file = new TFile(xs_file_name);
-  TTree *xs_tree = (TTree *)xs_file->Get("XS");
+  TFile* xs_file = new TFile(xs_file_name);
+  TTree* xs_tree = (TTree*)xs_file->Get("XS");
 
   // prepare tree branches
   Double_t xs = 0;
@@ -68,14 +69,14 @@ void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
   xs_tree->SetBranchAddress("xs_error", &xs_error);
 
   // reserve space
-  Double_t *xs_all = new Double_t[nIBC];
-  Double_t *xse_all = new Double_t[nIBC];
-  Double_t *N1N2_all = new Double_t[nIBC];
+  Double_t* xs_all = new Double_t[nIBC];
+  Double_t* xse_all = new Double_t[nIBC];
+  Double_t* N1N2_all = new Double_t[nIBC];
 
   // define graph
-  TGraphErrors *gr = new TGraphErrors();
-  TGraphErrors *gr_o = new TGraphErrors();
-  TGraphErrors *gr_e = new TGraphErrors();
+  TGraphErrors* gr = new TGraphErrors();
+  TGraphErrors* gr_o = new TGraphErrors();
+  TGraphErrors* gr_e = new TGraphErrors();
 
   gr->SetMarkerColor(0);
   gr_o->SetLineColor(4);
@@ -104,7 +105,7 @@ void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
     xs_all[i] = xs;
     xse_all[i] = xs_error;
     N1N2_all[i] =
-        cf_dcct_1 * bunch_intensity_1[i] * cf_dcct_2 * bunch_intensity_2[i];
+      cf_dcct_1 * bunch_intensity_1[i] * cf_dcct_2 * bunch_intensity_2[i];
 
     // July 1, scale down x axis by 10^18 for PN not plot - kimc
     N1N2_all[i] = N1N2_all[i] / (1.E18);
@@ -163,12 +164,12 @@ void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
     yMin = T0C - 1.0;
     yMax = T0C + 1.5;
   }
-  TCanvas *c1 = new TCanvas("c1", "xs_histo", 1600, 800);
+  TCanvas* c1 = new TCanvas("c1", "xs_histo", 1600, 800);
   c1->cd()->SetBottomMargin(0.125);
 
-  TH1F *H1 =
-      new TH1F("H1frame", ";N_{1} N_{2} #times 10^{ -18}; #sigma_{vis} [mb]",
-               100, xMin, xMax);
+  TH1F* H1 =
+    new TH1F("H1frame", ";N_{1} N_{2} #times 10^{ -18}; #sigma_{vis} [mb]",
+             100, xMin, xMax);
   H1->GetXaxis()->SetTitleOffset(1.3);
   H1->GetXaxis()->SetTitleSize(0.0375);
   H1->GetYaxis()->SetRangeUser(yMin, yMax);
@@ -182,7 +183,7 @@ void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
   gr->SetMarkerSize(1.5);
   gr->Draw("pe same");
 
-  TF1 *F1pol0 = new TF1("F1pol0", "pol0", xMin, xMax);
+  TF1* F1pol0 = new TF1("F1pol0", "pol0", xMin, xMax);
   F1pol0->SetParNames("Mean");
   F1pol0->SetLineColor(2);
   F1pol0->SetLineStyle(2);
@@ -196,29 +197,29 @@ void QA_xs_N1N2(Int_t Fill, const char *rate_name, const char *rate_type,
     YEAR = 2017;
   if (Fill == 6864)
     YEAR = 2018;
-  TLegend *L1 = new TLegend(0.145, 0.65, 0.35, 0.85);
+  TLegend* L1 = new TLegend(0.145, 0.65, 0.35, 0.85);
   L1->SetMargin(0);
   L1->SetBorderSize(0);
   L1->SetFillStyle(3001);
-  L1->AddEntry((TObject *)0, "ALICE", "");
-  L1->AddEntry((TObject *)0, "pp #sqrt{s} = 13 TeV", "");
-  L1->AddEntry((TObject *)0,
+  L1->AddEntry((TObject*)0, "ALICE", "");
+  L1->AddEntry((TObject*)0, "pp #sqrt{s} = 13 TeV", "");
+  L1->AddEntry((TObject*)0,
                Form("%i, %s, scan %i", YEAR,
                     (!strcmp(rate_name, "VBAandVBC")) ? "V0" : "T0", scan),
                "");
   L1->Draw();
 
-  TLegend *L2 = new TLegend(0.6, 0.735, 0.875, 0.85);
+  TLegend* L2 = new TLegend(0.6, 0.735, 0.875, 0.85);
   L2->SetMargin(0.1);
   L2->SetNColumns(2);
-  L2->AddEntry((TObject *)0, "#chi^{2}/NDF", "");
-  L2->AddEntry((TObject *)0,
+  L2->AddEntry((TObject*)0, "#chi^{2}/NDF", "");
+  L2->AddEntry((TObject*)0,
                Form("%5.2f/%i", F1pol0->GetChisquare(), F1pol0->GetNDF()), "");
-  L2->AddEntry((TObject *)0, "Mean", "");
+  L2->AddEntry((TObject*)0, "Mean", "");
   L2->AddEntry(
-      (TObject *)0,
-      Form("%5.3f #pm %4.3f", F1pol0->GetParameter(0), F1pol0->GetParError(0)),
-      "");
+    (TObject*)0,
+    Form("%5.3f #pm %4.3f", F1pol0->GetParameter(0), F1pol0->GetParError(0)),
+    "");
   L2->Draw();
 
   c1->Print(Form("Fill%i_xsN1N2_%s_%i.eps", Fill,

@@ -6,17 +6,18 @@
 //-------------------------------------------------------
 // accessing the rates
 
-void GetRate(Double_t *rate, const char *rate_name, const char *rate_type,
-             Int_t scan, Int_t scan_type, Int_t bc) {
-  char *file_name = new char[kg_string_size];
+void GetRate(Double_t* rate, const char* rate_name, const char* rate_type,
+             Int_t scan, Int_t scan_type, Int_t bc)
+{
+  char* file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(file_name, "../Fill-%d/%sRate_%s_x_Scan_%d.root", g_vdm_Fill,
             rate_type, rate_name, scan);
   if (scan_type == 2)
     sprintf(file_name, "../Fill-%d/%sRate_%s_y_Scan_%d.root", g_vdm_Fill,
             rate_type, rate_name, scan);
-  TFile *rate_file = new TFile(file_name);
-  TTree *rate_tree = (TTree *)rate_file->Get("Rate");
+  TFile* rate_file = new TFile(file_name);
+  TTree* rate_tree = (TTree*)rate_file->Get("Rate");
   rate_tree->ResetBranchAddresses();
   rate_tree->SetBranchAddress("rate", rate);
   rate_tree->GetEntry(bc);
@@ -29,7 +30,7 @@ void GetRate(Double_t *rate, const char *rate_name, const char *rate_type,
 // Note that it uses fBCT corrected rates.
 //-------------------------------------------------------
 
-void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
+void QA_corr_vs_sep(Int_t Fill, const char* rate_name, Int_t scan,
                     Int_t scan_type, Int_t bc)
 // scan_type: 1 => x-scan; 2 => y-scan
 {
@@ -40,11 +41,11 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
 
   // reserve space for rated
   Int_t n_sep = FindNumberSeparations(scan_type, scan);
-  Double_t *raw = new Double_t[n_sep];
-  Double_t *bkgd = new Double_t[n_sep];
-  Double_t *pu = new Double_t[n_sep];
-  Double_t *all = new Double_t[n_sep];
-  Double_t *optical = new Double_t[n_sep];
+  Double_t* raw = new Double_t[n_sep];
+  Double_t* bkgd = new Double_t[n_sep];
+  Double_t* pu = new Double_t[n_sep];
+  Double_t* all = new Double_t[n_sep];
+  Double_t* optical = new Double_t[n_sep];
 
   // get the rates
   GetRate(raw, rate_name, "Raw", scan, scan_type, bc);
@@ -56,14 +57,14 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
             bc);
 
   // get the separations
-  char *file_name = new char[kg_string_size];
+  char* file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill, scan);
   if (scan_type == 2)
     sprintf(file_name, "../Fill-%d/NomSep_y_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *sep_file = new TFile(file_name);
-  TTree *sep_tree = (TTree *)sep_file->Get("Separations");
-  Double_t *sep = new Double_t[n_sep];
+  TFile* sep_file = new TFile(file_name);
+  TTree* sep_tree = (TTree*)sep_file->Get("Separations");
+  Double_t* sep = new Double_t[n_sep];
   sep_tree->ResetBranchAddresses();
   sep_tree->SetBranchAddress("separation", sep);
   sep_tree->GetEntry(bc);
@@ -73,10 +74,10 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
   // " << bkgd[i]<< " " << pu[i]<< " " << all [i] << endl;
 
   // make ratios
-  Double_t *raw_bkgd = new Double_t[n_sep];
-  Double_t *bkgd_pu = new Double_t[n_sep];
-  Double_t *pu_all = new Double_t[n_sep];
-  Double_t *all_optical = new Double_t[n_sep];
+  Double_t* raw_bkgd = new Double_t[n_sep];
+  Double_t* bkgd_pu = new Double_t[n_sep];
+  Double_t* pu_all = new Double_t[n_sep];
+  Double_t* all_optical = new Double_t[n_sep];
   for (Int_t i = 0; i < n_sep; i++) {
     if (raw[i] > 0 && bkgd[i] > 0)
       raw_bkgd[i] = bkgd[i] / raw[i];
@@ -133,16 +134,16 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
   ratio_min *= 0.8;
 
   // make graphs
-  TGraph *gr_raw_bkgd = new TGraph(n_sep, sep, raw_bkgd);
+  TGraph* gr_raw_bkgd = new TGraph(n_sep, sep, raw_bkgd);
   gr_raw_bkgd->SetMarkerStyle(20);
   gr_raw_bkgd->SetMarkerColor(1);
-  TGraph *gr_bkgd_pu = new TGraph(n_sep, sep, bkgd_pu);
+  TGraph* gr_bkgd_pu = new TGraph(n_sep, sep, bkgd_pu);
   gr_bkgd_pu->SetMarkerStyle(20);
   gr_bkgd_pu->SetMarkerColor(2);
-  TGraph *gr_pu_all = new TGraph(n_sep, sep, pu_all);
+  TGraph* gr_pu_all = new TGraph(n_sep, sep, pu_all);
   gr_pu_all->SetMarkerStyle(20);
   gr_pu_all->SetMarkerColor(4);
-  TGraph *gr_optical_all = NULL;
+  TGraph* gr_optical_all = NULL;
   if (doOptical) {
     gr_optical_all = new TGraph(n_sep, sep, all_optical);
     gr_optical_all->SetMarkerStyle(20);
@@ -152,15 +153,15 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
   // plot graphs
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(0);
-  TCanvas *corr_C = new TCanvas("corr_C", "rate versus separation", 600, 400);
-  TH1F *frame = gPad->DrawFrame(sep_min, ratio_min, sep_max, ratio_max);
+  TCanvas* corr_C = new TCanvas("corr_C", "rate versus separation", 600, 400);
+  TH1F* frame = gPad->DrawFrame(sep_min, ratio_min, sep_max, ratio_max);
   frame->SetTitle(";separation (mm); correction factor");
   gr_raw_bkgd->Draw("p,e1,same");
   gr_bkgd_pu->Draw("p,e1,same");
   gr_pu_all->Draw("p,e1,same");
   if (doOptical)
     gr_optical_all->Draw("p,e1,same");
-  TLegend *legend = new TLegend(0.3, 0.7, 0.7, 0.9);
+  TLegend* legend = new TLegend(0.3, 0.7, 0.7, 0.9);
   legend->AddEntry(gr_raw_bkgd, "Raw/Bkgd", "p");
   legend->AddEntry(gr_bkgd_pu, "Bkgd/Pileup", "p");
   legend->AddEntry(gr_pu_all, "Pileup/Intensity", "p");

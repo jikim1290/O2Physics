@@ -8,7 +8,7 @@
 //-------------------------------------------------------
 
 void Create_DDL2_raw_rate_file(Int_t scan_type, Int_t scan,
-                               const char *rate_name)
+                               const char* rate_name)
 // scan_type: 1 => x-scan; 2 => y-scan
 
 // There are two steps"
@@ -16,7 +16,7 @@ void Create_DDL2_raw_rate_file(Int_t scan_type, Int_t scan,
 // 2.- loop over the range of each step and get the raw rate and its error
 {
   // check if branch exists
-  char *ddl2_counter = new char[kg_string_size];
+  char* ddl2_counter = new char[kg_string_size];
   sprintf(ddl2_counter, "c2%s", rate_name);
   if (g_vdm_Tree->FindBranch(ddl2_counter) == NULL) {
     cout << " Requested branch (" << ddl2_counter
@@ -28,8 +28,8 @@ void Create_DDL2_raw_rate_file(Int_t scan_type, Int_t scan,
   // -- find the number of separations (ie of steps in the scan)
   Int_t n_separations = FindNumberSeparations(scan_type, scan);
   // -- reserve memory to store the start and end of each step
-  Int_t *idx_start = new Int_t[n_separations];
-  Int_t *idx_end = new Int_t[n_separations];
+  Int_t* idx_start = new Int_t[n_separations];
+  Int_t* idx_end = new Int_t[n_separations];
   // -- find indices of steps
   FindStepStartAndEnd(scan_type, scan, n_separations, idx_start, idx_end);
 
@@ -37,15 +37,15 @@ void Create_DDL2_raw_rate_file(Int_t scan_type, Int_t scan,
   // ** // set up branch addresses for incoming data
   Int_t orbit;
   Int_t aqflag;
-  Double_t *raw_rate = new Double_t[3564];
-  Double_t *counter = new Double_t[3564];
+  Double_t* raw_rate = new Double_t[3564];
+  Double_t* counter = new Double_t[3564];
   g_vdm_Tree->ResetBranchAddresses();
   g_vdm_Tree->SetBranchAddress("c2orbit", &orbit);
   g_vdm_Tree->SetBranchAddress("aqflag", &aqflag);
   g_vdm_Tree->SetBranchAddress(ddl2_counter, counter);
 
   // set up output tree for rates
-  char *file_name = new char[kg_string_size];
+  char* file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(file_name, "../Fill-%d/RawRate_%s_x_Scan_%d.root", g_vdm_Fill,
             rate_name, scan);
@@ -53,14 +53,14 @@ void Create_DDL2_raw_rate_file(Int_t scan_type, Int_t scan,
     sprintf(file_name, "../Fill-%d/RawRate_%s_y_Scan_%d.root", g_vdm_Fill,
             rate_name, scan);
 
-  TFile *RateFile = new TFile(file_name, "recreate");
-  Double_t *rate_orbits = new Double_t[n_separations];
-  Double_t *rate = new Double_t[n_separations];
-  Double_t *rate_error = new Double_t[n_separations];
-  Double_t *rate_counts = new Double_t[n_separations];
+  TFile* RateFile = new TFile(file_name, "recreate");
+  Double_t* rate_orbits = new Double_t[n_separations];
+  Double_t* rate = new Double_t[n_separations];
+  Double_t* rate_error = new Double_t[n_separations];
+  Double_t* rate_counts = new Double_t[n_separations];
 
-  TTree *rate_tree = new TTree("Rate", "Rate");
-  char *txt_tmp = new char[kg_string_size];
+  TTree* rate_tree = new TTree("Rate", "Rate");
+  char* txt_tmp = new char[kg_string_size];
   sprintf(txt_tmp, "rate_orbits[%d]/D", n_separations);
   rate_tree->Branch("rate_orbits", rate_orbits, txt_tmp);
   sprintf(txt_tmp, "rate[%d]/D", n_separations);
@@ -74,7 +74,7 @@ void Create_DDL2_raw_rate_file(Int_t scan_type, Int_t scan,
   // -- number of bc
   Int_t nIBC = GetNumberInteractingBunchCrossings();
   // -- bucket info
-  Int_t *bunches = new Int_t[nIBC];
+  Int_t* bunches = new Int_t[nIBC];
   GetBunchIndices(bunches);
   // loop over input data to fill the info
   for (Int_t k = 0; k < nIBC; k++) // loop over bunches
@@ -130,7 +130,8 @@ void Create_DDL2_raw_rate_file(Int_t scan_type, Int_t scan,
   return;
 }
 
-void Create_raw_rate_file(Int_t Fill, const char *rate_name) {
+void Create_raw_rate_file(Int_t Fill, const char* rate_name)
+{
   cout << " Starting, this will take some time " << endl;
 
   // get name of files and set pointers to trees

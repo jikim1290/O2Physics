@@ -21,8 +21,8 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
   // -- find the number of separations (ie of steps in the scan)
   Int_t n_separations = FindNumberSeparations(scan_type, scan);
   // -- reserve memory to store the start and end of each step
-  Int_t *idx_start = new Int_t[n_separations];
-  Int_t *idx_end = new Int_t[n_separations];
+  Int_t* idx_start = new Int_t[n_separations];
+  Int_t* idx_end = new Int_t[n_separations];
   // -- find indices of steps
   FindStepStartAndEnd(scan_type, scan, n_separations, idx_start, idx_end);
 
@@ -34,12 +34,12 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
   // Int_t Bunches[nIBC];
   // GetBunchIndices(Bunches);
   // -- bucket info
-  Int_t *BucketA = new Int_t[nIBC];
-  Int_t *BucketC = new Int_t[nIBC];
+  Int_t* BucketA = new Int_t[nIBC];
+  Int_t* BucketC = new Int_t[nIBC];
   GetBucketInfo(BucketA, BucketC);
 
   // --> create intensity file name
-  char *intensity_file_name = new char[kg_string_size];
+  char* intensity_file_name = new char[kg_string_size];
   if (intensity_type == 1)
     sprintf(intensity_file_name, "../Fill-%d/BPTX_Scan_%d.root", g_vdm_Fill,
             scan);
@@ -47,11 +47,11 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
     sprintf(intensity_file_name, "../Fill-%d/FBCT_Scan_%d.root", g_vdm_Fill,
             scan);
   // --> open file
-  TFile *intensity_file = new TFile(intensity_file_name);
+  TFile* intensity_file = new TFile(intensity_file_name);
   // --> get intensity information
-  TTree *intensity_tree = (TTree *)intensity_file->Get("Bunch_Intensity");
-  Double_t *bunch_intensity_1 = new Double_t[nIBC];
-  Double_t *bunch_intensity_2 = new Double_t[nIBC];
+  TTree* intensity_tree = (TTree*)intensity_file->Get("Bunch_Intensity");
+  Double_t* bunch_intensity_1 = new Double_t[nIBC];
+  Double_t* bunch_intensity_2 = new Double_t[nIBC];
   Double_t cf_dcct_1_ref = 0;
   Double_t cf_dcct_2_ref = 0;
   intensity_tree->ResetBranchAddresses();
@@ -62,14 +62,14 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
   intensity_tree->GetEntry(0);
 
   // --> set up tree with info on normalisation
-  char *norm_file_name = new char[kg_string_size];
+  char* norm_file_name = new char[kg_string_size];
   if (intensity_type == 1)
     sprintf(norm_file_name, "../Fill-%d/BPTX_norm.root", g_vdm_Fill);
   if (intensity_type == 2)
     sprintf(norm_file_name, "../Fill-%d/FBCT_norm.root", g_vdm_Fill);
   // --> open file
-  TFile *NormFile = new TFile(norm_file_name);
-  TTree *norm_tree = (TTree *)NormFile->Get("Beam_Normalisation");
+  TFile* NormFile = new TFile(norm_file_name);
+  TTree* norm_tree = (TTree*)NormFile->Get("Beam_Normalisation");
   Double_t cf_dcct_1 = 0;
   Double_t cf_dcct_2 = 0;
   norm_tree->ResetBranchAddresses();
@@ -79,8 +79,8 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
   // ** 3.- loop over the range of each step and get the correction and its
   // error ** // set up branch addresses for incoming data
   Int_t aqflag;
-  Double_t *bunch1 = new Double_t[3564];
-  Double_t *bunch2 = new Double_t[3564];
+  Double_t* bunch1 = new Double_t[3564];
+  Double_t* bunch2 = new Double_t[3564];
   g_vdm_Tree->ResetBranchAddresses();
   g_vdm_Tree->SetBranchAddress("aqflag", &aqflag);
   if (intensity_type == 1) {
@@ -92,7 +92,7 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
   }
 
   // set up output tree for rates
-  char *file_name = new char[kg_string_size];
+  char* file_name = new char[kg_string_size];
   if (scan_type == 1) {
     if (intensity_type == 1) {
       sprintf(file_name, "../Fill-%d/BPTXCorr_x_Scan_%d.root", g_vdm_Fill,
@@ -111,13 +111,13 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
     }
   }
 
-  TFile *CorrFile = new TFile(file_name, "recreate");
-  Double_t *b1_correction = new Double_t[n_separations];
-  Double_t *b1_correction_error = new Double_t[n_separations];
-  Double_t *b2_correction = new Double_t[n_separations];
-  Double_t *b2_correction_error = new Double_t[n_separations];
-  TTree *correction_tree =
-      new TTree("IntensityCorrection", "IntensityCorrection");
+  TFile* CorrFile = new TFile(file_name, "recreate");
+  Double_t* b1_correction = new Double_t[n_separations];
+  Double_t* b1_correction_error = new Double_t[n_separations];
+  Double_t* b2_correction = new Double_t[n_separations];
+  Double_t* b2_correction_error = new Double_t[n_separations];
+  TTree* correction_tree =
+    new TTree("IntensityCorrection", "IntensityCorrection");
   char txt_tmp[kg_string_size];
   sprintf(txt_tmp, "b1_correction[%d]/D", n_separations);
   correction_tree->Branch("b1_correction", b1_correction, txt_tmp);
@@ -177,19 +177,19 @@ void Compute_intensity_correction(Int_t Fill, Int_t scan_type, Int_t scan,
       b1_correction[i] = bi1 / ni;
       b2_correction[i] = bi2 / ni;
       b1_correction_error[i] =
-          TMath::Sqrt((1. / (ni - 1.0)) * (bi1_2 - bi1 * bi1 / ni));
+        TMath::Sqrt((1. / (ni - 1.0)) * (bi1_2 - bi1 * bi1 / ni));
       b2_correction_error[i] =
-          TMath::Sqrt((1. / (ni - 1.0)) * (bi2_2 - bi2 * bi2 / ni));
+        TMath::Sqrt((1. / (ni - 1.0)) * (bi2_2 - bi2 * bi2 / ni));
 
       b1_correction[i] =
-          (b1_correction[i] / (cf_dcct_1_ref * bunch_intensity_1[k]));
+        (b1_correction[i] / (cf_dcct_1_ref * bunch_intensity_1[k]));
       b1_correction_error[i] =
-          (b1_correction_error[i] / (cf_dcct_1_ref * bunch_intensity_1[k]));
+        (b1_correction_error[i] / (cf_dcct_1_ref * bunch_intensity_1[k]));
 
       b2_correction[i] =
-          (b2_correction[i] / (cf_dcct_2_ref * bunch_intensity_2[k]));
+        (b2_correction[i] / (cf_dcct_2_ref * bunch_intensity_2[k]));
       b2_correction_error[i] =
-          (b2_correction_error[i] / (cf_dcct_2_ref * bunch_intensity_2[k]));
+        (b2_correction_error[i] / (cf_dcct_2_ref * bunch_intensity_2[k]));
 
       // avoid extremely large correction factors
       if (b1_correction[i] > 2.0 || b1_correction[i] < 0.2) {

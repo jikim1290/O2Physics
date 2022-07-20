@@ -14,10 +14,11 @@ UInt_t gScan1StartY = 0;
 UInt_t gScan1EndY = 0;
 
 // Checks the variable names from the input data file
-Bool_t CheckVariableName(TString name, Int_t &variable) {
+Bool_t CheckVariableName(TString name, Int_t& variable)
+{
   Bool_t useVariable = kFALSE;
-  TObjArray *s = name.Tokenize(":");
-  TString temp = ((TObjString *)s->At(2))->GetString();
+  TObjArray* s = name.Tokenize(":");
+  TString temp = ((TObjString*)s->At(2))->GetString();
   // cout << "variable: " << temp.Data() << endl;
 
   variable = -1;
@@ -61,10 +62,11 @@ Bool_t CheckVariableName(TString name, Int_t &variable) {
 }
 
 // Returns the comma separated values from a given string
-void GetVariables(TString name, UInt_t &timestamp, Double_t &value) {
-  TObjArray *s = name.Tokenize(",");
-  TString tmpTime = ((TObjString *)s->At(0))->GetString();
-  TString tmpValue = ((TObjString *)s->At(1))->GetString();
+void GetVariables(TString name, UInt_t& timestamp, Double_t& value)
+{
+  TObjArray* s = name.Tokenize(",");
+  TString tmpTime = ((TObjString*)s->At(0))->GetString();
+  TString tmpValue = ((TObjString*)s->At(1))->GetString();
 
   // convert strings into correct variable type
   TDatime t(tmpTime.Data());
@@ -75,7 +77,8 @@ void GetVariables(TString name, UInt_t &timestamp, Double_t &value) {
 }
 
 // Set the start and end times of the scans
-void SetScanTimes() {
+void SetScanTimes()
+{
   // set set branches
   Double_t time;
   g_vdm_Tree->ResetBranchAddresses();
@@ -115,7 +118,8 @@ void SetScanTimes() {
 }
 
 // Check if given timestamp falls inside scan period
-Bool_t InsideScanPeriod(UInt_t time) {
+Bool_t InsideScanPeriod(UInt_t time)
+{
   Bool_t isInside = kFALSE;
   if (time >= gScan0StartX && time <= gScan0EndX)
     isInside = kTRUE;
@@ -145,7 +149,7 @@ void Get_ghostSatellite_tree(Int_t Fill, Int_t opt)
   // ** WARNING: Directory structure and nameing convention
   //    valid for fill 4937 ... the corresponding structure
   //    has to be added for other fills ... **
-  char *data_file_name = new char[kg_string_size];
+  char* data_file_name = new char[kg_string_size];
   if (opt == 0)
     sprintf(data_file_name, "../Fill-%d/ghostCharge/%d_B1.SYS_A.CSV", Fill,
             Fill);
@@ -161,7 +165,7 @@ void Get_ghostSatellite_tree(Int_t Fill, Int_t opt)
   data_file.open(data_file_name);
 
   // now prepare names of output
-  char *ghost_file_name = new char[kg_string_size];
+  char* ghost_file_name = new char[kg_string_size];
   if (opt == 0)
     sprintf(ghost_file_name, "../Fill-%d/ghostCharge/ghostCharge_B1_A.root",
             Fill);
@@ -214,48 +218,48 @@ void Get_ghostSatellite_tree(Int_t Fill, Int_t opt)
       if (isInsideScan) {
         //  cout << time << endl;
         switch (variable) {
-        case 1:
-          Q_ghost_value_array[ighost] = value;
-          Q_ghost_time_array[ighost] = time;
-          cout << line.Data() << endl;
-          cout << "timestamp" << time << " value " << value << endl;
-          ighost++;
-          break;
-        case 2:
-          Q_sat_value_array[isat] = value;
-          Q_sat_time_array[isat] = time;
-          isat++;
-          break;
-        case 3:
-          sigma_ghost_value_array[ighostErr] = value;
-          sigma_ghost_time_array[ighostErr] = time;
-          ighostErr++;
-          break;
-        case 4:
-          sigma_sat_value_array[isatErr] = value;
-          sigma_sat_time_array[isatErr] = time;
-          isatErr++;
-          break;
-        case 5:
-          sigma_ghost_stat_value_array[ighostErrStat] = value;
-          ighostErrStat++;
-          break;
-        case 6:
-          sigma_ghost_syst_value_array[ighostErrSyst] = value;
-          ighostErrSyst++;
-          break;
-        case 7:
-          sigma_sat_stat_value_array[isatErrStat] = value;
-          isatErrStat++;
-          break;
-        case 8:
-          sigma_sat_syst_value_array[isatErrSyst] = value;
-          isatErrSyst++;
-          break;
-        default:
-          cout << "unknown variable" << endl;
-          continue;
-          break;
+          case 1:
+            Q_ghost_value_array[ighost] = value;
+            Q_ghost_time_array[ighost] = time;
+            cout << line.Data() << endl;
+            cout << "timestamp" << time << " value " << value << endl;
+            ighost++;
+            break;
+          case 2:
+            Q_sat_value_array[isat] = value;
+            Q_sat_time_array[isat] = time;
+            isat++;
+            break;
+          case 3:
+            sigma_ghost_value_array[ighostErr] = value;
+            sigma_ghost_time_array[ighostErr] = time;
+            ighostErr++;
+            break;
+          case 4:
+            sigma_sat_value_array[isatErr] = value;
+            sigma_sat_time_array[isatErr] = time;
+            isatErr++;
+            break;
+          case 5:
+            sigma_ghost_stat_value_array[ighostErrStat] = value;
+            ighostErrStat++;
+            break;
+          case 6:
+            sigma_ghost_syst_value_array[ighostErrSyst] = value;
+            ighostErrSyst++;
+            break;
+          case 7:
+            sigma_sat_stat_value_array[isatErrStat] = value;
+            isatErrStat++;
+            break;
+          case 8:
+            sigma_sat_syst_value_array[isatErrSyst] = value;
+            isatErrSyst++;
+            break;
+          default:
+            cout << "unknown variable" << endl;
+            continue;
+            break;
         } // end switch
       }   // end if isInsideScan
     }     // end if fillInfo
@@ -264,9 +268,9 @@ void Get_ghostSatellite_tree(Int_t Fill, Int_t opt)
   } // end while loop
 
   // Create tree file
-  TFile *ghost_file = new TFile(ghost_file_name, "RECREATE");
-  TTree *ghost_tree = new TTree("GhostCharge", "GhostCharge");
-  TTree *satellite_tree = new TTree("SatelliteCharge", "SatelliteCharge");
+  TFile* ghost_file = new TFile(ghost_file_name, "RECREATE");
+  TTree* ghost_tree = new TTree("GhostCharge", "GhostCharge");
+  TTree* satellite_tree = new TTree("SatelliteCharge", "SatelliteCharge");
 
   UInt_t Q_ghost_time = 0;
   UInt_t Q_sat_time = 0;
@@ -326,7 +330,8 @@ void Get_ghostSatellite_tree(Int_t Fill, Int_t opt)
   ghost_file->Close();
 }
 
-void Create_ghostSatellite_tree(Int_t Fill) {
+void Create_ghostSatellite_tree(Int_t Fill)
+{
 
   // initialize
   Set_input_file_names(Fill);

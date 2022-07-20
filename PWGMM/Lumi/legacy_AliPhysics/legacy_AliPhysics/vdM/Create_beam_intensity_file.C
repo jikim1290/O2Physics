@@ -7,7 +7,8 @@
 // get indices between x and y scans
 //-------------------------------------------------------
 
-void GetIndices(Int_t *idx) {
+void GetIndices(Int_t* idx)
+{
   for (Int_t i = 0; i < g_n_Scans_in_Fill; i++)
     idx[i] = FindIdxBetweenScans(i);
   return;
@@ -24,11 +25,11 @@ void Create_single_beam_intensity_file(Int_t Fill, Int_t scan, Int_t opt)
 {
   // get the branches with intensity and normalisation information
   // (also, set the name of the output file)
-  TFile *NormFile = NULL;
-  char *file_name = new char[kg_string_size];
+  TFile* NormFile = NULL;
+  char* file_name = new char[kg_string_size];
   g_vdm_Tree->ResetBranchAddresses();
-  Double_t *bunch1 = new Double_t[3564];
-  Double_t *bunch2 = new Double_t[3564];
+  Double_t* bunch1 = new Double_t[3564];
+  Double_t* bunch2 = new Double_t[3564];
   Double_t timerel;
   g_vdm_Tree->SetBranchAddress("timerel", &timerel);
 
@@ -52,7 +53,7 @@ void Create_single_beam_intensity_file(Int_t Fill, Int_t scan, Int_t opt)
   }
 
   // --> set up tree with info on normalisation
-  TTree *norm_tree = (TTree *)NormFile->Get("Beam_Normalisation");
+  TTree* norm_tree = (TTree*)NormFile->Get("Beam_Normalisation");
   Double_t cf_dcct_1 = 0;
   Double_t cf_dcct_2 = 0;
   Double_t cf_dcct_1a = 0;
@@ -86,19 +87,19 @@ void Create_single_beam_intensity_file(Int_t Fill, Int_t scan, Int_t opt)
   // Int_t Bunches[nIBC];
   // GetBunchIndices(Bunches);
   // -- bucket info
-  Int_t *BucketA = new Int_t[nIBC];
-  Int_t *BucketC = new Int_t[nIBC];
+  Int_t* BucketA = new Int_t[nIBC];
+  Int_t* BucketC = new Int_t[nIBC];
   GetBucketInfo(BucketA, BucketC);
 
   // set up output tree for rates
-  TFile *IntensityFile = new TFile(file_name, "recreate");
-  TTree *intensity_tree = new TTree("Bunch_Intensity", "Bunch_Intensity");
-  Double_t *bunch_intensity_1 = new Double_t[nIBC];
-  Double_t *bunch_intensity_2 = new Double_t[nIBC];
+  TFile* IntensityFile = new TFile(file_name, "recreate");
+  TTree* intensity_tree = new TTree("Bunch_Intensity", "Bunch_Intensity");
+  Double_t* bunch_intensity_1 = new Double_t[nIBC];
+  Double_t* bunch_intensity_2 = new Double_t[nIBC];
   for (Int_t i = 0; i < nIBC; i++)
     bunch_intensity_1[i] = bunch_intensity_2[i] = 0.0;
 
-  char *txt_tmp = new char[kg_string_size];
+  char* txt_tmp = new char[kg_string_size];
   sprintf(txt_tmp, "bunch_intensity_1[%d]/D", nIBC);
   intensity_tree->Branch("bunch_intensity_1", bunch_intensity_1, txt_tmp);
   sprintf(txt_tmp, "bunch_intensity_2[%d]/D", nIBC);

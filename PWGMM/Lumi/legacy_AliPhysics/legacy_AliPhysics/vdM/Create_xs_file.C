@@ -8,45 +8,46 @@
 //-------------------------------------------------------
 // Computes the cross section file for a scan
 //-------------------------------------------------------
-void Compute_xs(Int_t Fill, Int_t scan, const char *rate_name,
-                const char *rate_type, const char *sep_type,
-                const char *intensity_type, Int_t fit_type, Double_t lsc,
-                Double_t ghost, Double_t satellite, Double_t non_fact) {
+void Compute_xs(Int_t Fill, Int_t scan, const char* rate_name,
+                const char* rate_type, const char* sep_type,
+                const char* intensity_type, Int_t fit_type, Double_t lsc,
+                Double_t ghost, Double_t satellite, Double_t non_fact)
+{
   // first get the files and trees
   // --> create hx/hy file names
 
-  char *hx_file_name = new char[kg_string_size];
+  char* hx_file_name = new char[kg_string_size];
   sprintf(hx_file_name, "../Fill-%d/hxy_%sRate_%s_%sSep_x_Scan_%d_Fit_%s.root",
           g_vdm_Fill, rate_type, rate_name, sep_type, scan,
           g_fit_model_name[fit_type]);
 
-  char *hy_file_name = new char[kg_string_size];
+  char* hy_file_name = new char[kg_string_size];
   sprintf(hy_file_name, "../Fill-%d/hxy_%sRate_%s_%sSep_y_Scan_%d_Fit_%s.root",
           g_vdm_Fill, rate_type, rate_name, sep_type, scan,
           g_fit_model_name[fit_type]);
 
   // --> create intensity file name
-  char *intensity_file_name = new char[kg_string_size];
+  char* intensity_file_name = new char[kg_string_size];
   sprintf(intensity_file_name, "../Fill-%d/%s_Scan_%d.root", g_vdm_Fill,
           intensity_type, scan);
 
   // --> open files
-  TFile *hx_file = new TFile(hx_file_name);
-  TFile *hy_file = new TFile(hy_file_name);
-  TFile *intensity_file = new TFile(intensity_file_name);
+  TFile* hx_file = new TFile(hx_file_name);
+  TFile* hy_file = new TFile(hy_file_name);
+  TFile* intensity_file = new TFile(intensity_file_name);
   // --> get the trees
-  TTree *hx_tree = (TTree *)hx_file->Get("AreaRate");
-  TTree *hy_tree = (TTree *)hy_file->Get("AreaRate");
-  TTree *intensity_tree = (TTree *)intensity_file->Get("Bunch_Intensity");
+  TTree* hx_tree = (TTree*)hx_file->Get("AreaRate");
+  TTree* hy_tree = (TTree*)hy_file->Get("AreaRate");
+  TTree* intensity_tree = (TTree*)intensity_file->Get("Bunch_Intensity");
 
   // Next step: prepare variables to store the info for each bunch crossing
   // --> variables
   Double_t chi2_dof_x;
   Double_t chi2_dof_y;
-  Double_t *area_x = new Double_t[2];      // area and its error
-  Double_t *rate_zero_x = new Double_t[2]; // rate at zero and its error
-  Double_t *area_y = new Double_t[2];      // area and its error
-  Double_t *rate_zero_y = new Double_t[2]; // rate at zero and its error
+  Double_t* area_x = new Double_t[2];      // area and its error
+  Double_t* rate_zero_x = new Double_t[2]; // rate at zero and its error
+  Double_t* area_y = new Double_t[2];      // area and its error
+  Double_t* rate_zero_y = new Double_t[2]; // rate at zero and its error
   // --> set branches for hx, hy
   hx_tree->ResetBranchAddresses();
   hy_tree->ResetBranchAddresses();
@@ -63,8 +64,8 @@ void Compute_xs(Int_t Fill, Int_t scan, const char *rate_name,
   Int_t Bunches[nIBC]; // kimc
   GetBunchIndices(Bunches);
 
-  Double_t *bunch_intensity_1 = new Double_t[nIBC];
-  Double_t *bunch_intensity_2 = new Double_t[nIBC];
+  Double_t* bunch_intensity_1 = new Double_t[nIBC];
+  Double_t* bunch_intensity_2 = new Double_t[nIBC];
   Double_t cf_dcct_1;
   Double_t cf_dcct_2;
   intensity_tree->ResetBranchAddresses();
@@ -76,17 +77,17 @@ void Compute_xs(Int_t Fill, Int_t scan, const char *rate_name,
 
   // Next step: compute global correction factor
   Double_t total_correction =
-      lsc / (cf_dcct_1 * cf_dcct_2 * ghost * satellite * non_fact);
+    lsc / (cf_dcct_1 * cf_dcct_2 * ghost * satellite * non_fact);
 
   // Next step: create file and tree for output
   // --> file
-  char *xs_file_name = new char[kg_string_size];
+  char* xs_file_name = new char[kg_string_size];
   sprintf(xs_file_name, "../Fill-%d/xs_%sRate_%s_%sSep_%s_Scan_%d_Fit_%s.root",
           g_vdm_Fill, rate_type, rate_name, sep_type, intensity_type, scan,
           g_fit_model_name[fit_type]);
-  TFile *xs_file = new TFile(xs_file_name, "recreate");
+  TFile* xs_file = new TFile(xs_file_name, "recreate");
   // --> tree
-  TTree *xs_tree = new TTree("XS", "XS");
+  TTree* xs_tree = new TTree("XS", "XS");
   xs_tree->Branch("chi2_dof_x", &chi2_dof_x, "chi2_dof_x/D");
   xs_tree->Branch("chi2_dof_y", &chi2_dof_y, "chi2_dof_y/D");
   Double_t xs = 0;
@@ -117,9 +118,9 @@ void Compute_xs(Int_t Fill, Int_t scan, const char *rate_name,
       xs = GetXS(area_x[0], area_y[0], rate_zero_x[0], rate_zero_y[0],
                  bunch_intensity_1[k], bunch_intensity_2[k]);
       xs_error =
-          GetXSerr(area_x[0], area_x[1], area_y[0], area_y[1], rate_zero_x[0],
-                   rate_zero_x[1], rate_zero_y[0], rate_zero_y[1],
-                   bunch_intensity_1[k], bunch_intensity_2[k]);
+        GetXSerr(area_x[0], area_x[1], area_y[0], area_y[1], rate_zero_x[0],
+                 rate_zero_x[1], rate_zero_y[0], rate_zero_y[1],
+                 bunch_intensity_1[k], bunch_intensity_2[k]);
 
       // correct cross section
       xs *= total_correction;
@@ -156,10 +157,11 @@ void Compute_xs(Int_t Fill, Int_t scan, const char *rate_name,
 // Prepare the cross section file for a fill
 //-------------------------------------------------------
 
-void Create_xs_file(Int_t Fill, const char *rate_name, const char *rate_type,
-                    const char *sep_type, const char *intensity_type,
+void Create_xs_file(Int_t Fill, const char* rate_name, const char* rate_type,
+                    const char* sep_type, const char* intensity_type,
                     Int_t fit_type, Double_t lsc, Double_t ghost,
-                    Double_t satellite, Double_t non_fact) {
+                    Double_t satellite, Double_t non_fact)
+{
   // initialize
   Set_input_file_names(Fill);
   Set_pointers_to_input_files_and_trees();

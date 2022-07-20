@@ -8,15 +8,15 @@
 // Compute hx or hy for a scan
 //-------------------------------------------------------
 void Compute_RateIntegral(Int_t Fill, Int_t scan_type, Int_t scan,
-                          const char *rate_name, const char *rate_type,
-                          const char *sep_type, Int_t fit_type)
+                          const char* rate_name, const char* rate_type,
+                          const char* sep_type, Int_t fit_type)
 // scan_type: 1 => x-scan; 2 => y-scan
 // First get the right files and the trees inside them
 // then loop over all bunch crossings and for each of them make a fit
 {
   // first get the files and trees
   // --> create rate file name
-  char *rate_file_name = new char[kg_string_size];
+  char* rate_file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(rate_file_name, "../Fill-%d/%sRate_%s_x_Scan_%d.root", g_vdm_Fill,
             rate_type, rate_name, scan);
@@ -25,7 +25,7 @@ void Compute_RateIntegral(Int_t Fill, Int_t scan_type, Int_t scan,
             rate_type, rate_name, scan);
 
   // --> create separation file name
-  char *sep_file_name = new char[kg_string_size];
+  char* sep_file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(sep_file_name, "../Fill-%d/%sSep_x_Scan_%d.root", g_vdm_Fill,
             sep_type, scan);
@@ -34,21 +34,21 @@ void Compute_RateIntegral(Int_t Fill, Int_t scan_type, Int_t scan,
             sep_type, scan);
 
   // --> open files
-  TFile *rate_file = new TFile(rate_file_name);
-  TFile *sep_file = new TFile(sep_file_name);
+  TFile* rate_file = new TFile(rate_file_name);
+  TFile* sep_file = new TFile(sep_file_name);
 
   // --> get the trees
-  TTree *rate_tree = (TTree *)rate_file->Get("Rate");
-  TTree *sep_tree = (TTree *)sep_file->Get("Separations");
+  TTree* rate_tree = (TTree*)rate_file->Get("Rate");
+  TTree* sep_tree = (TTree*)sep_file->Get("Separations");
 
   // Next step: prepare variables to be fitted
   // --> get number of separations
   Int_t n_sep = FindNumberSeparations(scan_type, scan);
 
   // --> reserve space for rates and separations
-  Double_t *rate = new Double_t[n_sep];
-  Double_t *rate_error = new Double_t[n_sep];
-  Double_t *sep = new Double_t[n_sep];
+  Double_t* rate = new Double_t[n_sep];
+  Double_t* rate_error = new Double_t[n_sep];
+  Double_t* sep = new Double_t[n_sep];
 
   // --> set branches
   rate_tree->ResetBranchAddresses();
@@ -58,16 +58,16 @@ void Compute_RateIntegral(Int_t Fill, Int_t scan_type, Int_t scan,
   sep_tree->SetBranchAddress("separation", sep);
 
   // Now reserve space for fit output
-  Double_t *area = new Double_t[2];      // area and its error
-  Double_t *rate_zero = new Double_t[2]; // rate at zero and its error
+  Double_t* area = new Double_t[2];      // area and its error
+  Double_t* rate_zero = new Double_t[2]; // rate at zero and its error
   Double_t chi2_dof = -1;
-  Double_t *par = new Double_t[Get_number_par(fit_type)];
-  Double_t *par_err = new Double_t[Get_number_par(fit_type)];
+  Double_t* par = new Double_t[Get_number_par(fit_type)];
+  Double_t* par_err = new Double_t[Get_number_par(fit_type)];
 
   // create file and tree for output
 
   // --> file
-  char *h_file_name = new char[kg_string_size];
+  char* h_file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(h_file_name, "../Fill-%d/hxy_%sRate_%s_%sSep_x_Scan_%d_Fit_%s.root",
             g_vdm_Fill, rate_type, rate_name, sep_type, scan,
@@ -76,10 +76,10 @@ void Compute_RateIntegral(Int_t Fill, Int_t scan_type, Int_t scan,
     sprintf(h_file_name, "../Fill-%d/hxy_%sRate_%s_%sSep_y_Scan_%d_Fit_%s.root",
             g_vdm_Fill, rate_type, rate_name, sep_type, scan,
             g_fit_model_name[fit_type]);
-  TFile *hFile = new TFile(h_file_name, "recreate");
+  TFile* hFile = new TFile(h_file_name, "recreate");
 
   // --> tree
-  TTree *h_tree = new TTree("AreaRate", "AreaRate");
+  TTree* h_tree = new TTree("AreaRate", "AreaRate");
 
   char txt_tmp[kg_string_size];
   h_tree->Branch("chi2_dof", &chi2_dof, "chi2_dof/D");
@@ -103,11 +103,11 @@ void Compute_RateIntegral(Int_t Fill, Int_t scan_type, Int_t scan,
     sep_tree->GetEntry(k);
 
     // do fit
-    const char *cName1 = Form("Fill%i_%s_%s_%s_F%i", Fill, sep_type, rate_type,
+    const char* cName1 = Form("Fill%i_%s_%s_%s_F%i", Fill, sep_type, rate_type,
                               rate_name, fit_type);
-    const char *cName2 =
-        Form("%s_scan%i_i%i_bc%i", cName1, scan, k, Bunches[k]);
-    const char *cName3 = "WRONG_SCAN_TYPE";
+    const char* cName2 =
+      Form("%s_scan%i_i%i_bc%i", cName1, scan, k, Bunches[k]);
+    const char* cName3 = "WRONG_SCAN_TYPE";
     if (scan_type == 1)
       cName3 = Form("%s_x", cName2);
     if (scan_type == 2)
@@ -149,8 +149,9 @@ void Compute_RateIntegral(Int_t Fill, Int_t scan_type, Int_t scan,
 // Compute hx and hy for a fill
 //-------------------------------------------------------
 
-void Create_hxhy_file(Int_t Fill, const char *rate_name, const char *rate_type,
-                      const char *sep_type, Int_t fit_type) {
+void Create_hxhy_file(Int_t Fill, const char* rate_name, const char* rate_type,
+                      const char* sep_type, Int_t fit_type)
+{
   // initialize
   Set_input_file_names(Fill);
   Set_pointers_to_input_files_and_trees();

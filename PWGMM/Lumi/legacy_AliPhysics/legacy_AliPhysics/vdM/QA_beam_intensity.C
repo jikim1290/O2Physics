@@ -12,7 +12,8 @@
 // produce the canvas with the intensities at the
 // normalisation point
 
-void Canvas_intensity(Int_t Fill, Int_t opt, Int_t scan) {
+void Canvas_intensity(Int_t Fill, Int_t opt, Int_t scan)
+{
   // get number of bunch crossings
   Int_t nIBC = GetNumberInteractingBunchCrossings();
 
@@ -22,15 +23,15 @@ void Canvas_intensity(Int_t Fill, Int_t opt, Int_t scan) {
     sprintf(filename, "../Fill-%d/FBCT_Scan_%d.root", Fill, scan);
   if (opt == 1)
     sprintf(filename, "../Fill-%d/BPTX_Scan_%d.root", Fill, scan);
-  TFile *IntensityFile = new TFile(filename);
+  TFile* IntensityFile = new TFile(filename);
 
   // get the info from the tree
-  Double_t *bunch_intensity_1 = new Double_t[nIBC];
-  Double_t *bunch_intensity_2 = new Double_t[nIBC];
+  Double_t* bunch_intensity_1 = new Double_t[nIBC];
+  Double_t* bunch_intensity_2 = new Double_t[nIBC];
   Double_t cf_dcct_1;
   Double_t cf_dcct_2;
 
-  TTree *intensity_tree = (TTree *)IntensityFile->Get("Bunch_Intensity");
+  TTree* intensity_tree = (TTree*)IntensityFile->Get("Bunch_Intensity");
   intensity_tree->ResetBranchAddresses();
   intensity_tree->SetBranchAddress("cf_dcct_1", &cf_dcct_1);
   intensity_tree->SetBranchAddress("cf_dcct_2", &cf_dcct_2);
@@ -39,10 +40,10 @@ void Canvas_intensity(Int_t Fill, Int_t opt, Int_t scan) {
   intensity_tree->GetEntry(0);
 
   // fill histograms
-  TH1D *bi1_H =
-      new TH1D("bi1_H", "bunch intensities beam 1", nIBC, -0.5, nIBC - 0.5);
-  TH1D *bi2_H =
-      new TH1D("bi2_H", "bunch intensities beam 2", nIBC, -0.5, nIBC - 0.5);
+  TH1D* bi1_H =
+    new TH1D("bi1_H", "bunch intensities beam 1", nIBC, -0.5, nIBC - 0.5);
+  TH1D* bi2_H =
+    new TH1D("bi2_H", "bunch intensities beam 2", nIBC, -0.5, nIBC - 0.5);
   for (Int_t i = 0; i < nIBC; i++) {
     bi1_H->SetBinContent(i + 1, cf_dcct_1 * bunch_intensity_1[i]);
     bi1_H->SetBinError(i + 1, 0);
@@ -64,7 +65,7 @@ void Canvas_intensity(Int_t Fill, Int_t opt, Int_t scan) {
     bi2_H->SetTitle("beam 2;bunch crossing; beam 2 BPTX");
   }
 
-  TCanvas *bi_C = new TCanvas(txt, txt, 1200, 800);
+  TCanvas* bi_C = new TCanvas(txt, txt, 1200, 800);
   bi_C->Divide(1, 2);
   bi_C->cd(1);
   bi1_H->SetMarkerStyle(20);
@@ -73,7 +74,7 @@ void Canvas_intensity(Int_t Fill, Int_t opt, Int_t scan) {
   bi2_H->SetMarkerStyle(20);
   bi2_H->Draw("p");
 
-  bi_C->Print(Form("c1a_%s_fill%i_opt%i_scan%i.%s", (const char *)txt, Fill,
+  bi_C->Print(Form("c1a_%s_fill%i_opt%i_scan%i.%s", (const char*)txt, Fill,
                    opt, scan, FFormat));
 
   // clean
@@ -83,7 +84,8 @@ void Canvas_intensity(Int_t Fill, Int_t opt, Int_t scan) {
 }
 
 //-------------------------------------------------------
-Bool_t CheckInputs(Int_t opt, Int_t scan) {
+Bool_t CheckInputs(Int_t opt, Int_t scan)
+{
   // check inputs
   // --> opt
   if (opt != 0 && opt != 1) {

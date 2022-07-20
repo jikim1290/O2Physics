@@ -12,9 +12,9 @@
 //   FBCT-Nom) correction applied to IntensityCorrFBCTRate
 //-------------------------------------------------------
 
-void Create_optical_corrected_rate_file(Int_t Fill, const char *intensity_name,
-                                        const char *rate_name,
-                                        const char *sys_opt)
+void Create_optical_corrected_rate_file(Int_t Fill, const char* intensity_name,
+                                        const char* rate_name,
+                                        const char* sys_opt)
 // sys_opt = "" default, other options are for systematic studies:
 // "+Q", "+xi", "-Q", "-xi"
 {
@@ -32,13 +32,13 @@ void Create_optical_corrected_rate_file(Int_t Fill, const char *intensity_name,
   Int_t nIBC = GetNumberInteractingBunchCrossings();
 
   // to store names for rate files
-  char *file_name_rate_x = new char[kg_string_size];     // input rates
-  char *file_name_new_rate_x = new char[kg_string_size]; // new rates
-  char *file_name_rate_y = new char[kg_string_size];     // input rates
-  char *file_name_new_rate_y = new char[kg_string_size]; // new rates
+  char* file_name_rate_x = new char[kg_string_size];     // input rates
+  char* file_name_new_rate_x = new char[kg_string_size]; // new rates
+  char* file_name_rate_y = new char[kg_string_size];     // input rates
+  char* file_name_new_rate_y = new char[kg_string_size]; // new rates
 
   // create  file name with optical correction
-  char *optical_file_name = new char[kg_string_size];
+  char* optical_file_name = new char[kg_string_size];
   if (strcmp(rate_name, "TVX") == 0)
     sprintf(optical_file_name,
             "../Fill-%d/Corr-%d-sys/FBCT/ROOT/OPT-bbroot_%d_T0%s.root",
@@ -49,10 +49,10 @@ void Create_optical_corrected_rate_file(Int_t Fill, const char *intensity_name,
             g_vdm_Fill, g_vdm_Fill, g_vdm_Fill, sys_opt);
 
   // open  file and get the trees
-  TFile *optical_file = new TFile(optical_file_name);
-  TTree *optical_tree = (TTree *)optical_file->Get("optical");
+  TFile* optical_file = new TFile(optical_file_name);
+  TTree* optical_tree = (TTree*)optical_file->Get("optical");
   optical_tree->ResetBranchAddresses();
-  Double_t *optLL0 = new Double_t[n_sep * 2];
+  Double_t* optLL0 = new Double_t[n_sep * 2];
   optical_tree->SetBranchAddress("optLL0", optLL0);
   Double_t LL000x;
   optical_tree->SetBranchAddress("LL000x", &LL000x);
@@ -93,34 +93,34 @@ sprintf(file_name_rate_y,"../Fill-%d/IntensityCorrFBCTRate_%s_y_Scan_%d.root",
             intensity_name, rate_name, scan);
 
     // open file with rates in x
-    TFile *RateFile_x = new TFile(file_name_rate_x);
-    TTree *rate_tree_x = (TTree *)RateFile_x->Get("Rate");
-    Double_t *rate_x = new Double_t[n_sep];
-    Double_t *rate_error_x = new Double_t[n_sep];
+    TFile* RateFile_x = new TFile(file_name_rate_x);
+    TTree* rate_tree_x = (TTree*)RateFile_x->Get("Rate");
+    Double_t* rate_x = new Double_t[n_sep];
+    Double_t* rate_error_x = new Double_t[n_sep];
     rate_tree_x->SetBranchAddress("rate", rate_x);
     rate_tree_x->SetBranchAddress("rate_error", rate_error_x);
     // open file with rates in y
-    TFile *RateFile_y = new TFile(file_name_rate_y);
-    TTree *rate_tree_y = (TTree *)RateFile_y->Get("Rate");
-    Double_t *rate_y = new Double_t[n_sep];
-    Double_t *rate_error_y = new Double_t[n_sep];
+    TFile* RateFile_y = new TFile(file_name_rate_y);
+    TTree* rate_tree_y = (TTree*)RateFile_y->Get("Rate");
+    Double_t* rate_y = new Double_t[n_sep];
+    Double_t* rate_error_y = new Double_t[n_sep];
     rate_tree_y->SetBranchAddress("rate", rate_y);
     rate_tree_y->SetBranchAddress("rate_error", rate_error_y);
 
     // create trees with new rates
-    TFile *RateFile_new_x = new TFile(file_name_new_rate_x, "recreate");
-    TTree *new_rate_x_tree = new TTree("Rate", "Rate");
-    Double_t *new_rate_x = new Double_t[n_sep];
-    Double_t *new_rate_error_x = new Double_t[n_sep];
-    char *txt_tmp = new char[kg_string_size];
+    TFile* RateFile_new_x = new TFile(file_name_new_rate_x, "recreate");
+    TTree* new_rate_x_tree = new TTree("Rate", "Rate");
+    Double_t* new_rate_x = new Double_t[n_sep];
+    Double_t* new_rate_error_x = new Double_t[n_sep];
+    char* txt_tmp = new char[kg_string_size];
     sprintf(txt_tmp, "rate[%d]/D", n_sep);
     new_rate_x_tree->Branch("rate", new_rate_x, txt_tmp);
     sprintf(txt_tmp, "rate_error[%d]/D", n_sep);
     new_rate_x_tree->Branch("rate_error", new_rate_error_x, txt_tmp);
-    TFile *RateFile_new_y = new TFile(file_name_new_rate_y, "recreate");
-    TTree *new_rate_y_tree = new TTree("Rate", "Rate");
-    Double_t *new_rate_y = new Double_t[n_sep];
-    Double_t *new_rate_error_y = new Double_t[n_sep];
+    TFile* RateFile_new_y = new TFile(file_name_new_rate_y, "recreate");
+    TTree* new_rate_y_tree = new TTree("Rate", "Rate");
+    Double_t* new_rate_y = new Double_t[n_sep];
+    Double_t* new_rate_error_y = new Double_t[n_sep];
     sprintf(txt_tmp, "rate[%d]/D", n_sep);
     new_rate_y_tree->Branch("rate", new_rate_y, txt_tmp);
     sprintf(txt_tmp, "rate_error[%d]/D", n_sep);
@@ -136,7 +136,7 @@ sprintf(file_name_rate_y,"../Fill-%d/IntensityCorrFBCTRate_%s_y_Scan_%d.root",
         new_rate_y[isep] = LL000y * rate_y[isep] / optLL0[isep + n_sep];
         new_rate_error_x[isep] = LL000x * rate_error_x[isep] / optLL0[isep];
         new_rate_error_y[isep] =
-            LL000y * rate_error_y[isep] / optLL0[isep + n_sep];
+          LL000y * rate_error_y[isep] / optLL0[isep + n_sep];
       }
       RateFile_new_x->cd();
       new_rate_x_tree->Fill();

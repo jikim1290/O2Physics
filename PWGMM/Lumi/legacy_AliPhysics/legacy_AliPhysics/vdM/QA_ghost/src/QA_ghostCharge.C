@@ -18,7 +18,8 @@ UInt_t gScan1StartY = 0;
 UInt_t gScan1EndY = 0;
 
 // Set the start and end times of the scans
-void SetScanTimes() {
+void SetScanTimes()
+{
   // set set branches
   Double_t time;
   g_vdm_Tree->ResetBranchAddresses();
@@ -64,7 +65,7 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
 
 {
   // create names for files
-  char *ghost_file_name = new char[kg_string_size];
+  char* ghost_file_name = new char[kg_string_size];
   if (opt == 0)
     sprintf(ghost_file_name, "../Fill-%d/ghostCharge/ghostCharge_B1_A.root",
             Fill);
@@ -76,8 +77,8 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
             Fill);
 
   // Open files and get trees
-  TFile *ghost_file = new TFile(ghost_file_name);
-  TTree *ghost_tree = (TTree *)ghost_file->Get("GhostCharge");
+  TFile* ghost_file = new TFile(ghost_file_name);
+  TTree* ghost_tree = (TTree*)ghost_file->Get("GhostCharge");
 
   // reserve space
   Int_t ng = ghost_tree->GetEntries();
@@ -91,9 +92,9 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
     ghost_tree->SetBranchAddress("sigma_ghost_value_syst", &ghostErr);
   ghost_tree->SetBranchAddress("Q_ghost_time", &time);
 
-  Double_t *ghostArray = new Double_t[ng];
-  Double_t *ghostErrArray = new Double_t[ng];
-  Double_t *timeArray = new Double_t[ng];
+  Double_t* ghostArray = new Double_t[ng];
+  Double_t* ghostErrArray = new Double_t[ng];
+  Double_t* timeArray = new Double_t[ng];
   for (Int_t i = 0; i < ng; i++) {
     ghost_tree->GetEntry(i);
     timeArray[i] = time;
@@ -102,8 +103,8 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
   }
 
   // fill graph
-  TGraphErrors *ghost_gr =
-      new TGraphErrors(ng, timeArray, ghostArray, NULL, ghostErrArray);
+  TGraphErrors* ghost_gr =
+    new TGraphErrors(ng, timeArray, ghostArray, NULL, ghostErrArray);
   ghost_gr->SetMarkerStyle(20);
 
   // define the limits for the plot
@@ -136,8 +137,8 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
   gStyle->SetOptStat(0);
   // gStyle->SetOptTitle(0);
   gStyle->SetPadLeftMargin(0.12);
-  TCanvas *ghost_C = new TCanvas("ghost_C", "ghost charge", 600, 400);
-  TH1F *frame = gPad->DrawFrame(time_min, ghost_min, time_max, ghost_max);
+  TCanvas* ghost_C = new TCanvas("ghost_C", "ghost charge", 600, 400);
+  TH1F* frame = gPad->DrawFrame(time_min, ghost_min, time_max, ghost_max);
   TString device = "";
   if (opt == 0)
     device = "B1_A";
@@ -146,21 +147,21 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
   if (opt == 2)
     device = "B2";
   frame->SetTitle(
-      Form("Fraction of beam in Ghost Bucket (%s);timestamp ; ghost charge",
-           device.Data()));
+    Form("Fraction of beam in Ghost Bucket (%s);timestamp ; ghost charge",
+         device.Data()));
   ghost_gr->Draw("p,e1,same");
 
   if (Fill == 4937 || Fill == 6012 || Fill == 6864) {
-    TF1 *fit1 = new TF1("fit1", "pol0");
+    TF1* fit1 = new TF1("fit1", "pol0");
     ghost_gr->Fit(fit1, "", "", gScan0StartX, gScan0EndY);
     fit1->Draw("same");
 
-    TF1 *fit2 = new TF1("fit2", "pol0");
+    TF1* fit2 = new TF1("fit2", "pol0");
     fit2->SetLineColor(kBlue);
     ghost_gr->Fit(fit2, "+", "", gScan1StartX, gScan1EndY);
     fit2->Draw("same");
 
-    TLatex *lat = new TLatex();
+    TLatex* lat = new TLatex();
     lat->SetNDC();
     lat->SetTextSize(0.04);
     lat->SetTextFont(42);
@@ -168,18 +169,18 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
 
     lat->DrawLatex(0.6, 0.85, "Scan 0:");
     lat->DrawLatex(
-        0.6, 0.80,
-        Form("#chi^{2}/ndf = %.2f/%d", fit1->GetChisquare(), fit1->GetNDF()));
+      0.6, 0.80,
+      Form("#chi^{2}/ndf = %.2f/%d", fit1->GetChisquare(), fit1->GetNDF()));
     lat->DrawLatex(
-        0.6, 0.75,
-        Form("p_{0} = %f #pm %f", fit1->GetParameter(0), fit1->GetParError(0)));
+      0.6, 0.75,
+      Form("p_{0} = %f #pm %f", fit1->GetParameter(0), fit1->GetParError(0)));
     lat->DrawLatex(0.6, 0.70, "Scan 1:");
     lat->DrawLatex(
-        0.6, 0.65,
-        Form("#chi^{2}/ndf = %.2f/%d", fit2->GetChisquare(), fit2->GetNDF()));
+      0.6, 0.65,
+      Form("#chi^{2}/ndf = %.2f/%d", fit2->GetChisquare(), fit2->GetNDF()));
     lat->DrawLatex(
-        0.6, 0.60,
-        Form("p_{0} = %f #pm %f", fit2->GetParameter(0), fit2->GetParError(0)));
+      0.6, 0.60,
+      Form("p_{0} = %f #pm %f", fit2->GetParameter(0), fit2->GetParError(0)));
   }
 
   // save plot
@@ -206,7 +207,8 @@ void Get_ghostCharge(Int_t Fill, Int_t opt, Bool_t stat, Bool_t save)
   delete[] timeArray;
 }
 
-void QA_ghostCharge(Int_t Fill, Bool_t save = kFALSE) {
+void QA_ghostCharge(Int_t Fill, Bool_t save = kFALSE)
+{
 
   // initialize
   Set_input_file_names(Fill);

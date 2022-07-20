@@ -9,7 +9,8 @@
 // Compute the separations for beam-beam deflection
 //-------------------------------------------------------
 
-Double_t BBDcorrection(Double_t sep, Double_t d1, Double_t d2) {
+Double_t BBDcorrection(Double_t sep, Double_t d1, Double_t d2)
+{
   Double_t Delta = (d1 + d2) / 1000.0; // factor of 1000 to convert to mm
   Double_t SepNew = sep + Delta;
   if ((TMath::Abs(SepNew) - TMath::Abs(sep)) < 0)
@@ -34,14 +35,14 @@ void Get_BBD_separations_7483(Int_t scan, Int_t opt)
     exit(-1);
   }
   Int_t n_sep = n_sep_x;
-  Double_t *sep_x = new Double_t[n_sep];
-  Double_t *sep_y = new Double_t[n_sep];
+  Double_t* sep_x = new Double_t[n_sep];
+  Double_t* sep_y = new Double_t[n_sep];
 
   // create names for BBD separation files created by Ivan
   // ** WARNING: Directory structure and nameing convention
   //    valid for fill 7483 ... the corresponding structure
   //    has to be added for other fills ... **
-  char *bbd_file_name = new char[kg_string_size];
+  char* bbd_file_name = new char[kg_string_size];
   if (opt == 0)
     sprintf(bbd_file_name,
             "../Fill-%d/BBD_FromIvan/NOM-%d/ROOT/bbroot_%d_V0.root", g_vdm_Fill,
@@ -52,17 +53,17 @@ void Get_BBD_separations_7483(Int_t scan, Int_t opt)
             (scan + 1), g_vdm_Fill);
 
   // open  file and get the trees
-  TFile *bbd_file = new TFile(bbd_file_name);
-  TTree *sep_tree = (TTree *)bbd_file->Get("beamsep");
+  TFile* bbd_file = new TFile(bbd_file_name);
+  TTree* sep_tree = (TTree*)bbd_file->Get("beamsep");
   sep_tree->ResetBranchAddresses();
   Int_t bc;
   Int_t nseps;
-  Double_t *sepx = new Double_t[n_sep * 2];
-  Double_t *sepy = new Double_t[n_sep * 2];
-  Double_t *dx1 = new Double_t[n_sep * 2];
-  Double_t *dy1 = new Double_t[n_sep * 2];
-  Double_t *dx2 = new Double_t[n_sep * 2];
-  Double_t *dy2 = new Double_t[n_sep * 2];
+  Double_t* sepx = new Double_t[n_sep * 2];
+  Double_t* sepy = new Double_t[n_sep * 2];
+  Double_t* dx1 = new Double_t[n_sep * 2];
+  Double_t* dy1 = new Double_t[n_sep * 2];
+  Double_t* dx2 = new Double_t[n_sep * 2];
+  Double_t* dy2 = new Double_t[n_sep * 2];
   sep_tree->SetBranchAddress("bc", &bc);
   sep_tree->SetBranchAddress("nseps", &nseps);
   sep_tree->SetBranchAddress("sepx", sepx);
@@ -73,8 +74,8 @@ void Get_BBD_separations_7483(Int_t scan, Int_t opt)
   sep_tree->SetBranchAddress("dy2", dy2);
 
   // now prepare names of output
-  char *sep_file_name_x = new char[kg_string_size];
-  char *sep_file_name_y = new char[kg_string_size];
+  char* sep_file_name_x = new char[kg_string_size];
+  char* sep_file_name_y = new char[kg_string_size];
   if (opt == 0) {
     sprintf(sep_file_name_x, "../Fill-%d/NomBBDSep_x_Scan_%d.root", g_vdm_Fill,
             scan);
@@ -90,9 +91,9 @@ void Get_BBD_separations_7483(Int_t scan, Int_t opt)
   // next piece is repeated twice, because we want to use
   // the same name for the tree ...
   // -- create tree with separations
-  TFile *BBDFile_x = new TFile(sep_file_name_x, "recreate");
-  TTree *bbd_sep_tree_x = new TTree("Separations", "Separations");
-  char *txt_tmp = new char[kg_string_size];
+  TFile* BBDFile_x = new TFile(sep_file_name_x, "recreate");
+  TTree* bbd_sep_tree_x = new TTree("Separations", "Separations");
+  char* txt_tmp = new char[kg_string_size];
   sprintf(txt_tmp, "separation[%d]/D", n_sep);
   bbd_sep_tree_x->Branch("separation", sep_x, txt_tmp);
 
@@ -130,8 +131,8 @@ void Get_BBD_separations_7483(Int_t scan, Int_t opt)
 
   // here is the repetition for the y-coordinate
   // -- create tree with separations
-  TFile *BBDFile_y = new TFile(sep_file_name_y, "recreate");
-  TTree *bbd_sep_tree_y = new TTree("Separations", "Separations");
+  TFile* BBDFile_y = new TFile(sep_file_name_y, "recreate");
+  TTree* bbd_sep_tree_y = new TTree("Separations", "Separations");
   bbd_sep_tree_y->Branch("separation", sep_y, txt_tmp);
 
   // loop over bunches
@@ -141,8 +142,8 @@ void Get_BBD_separations_7483(Int_t scan, Int_t opt)
     for (Int_t isep = 0; isep < nseps_half; isep++) {
 
       sep_y[isep] =
-          BBDcorrection(sepy[isep + nseps_half], dy1[isep + nseps_half],
-                        dy2[isep + nseps_half]);
+        BBDcorrection(sepy[isep + nseps_half], dy1[isep + nseps_half],
+                      dy2[isep + nseps_half]);
 
       // cout << " -y- " << sep_y[isep]-sepy[isep] << endl;
     }
@@ -174,7 +175,7 @@ void Get_BBD_separations_7483(Int_t scan, Int_t opt)
 // this is valid for fills 4937, 6012 and 6864 (up to now)
 //-------------------------------------------------------
 
-void Get_BBD_separations(Int_t opt, const char *sys_opt)
+void Get_BBD_separations(Int_t opt, const char* sys_opt)
 // opt: 0 => nominal separations
 // opt: 1 => separations corrected for orbit drift
 // sys_opt = "" default, other options are for systematic studies:
@@ -184,13 +185,13 @@ void Get_BBD_separations(Int_t opt, const char *sys_opt)
   // For fills 4937, 6012 and 6864
   // is the same for both scans and for x and y
   Int_t n_sep = FindNumberSeparations(1, 0);
-  Double_t *sep_x = new Double_t[n_sep];
-  Double_t *sep_y = new Double_t[n_sep];
+  Double_t* sep_x = new Double_t[n_sep];
+  Double_t* sep_y = new Double_t[n_sep];
 
   // create names for BBD separation files created by Ivan
   // ** WARNING: Directory structure and nameing convention
   //    valid for fills 4937, 6012 and 6864
-  char *bbd_file_name = new char[kg_string_size];
+  char* bbd_file_name = new char[kg_string_size];
   if (opt == 0)
     // sprintf(bbd_file_name,"../Fill-%d/Corr-%d-sys/FBCT-NOM/ROOT/bbroot_%d_V0%s.root",
     sprintf(bbd_file_name,
@@ -202,17 +203,17 @@ void Get_BBD_separations(Int_t opt, const char *sys_opt)
             g_vdm_Fill, g_vdm_Fill, sys_opt);
 
   // open  file and get the trees
-  TFile *bbd_file = new TFile(bbd_file_name);
-  TTree *sep_tree = (TTree *)bbd_file->Get("beamsep");
+  TFile* bbd_file = new TFile(bbd_file_name);
+  TTree* sep_tree = (TTree*)bbd_file->Get("beamsep");
   sep_tree->ResetBranchAddresses();
   Int_t bc;
   Int_t nseps;
-  Double_t *sepx = new Double_t[n_sep * 2];
-  Double_t *sepy = new Double_t[n_sep * 2];
-  Double_t *dx1 = new Double_t[n_sep * 2];
-  Double_t *dy1 = new Double_t[n_sep * 2];
-  Double_t *dx2 = new Double_t[n_sep * 2];
-  Double_t *dy2 = new Double_t[n_sep * 2];
+  Double_t* sepx = new Double_t[n_sep * 2];
+  Double_t* sepy = new Double_t[n_sep * 2];
+  Double_t* dx1 = new Double_t[n_sep * 2];
+  Double_t* dy1 = new Double_t[n_sep * 2];
+  Double_t* dx2 = new Double_t[n_sep * 2];
+  Double_t* dy2 = new Double_t[n_sep * 2];
   sep_tree->SetBranchAddress("bc", &bc);
   sep_tree->SetBranchAddress("nseps", &nseps);
   sep_tree->SetBranchAddress("sepx", sepx);
@@ -231,8 +232,8 @@ void Get_BBD_separations(Int_t opt, const char *sys_opt)
   Int_t nEntries = sep_tree->GetEntries();
 
   //  names of output
-  char *sep_file_name_x = new char[kg_string_size];
-  char *sep_file_name_y = new char[kg_string_size];
+  char* sep_file_name_x = new char[kg_string_size];
+  char* sep_file_name_y = new char[kg_string_size];
 
   for (Int_t scan = 0; scan < 2; scan++) {
     cout << " doing  scan " << scan << endl;
@@ -249,13 +250,13 @@ void Get_BBD_separations(Int_t opt, const char *sys_opt)
               g_vdm_Fill, sys_opt, scan);
     }
     // -- create tree with separations
-    TFile *BBDFile_x = new TFile(sep_file_name_x, "recreate");
-    TTree *bbd_sep_tree_x = new TTree("Separations", "Separations");
-    char *txt_tmp = new char[kg_string_size];
+    TFile* BBDFile_x = new TFile(sep_file_name_x, "recreate");
+    TTree* bbd_sep_tree_x = new TTree("Separations", "Separations");
+    char* txt_tmp = new char[kg_string_size];
     sprintf(txt_tmp, "separation[%d]/D", n_sep);
     bbd_sep_tree_x->Branch("separation", sep_x, txt_tmp);
-    TFile *BBDFile_y = new TFile(sep_file_name_y, "recreate");
-    TTree *bbd_sep_tree_y = new TTree("Separations", "Separations");
+    TFile* BBDFile_y = new TFile(sep_file_name_y, "recreate");
+    TTree* bbd_sep_tree_y = new TTree("Separations", "Separations");
     bbd_sep_tree_y->Branch("separation", sep_y, txt_tmp);
 
     // loop over bunches
@@ -265,8 +266,8 @@ void Get_BBD_separations(Int_t opt, const char *sys_opt)
       for (Int_t isep = 0; isep < nseps_half; isep++) {
         sep_x[isep] = BBDcorrection(sepx[isep], dx1[isep], dx2[isep]);
         sep_y[isep] =
-            BBDcorrection(sepy[isep + nseps_half], dy1[isep + nseps_half],
-                          dy2[isep + nseps_half]);
+          BBDcorrection(sepy[isep + nseps_half], dy1[isep + nseps_half],
+                        dy2[isep + nseps_half]);
       }
       BBDFile_x->cd();
       bbd_sep_tree_x->Fill();
@@ -308,7 +309,7 @@ void Get_BBD_separations(Int_t opt, const char *sys_opt)
 // to orbit-drift-corrected separations
 //-------------------------------------------------------
 
-void Create_BBD_separation_file(Int_t Fill, const char *sys_opt)
+void Create_BBD_separation_file(Int_t Fill, const char* sys_opt)
 // sys_opt = "" default, other options are for systematic studies:
 // "+Q", "+xi", "-Q", "-xi"
 {

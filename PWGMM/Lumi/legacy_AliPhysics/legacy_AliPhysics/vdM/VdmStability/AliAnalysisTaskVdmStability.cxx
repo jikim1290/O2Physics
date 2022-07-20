@@ -35,40 +35,25 @@ using namespace std;
 #include "AliAnalysisTaskVdmStability.h"
 ClassImp(AliAnalysisTaskVdmStability)
 
-    //_________________________________________________________________________________
-    AliAnalysisTaskVdmStability::AliAnalysisTaskVdmStability()
-    : AliAnalysisTaskSE(), fOutputList(), fRunNumber(0), fVtxZ(-999.),
-      fnVtxCont(0), fIsGoodZ(kFALSE), fSelectPhysics(kFALSE),
-      fIsV0ANDfired(kFALSE), fIsT0fired(kFALSE), fIsEMCALfired(kFALSE),
-      fIsMUfired(kFALSE), fIsDIMUfired(kFALSE), fPileupEvent(kFALSE),
-      fTV0A(-10240.0f), fTV0C(-10240.0f), fGoodTime(kFALSE), fzCut30(kFALSE),
-      fzCut10(kFALSE), fzCut30nCont0(kFALSE), fzCut10nCont0(kFALSE),
-      fzCut30nCont1(kFALSE), fzCut10nCont1(kFALSE), fV0TimeDiff_min(5.5),
-      fV0TimeDiff_max(11.5), fV0TimeSum_min(11.5), fV0TimeSum_max(17.5),
-      fEventTag(0), fEvent(0x0), fEventStatV0(0x0), fEventStatT0(0x0),
-      fEventTree(0x0), fNRuns(1000), fNSelectionCases(25), fFillTTree(false) {
+  //_________________________________________________________________________________
+  AliAnalysisTaskVdmStability::AliAnalysisTaskVdmStability()
+  : AliAnalysisTaskSE(), fOutputList(), fRunNumber(0), fVtxZ(-999.), fnVtxCont(0), fIsGoodZ(kFALSE), fSelectPhysics(kFALSE), fIsV0ANDfired(kFALSE), fIsT0fired(kFALSE), fIsEMCALfired(kFALSE), fIsMUfired(kFALSE), fIsDIMUfired(kFALSE), fPileupEvent(kFALSE), fTV0A(-10240.0f), fTV0C(-10240.0f), fGoodTime(kFALSE), fzCut30(kFALSE), fzCut10(kFALSE), fzCut30nCont0(kFALSE), fzCut10nCont0(kFALSE), fzCut30nCont1(kFALSE), fzCut10nCont1(kFALSE), fV0TimeDiff_min(5.5), fV0TimeDiff_max(11.5), fV0TimeSum_min(11.5), fV0TimeSum_max(17.5), fEventTag(0), fEvent(0x0), fEventStatV0(0x0), fEventStatT0(0x0), fEventTree(0x0), fNRuns(1000), fNSelectionCases(25), fFillTTree(false)
+{
   // ROOT IO constructor, don't allocate memory here!
 }
 
 //_________________________________________________________________________________
-AliAnalysisTaskVdmStability::AliAnalysisTaskVdmStability(const char *taskname)
-    : AliAnalysisTaskSE(taskname), fOutputList(), fRunNumber(0), fVtxZ(-999.),
-      fnVtxCont(0), fIsGoodZ(kFALSE), fSelectPhysics(kFALSE),
-      fIsV0ANDfired(kFALSE), fIsT0fired(kFALSE), fIsEMCALfired(kFALSE),
-      fIsMUfired(kFALSE), fIsDIMUfired(kFALSE), fPileupEvent(kFALSE),
-      fTV0A(-10240.0f), fTV0C(-10240.0f), fGoodTime(kFALSE), fzCut30(kFALSE),
-      fzCut10(kFALSE), fzCut30nCont0(kFALSE), fzCut10nCont0(kFALSE),
-      fzCut30nCont1(kFALSE), fzCut10nCont1(kFALSE), fV0TimeDiff_min(5.5),
-      fV0TimeDiff_max(11.5), fV0TimeSum_min(11.5), fV0TimeSum_max(17.5),
-      fEventTag(0), fEvent(0x0), fEventStatV0(0x0), fEventStatT0(0x0),
-      fEventTree(0x0), fNRuns(1000), fNSelectionCases(25), fFillTTree(false) {
+AliAnalysisTaskVdmStability::AliAnalysisTaskVdmStability(const char* taskname)
+  : AliAnalysisTaskSE(taskname), fOutputList(), fRunNumber(0), fVtxZ(-999.), fnVtxCont(0), fIsGoodZ(kFALSE), fSelectPhysics(kFALSE), fIsV0ANDfired(kFALSE), fIsT0fired(kFALSE), fIsEMCALfired(kFALSE), fIsMUfired(kFALSE), fIsDIMUfired(kFALSE), fPileupEvent(kFALSE), fTV0A(-10240.0f), fTV0C(-10240.0f), fGoodTime(kFALSE), fzCut30(kFALSE), fzCut10(kFALSE), fzCut30nCont0(kFALSE), fzCut10nCont0(kFALSE), fzCut30nCont1(kFALSE), fzCut10nCont1(kFALSE), fV0TimeDiff_min(5.5), fV0TimeDiff_max(11.5), fV0TimeSum_min(11.5), fV0TimeSum_max(17.5), fEventTag(0), fEvent(0x0), fEventStatV0(0x0), fEventStatT0(0x0), fEventTree(0x0), fNRuns(1000), fNSelectionCases(25), fFillTTree(false)
+{
   DefineInput(0, TChain::Class());
   DefineOutput(1, TList::Class()); // TList of event statistics
   DefineOutput(2, TTree::Class()); // event tree information
 }
 
 //_________________________________________________________________________________
-AliAnalysisTaskVdmStability::~AliAnalysisTaskVdmStability() {
+AliAnalysisTaskVdmStability::~AliAnalysisTaskVdmStability()
+{
   if (fEventStatV0) {
     delete fEventStatV0;
     fEventStatV0 = 0;
@@ -116,7 +101,8 @@ AliAnalysisTaskVdmStability::~AliAnalysisTaskVdmStability() {
 }
 // defíne output
 //_________________________________________________________________________________
-void AliAnalysisTaskVdmStability::UserCreateOutputObjects() {
+void AliAnalysisTaskVdmStability::UserCreateOutputObjects()
+{
   // set ownership of list
   fOutputList.SetOwner();
   // ---| skip list initialisation if already done |----------------------------
@@ -132,7 +118,7 @@ void AliAnalysisTaskVdmStability::UserCreateOutputObjects() {
   Int_t nbins = kNbinsEvent;
   if (!fEventStatV0) {
     fEventStatV0 =
-        new TH1D("hEventStatV0", "Event statistics V0", nbins, 0, nbins);
+      new TH1D("hEventStatV0", "Event statistics V0", nbins, 0, nbins);
     fEventStatV0->GetXaxis()->SetBinLabel(1, "Before Phys. Sel.");
     fEventStatV0->GetXaxis()->SetBinLabel(2, "After Phys. Sel.");
     fEventStatV0->GetXaxis()->SetBinLabel(3, "V0 timing");
@@ -146,7 +132,7 @@ void AliAnalysisTaskVdmStability::UserCreateOutputObjects() {
 
   if (!fEventStatT0) {
     fEventStatT0 =
-        new TH1D("hEventStatT0", "Event statistics T0", nbins, 0, nbins);
+      new TH1D("hEventStatT0", "Event statistics T0", nbins, 0, nbins);
     fEventStatT0->GetXaxis()->SetBinLabel(1, "Before Phys. Sel.");
     fEventStatT0->GetXaxis()->SetBinLabel(2, "After Phys. Sel.");
     fEventStatT0->GetXaxis()->SetBinLabel(3, "V0 timing");
@@ -159,31 +145,31 @@ void AliAnalysisTaskVdmStability::UserCreateOutputObjects() {
   fOutputList.Add(fEventStatT0);
 
   TString selectionCases[25] = {
-      "no_selection",
-      "physics_selected",
-      "V0_timing_cut",
-      "pileup_rejection",
-      "z-vertex_cut",
-      "z-vertex_30",
-      "z-vertex_10",
-      "z-vertex_30_nContCut1",
-      "z-vertex_10_nContCut1",
-      "z-vertex_30_nContCut2",
-      "z-vertex_10_nContCut2",
-      "V0_timing_cut_pileup_rejection",
-      "V0_timing_cut_z-vertex_cut",
-      "V0_timing_cut_pileup_rejection_z-vertex_cut",
-      "V0_timing_cut_pileup_rejection_z-vertex_30",
-      "V0_timing_cut_pileup_rejection_z-vertex_10",
-      "V0_timing_cut_pileup_rejection_z-vertex_30nContCut1",
-      "V0_timing_cut_pileup_rejection_z-vertex_10nContCut1",
-      "V0_timing_cut_pileup_rejection_z-vertex_30nContCut2",
-      "V0_timing_cut_pileup_rejection_z-vertex_10nContCut2",
-      "V0_timing_cut_z-vertex_30nContCut1",
-      "TIME",
-      "TIME_PS",
-      "TIME_PU",
-      "TIME_PS_PU"};
+    "no_selection",
+    "physics_selected",
+    "V0_timing_cut",
+    "pileup_rejection",
+    "z-vertex_cut",
+    "z-vertex_30",
+    "z-vertex_10",
+    "z-vertex_30_nContCut1",
+    "z-vertex_10_nContCut1",
+    "z-vertex_30_nContCut2",
+    "z-vertex_10_nContCut2",
+    "V0_timing_cut_pileup_rejection",
+    "V0_timing_cut_z-vertex_cut",
+    "V0_timing_cut_pileup_rejection_z-vertex_cut",
+    "V0_timing_cut_pileup_rejection_z-vertex_30",
+    "V0_timing_cut_pileup_rejection_z-vertex_10",
+    "V0_timing_cut_pileup_rejection_z-vertex_30nContCut1",
+    "V0_timing_cut_pileup_rejection_z-vertex_10nContCut1",
+    "V0_timing_cut_pileup_rejection_z-vertex_30nContCut2",
+    "V0_timing_cut_pileup_rejection_z-vertex_10nContCut2",
+    "V0_timing_cut_z-vertex_30nContCut1",
+    "TIME",
+    "TIME_PS",
+    "TIME_PU",
+    "TIME_PS_PU"};
 
   for (Int_t iCase = 0; iCase < fNSelectionCases; iCase++) {
     v0_H[iCase] = new TH1D(Form("v0_H_%s", selectionCases[iCase].Data()),
@@ -193,32 +179,32 @@ void AliAnalysisTaskVdmStability::UserCreateOutputObjects() {
                            Form("T0 events, %s", selectionCases[iCase].Data()),
                            fNRuns, -0.5, fNRuns - 0.5);
     emcal_H[iCase] =
-        new TH1D(Form("emcal_H_%s", selectionCases[iCase].Data()),
-                 Form("EMCAL events, %s", selectionCases[iCase].Data()), fNRuns,
-                 -0.5, fNRuns - 0.5);
+      new TH1D(Form("emcal_H_%s", selectionCases[iCase].Data()),
+               Form("EMCAL events, %s", selectionCases[iCase].Data()), fNRuns,
+               -0.5, fNRuns - 0.5);
     muon_H[iCase] =
-        new TH1D(Form("muon_H_%s", selectionCases[iCase].Data()),
-                 Form("MUON events, %s", selectionCases[iCase].Data()), fNRuns,
-                 -0.5, fNRuns - 0.5);
+      new TH1D(Form("muon_H_%s", selectionCases[iCase].Data()),
+               Form("MUON events, %s", selectionCases[iCase].Data()), fNRuns,
+               -0.5, fNRuns - 0.5);
     dimuon_H[iCase] =
-        new TH1D(Form("dimuon_H_%s", selectionCases[iCase].Data()),
-                 Form("DIMUON events, %s", selectionCases[iCase].Data()),
-                 fNRuns, -0.5, fNRuns - 0.5);
+      new TH1D(Form("dimuon_H_%s", selectionCases[iCase].Data()),
+               Form("DIMUON events, %s", selectionCases[iCase].Data()),
+               fNRuns, -0.5, fNRuns - 0.5);
     v0_Timing[iCase] =
-        new TH2D(Form("v0_Timing_%s", selectionCases[iCase].Data()),
-                 "sum vs diff", 500, -30, 40, 500, -20, 50);
+      new TH2D(Form("v0_Timing_%s", selectionCases[iCase].Data()),
+               "sum vs diff", 500, -30, 40, 500, -20, 50);
     t0_Timing[iCase] =
-        new TH2D(Form("t0_Timing_%s", selectionCases[iCase].Data()),
-                 "sum vs diff", 500, -30, 40, 500, -20, 50);
+      new TH2D(Form("t0_Timing_%s", selectionCases[iCase].Data()),
+               "sum vs diff", 500, -30, 40, 500, -20, 50);
     emcal_Timing[iCase] =
-        new TH2D(Form("emcal_Timing_%s", selectionCases[iCase].Data()),
-                 "sum vs diff", 500, -30, 40, 500, -20, 50);
+      new TH2D(Form("emcal_Timing_%s", selectionCases[iCase].Data()),
+               "sum vs diff", 500, -30, 40, 500, -20, 50);
     muon_Timing[iCase] =
-        new TH2D(Form("muon_Timing_%s", selectionCases[iCase].Data()),
-                 "sum vs diff", 500, -30, 40, 500, -20, 50);
+      new TH2D(Form("muon_Timing_%s", selectionCases[iCase].Data()),
+               "sum vs diff", 500, -30, 40, 500, -20, 50);
     dimuon_Timing[iCase] =
-        new TH2D(Form("dimuon_Timing_%s", selectionCases[iCase].Data()),
-                 "sum vs diff", 500, -30, 40, 500, -20, 50);
+      new TH2D(Form("dimuon_Timing_%s", selectionCases[iCase].Data()),
+               "sum vs diff", 500, -30, 40, 500, -20, 50);
     fOutputList.Add(v0_H[iCase]);
     fOutputList.Add(t0_H[iCase]);
     fOutputList.Add(emcal_H[iCase]);
@@ -239,13 +225,14 @@ void AliAnalysisTaskVdmStability::UserCreateOutputObjects() {
 
 // Event loop
 //_________________________________________________________________________________
-void AliAnalysisTaskVdmStability::UserExec(Option_t *) {
+void AliAnalysisTaskVdmStability::UserExec(Option_t*)
+{
   // Get analysis manager
-  AliAnalysisManager *man = AliAnalysisManager::GetAnalysisManager();
+  AliAnalysisManager* man = AliAnalysisManager::GetAnalysisManager();
   Bool_t isESD =
-      man->GetInputEventHandler()->IsA() == AliESDInputHandler::Class();
+    man->GetInputEventHandler()->IsA() == AliESDInputHandler::Class();
   Bool_t isAOD =
-      man->GetInputEventHandler()->IsA() == AliAODInputHandler::Class();
+    man->GetInputEventHandler()->IsA() == AliAODInputHandler::Class();
 
   if (isAOD) {
     cout << "Error: AOD not inititalized yet " << endl;
@@ -253,13 +240,13 @@ void AliAnalysisTaskVdmStability::UserExec(Option_t *) {
   }
 
   // Get input handler
-  AliInputEventHandler *inputHandler =
-      (AliInputEventHandler *)(man->GetInputEventHandler());
+  AliInputEventHandler* inputHandler =
+    (AliInputEventHandler*)(man->GetInputEventHandler());
   if (!inputHandler)
     return;
 
   // get event
-  fEvent = static_cast<AliESDEvent *>(InputEvent());
+  fEvent = static_cast<AliESDEvent*>(InputEvent());
 
   // Check if V0 event
   TString ftc = fEvent->GetFiredTriggerClasses();
@@ -290,13 +277,13 @@ void AliAnalysisTaskVdmStability::UserExec(Option_t *) {
   fRunNumber = static_cast<UInt_t>(InputEvent()->GetRunNumber());
 
   // Set z-vertex information
-  const AliESDVertex *trackVtx = fEvent->GetPrimaryVertexTracks();
+  const AliESDVertex* trackVtx = fEvent->GetPrimaryVertexTracks();
   fVtxZ = trackVtx->GetZ();
   fnVtxCont = trackVtx->GetNContributors();
   fIsGoodZ = CheckZVtx(fVtxZ, fnVtxCont, 10., kTRUE, 1);
 
   // Set V0 timing
-  AliESDVZERO *esdV0 = fEvent->GetVZEROData();
+  AliESDVZERO* esdV0 = fEvent->GetVZEROData();
   fTV0A = esdV0->GetV0ATime();
   fTV0C = esdV0->GetV0CTime();
   fGoodTime = CheckTime(fTV0A, fTV0C);
@@ -384,7 +371,8 @@ void AliAnalysisTaskVdmStability::UserExec(Option_t *) {
 
 // Set branch names for event tree variables
 //_________________________________________________________________________________
-void AliAnalysisTaskVdmStability::AddEventTreeVariables(TTree *&tree) {
+void AliAnalysisTaskVdmStability::AddEventTreeVariables(TTree*& tree)
+{
   tree->Branch("RunNumber", &fRunNumber);
   // tree->Branch("VtxZ", &fVtxZ);
   // tree->Branch("nVtxCont", &fnVtxCont);
@@ -401,10 +389,11 @@ void AliAnalysisTaskVdmStability::AddEventTreeVariables(TTree *&tree) {
 
 // Terminate
 //_________________________________________________________________________________
-void AliAnalysisTaskVdmStability::Terminate(Option_t *) {}
+void AliAnalysisTaskVdmStability::Terminate(Option_t*) {}
 
 // Check if good V0 timing
-Bool_t AliAnalysisTaskVdmStability::CheckTime(Float_t timeA, Float_t timeC) {
+Bool_t AliAnalysisTaskVdmStability::CheckTime(Float_t timeA, Float_t timeC)
+{
   Float_t tV0sum = timeA + timeC;
   Float_t tV0diff = timeA - timeC;
   // return (((5.5 < tV0diff) && (tV0diff < 11.5)) && ((11.5 < tV0sum) &&
@@ -414,7 +403,8 @@ Bool_t AliAnalysisTaskVdmStability::CheckTime(Float_t timeA, Float_t timeC) {
 }
 
 // Timing Run
-Bool_t AliAnalysisTaskVdmStability::BadTimingRun(Int_t run) {
+Bool_t AliAnalysisTaskVdmStability::BadTimingRun(Int_t run)
+{
   return (run == 253978 || run == 253961 || run == 253958 || run == 253957 ||
           run == 253956 || run == 253951);
 }
@@ -422,7 +412,8 @@ Bool_t AliAnalysisTaskVdmStability::BadTimingRun(Int_t run) {
 // Check zVtx
 Bool_t AliAnalysisTaskVdmStability::CheckZVtx(Double_t zVtx, Int_t nCont,
                                               Double_t zCut, Bool_t contCut,
-                                              Int_t nContCut) {
+                                              Int_t nContCut)
+{
   if (TMath::Abs(zVtx) > zCut)
     return kFALSE; // check zCut, return false if bad z
   if (contCut)
@@ -430,7 +421,8 @@ Bool_t AliAnalysisTaskVdmStability::CheckZVtx(Double_t zVtx, Int_t nCont,
   return kTRUE;
 }
 
-Bool_t AliAnalysisTaskVdmStability::IsSelected(Int_t nSelection) {
+Bool_t AliAnalysisTaskVdmStability::IsSelected(Int_t nSelection)
+{
   // NO selection
   if (nSelection == 0)
     return kTRUE;

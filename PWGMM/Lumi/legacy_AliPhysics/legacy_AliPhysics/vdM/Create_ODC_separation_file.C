@@ -7,7 +7,8 @@
 // Evaluate the orbit-drift correction for fill 4690
 //------------------------------------------------------------
 
-Double_t Get_ODC_x_scan_4690(Double_t mid_time) {
+Double_t Get_ODC_x_scan_4690(Double_t mid_time)
+{
   Double_t p0 = 1449192576;
   Double_t p1 = 0.4323;
   Double_t p2 = 5.296e-5;
@@ -16,7 +17,8 @@ Double_t Get_ODC_x_scan_4690(Double_t mid_time) {
   return (p1 + p2 * x) / 1000;
 }
 
-Double_t Get_ODC_y_scan_4690(Double_t mid_time) {
+Double_t Get_ODC_y_scan_4690(Double_t mid_time)
+{
   Double_t p0 = 1449192576;
   Double_t p1 = 0.6993;
   Double_t p2 = 2.273e-5;
@@ -29,7 +31,8 @@ Double_t Get_ODC_y_scan_4690(Double_t mid_time) {
 // Evaluate the orbit-drift correction for fill 4937
 //------------------------------------------------------------
 
-Double_t Get_ODC_x_scan_4937(Double_t mid_time) {
+Double_t Get_ODC_x_scan_4937(Double_t mid_time)
+{
   Double_t p0 = 1463505614;
   Double_t p1 = 0.197442;
   Double_t p2 = 0.00156;
@@ -39,7 +42,8 @@ Double_t Get_ODC_x_scan_4937(Double_t mid_time) {
   return (p1 + p2 * x + p3 * x * x) / 1000;
 }
 
-Double_t Get_ODC_y_scan_4937(Double_t mid_time) {
+Double_t Get_ODC_y_scan_4937(Double_t mid_time)
+{
   Double_t p0 = 1463505614;
   Double_t p1 = -0.464639;
   Double_t p3 = 9.45379e-8;
@@ -53,7 +57,8 @@ Double_t Get_ODC_y_scan_4937(Double_t mid_time) {
 // Evaluate the orbit-drift correction for fill 5533
 //------------------------------------------------------------
 
-Double_t Get_ODC_x_scan_5533(Double_t mid_time) {
+Double_t Get_ODC_x_scan_5533(Double_t mid_time)
+{
   Double_t p0 = 1479918502;
   Double_t p1 = 2.0641;
   Double_t p2 = 0.00161356;
@@ -64,7 +69,8 @@ Double_t Get_ODC_x_scan_5533(Double_t mid_time) {
   return (p1 + p2 * x + p3 * x * x + p4 * x * x * x) / 1000;
 }
 
-Double_t Get_ODC_y_scan_5533(Double_t mid_time) {
+Double_t Get_ODC_y_scan_5533(Double_t mid_time)
+{
   Double_t p0 = 1479918502;
   Double_t p1 = -0.30024;
   Double_t p2 = 0.000314952;
@@ -78,7 +84,8 @@ Double_t Get_ODC_y_scan_5533(Double_t mid_time) {
 // Evaluate the orbit-drift correction for fill 5568
 //------------------------------------------------------------
 
-Double_t Get_ODC_x_scan_5568(Double_t mid_time) {
+Double_t Get_ODC_x_scan_5568(Double_t mid_time)
+{
   Double_t p0 = 1480695439;
   Double_t p1 = -2.80692;
   Double_t p2 = -0.000869452;
@@ -87,7 +94,8 @@ Double_t Get_ODC_x_scan_5568(Double_t mid_time) {
   return (p1 + p2 * x) / 1000;
 }
 
-Double_t Get_ODC_y_scan_5568(Double_t mid_time) {
+Double_t Get_ODC_y_scan_5568(Double_t mid_time)
+{
   Double_t p0 = 1480695439;
   Double_t p1 = 3.13328;
   Double_t p2 = 0.00094365;
@@ -100,7 +108,8 @@ Double_t Get_ODC_y_scan_5568(Double_t mid_time) {
 // Evaluate the orbit-drift correction for fill 6012
 //------------------------------------------------------------
 
-Double_t Get_ODC_x_scan_6012(Double_t mid_time) {
+Double_t Get_ODC_x_scan_6012(Double_t mid_time)
+{
   Double_t p0 = 1501171786;   // 1501174853;
   Double_t p1 = 0.812369;     //-5.14364;
   Double_t p2 = 0.00045667;   //-0.00424986;
@@ -111,7 +120,8 @@ Double_t Get_ODC_x_scan_6012(Double_t mid_time) {
   return (p1 + p2 * x + p3 * x * x * x + p4 * x * x * x * x) / 1000;
 }
 
-Double_t Get_ODC_y_scan_6012(Double_t mid_time) {
+Double_t Get_ODC_y_scan_6012(Double_t mid_time)
+{
   Double_t p0 = 1501173133;  // 1501173798;
   Double_t p1 = 0.324359;    // 2.19271;
   Double_t p2 = 0.000940862; // 0.00103011;
@@ -124,7 +134,8 @@ Double_t Get_ODC_y_scan_6012(Double_t mid_time) {
 // Evaluate the orbit-drift correction for fill 6864
 //------------------------------------------------------------
 
-Double_t Get_ODC_x_scan_6864(Double_t mid_time) {
+Double_t Get_ODC_x_scan_6864(Double_t mid_time)
+{
   Double_t p0 = 1530314570;
   Double_t p1 = -0.447739;
   Double_t p2 = 0.00229056;
@@ -137,7 +148,8 @@ Double_t Get_ODC_x_scan_6864(Double_t mid_time) {
          1000;
 }
 
-Double_t Get_ODC_y_scan_6864(Double_t mid_time) {
+Double_t Get_ODC_y_scan_6864(Double_t mid_time)
+{
   Double_t p0 = 1530316882;
   Double_t p1 = 1.68691;
   Double_t p2 = 0.000746951;
@@ -151,28 +163,32 @@ Double_t Get_ODC_y_scan_6864(Double_t mid_time) {
 // Evaluate the orbit-drift correction for fill 7483
 //------------------------------------------------------------
 
-Double_t Get_ODC_x_scan0_7483(Double_t mid_time) {
+Double_t Get_ODC_x_scan0_7483(Double_t mid_time)
+{
   Double_t p0 = -1863070;
   Double_t p1 = 0.00120706;
   // divide by 1000 to get right units
   return ((p0 + p1 * mid_time) / 1000);
 }
 
-Double_t Get_ODC_y_scan0_7483(Double_t mid_time) {
+Double_t Get_ODC_y_scan0_7483(Double_t mid_time)
+{
   Double_t p0 = 791330;
   Double_t p1 = -0.000512693;
   // divide by 1000 to get right units
   return ((p0 + p1 * mid_time) / 1000);
 }
 
-Double_t Get_ODC_x_scan1_7483(Double_t mid_time) {
+Double_t Get_ODC_x_scan1_7483(Double_t mid_time)
+{
   Double_t p0 = 109870;
   Double_t p1 = -7.11833e-5;
   // divide by 1000 to get right units
   return ((p0 + p1 * mid_time) / 1000);
 }
 
-Double_t Get_ODC_y_scan1_7483(Double_t mid_time) {
+Double_t Get_ODC_y_scan1_7483(Double_t mid_time)
+{
   Double_t p0 = -183147;
   Double_t p1 = 0.000118658;
   // divide by 1000 to get right units
@@ -248,7 +264,7 @@ void Get_ODC_separations(Int_t scan_type, Int_t scan)
 // scan_type: 1 => x-scan; 2 => y-scan
 {
   // --> create nominal separation file name
-  char *sep_file_name = new char[kg_string_size];
+  char* sep_file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(sep_file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill,
             scan);
@@ -257,14 +273,14 @@ void Get_ODC_separations(Int_t scan_type, Int_t scan)
             scan);
 
   // open separation file and get the tree
-  TFile *sep_file = new TFile(sep_file_name);
-  TTree *sep_tree = (TTree *)sep_file->Get("Separations");
-  TTree *sepinfo_tree = (TTree *)sep_file->Get("SepInfo");
+  TFile* sep_file = new TFile(sep_file_name);
+  TTree* sep_tree = (TTree*)sep_file->Get("Separations");
+  TTree* sepinfo_tree = (TTree*)sep_file->Get("SepInfo");
 
   // set branches
   // -- get number of separations
   Int_t n_sep = FindNumberSeparations(scan_type, scan);
-  Double_t *sep = new Double_t[n_sep];
+  Double_t* sep = new Double_t[n_sep];
   sep_tree->ResetBranchAddresses();
   sep_tree->SetBranchAddress("separation", sep);
   Long64_t time_start;
@@ -274,7 +290,7 @@ void Get_ODC_separations(Int_t scan_type, Int_t scan)
   sepinfo_tree->SetBranchAddress("time_separation_end", &time_end);
 
   // compute ODC (the same for all BC)
-  Double_t *odc_sep = new Double_t[n_sep];
+  Double_t* odc_sep = new Double_t[n_sep];
   sep_tree->GetEntry(0);
   for (Int_t i = 0; i < n_sep; i++) {
     sepinfo_tree->GetEntry(i);
@@ -295,10 +311,10 @@ void Get_ODC_separations(Int_t scan_type, Int_t scan)
   if (scan_type == 2)
     sprintf(sep_file_name, "../Fill-%d/ODCSep_y_Scan_%d.root", g_vdm_Fill,
             scan);
-  TFile *ODCFile = new TFile(sep_file_name, "recreate");
+  TFile* ODCFile = new TFile(sep_file_name, "recreate");
   // -- create tree with separations
-  TTree *odc_sep_tree = new TTree("Separations", "Separations");
-  char *txt_tmp = new char[kg_string_size];
+  TTree* odc_sep_tree = new TTree("Separations", "Separations");
+  char* txt_tmp = new char[kg_string_size];
   sprintf(txt_tmp, "separation[%d]/D", n_sep);
   odc_sep_tree->Branch("separation", odc_sep, txt_tmp);
 
@@ -327,7 +343,8 @@ void Get_ODC_separations(Int_t scan_type, Int_t scan)
 // the orbit-drift corrected separations
 //-------------------------------------------------------
 
-void Create_ODC_separation_file(Int_t Fill) {
+void Create_ODC_separation_file(Int_t Fill)
+{
   // get name of files and set pointers to trees
   Set_input_file_names(Fill);
   Set_pointers_to_input_files_and_trees();

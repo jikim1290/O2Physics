@@ -6,17 +6,18 @@
 //-------------------------------------------------------
 // accessing the rates
 
-void GetRate(Double_t *rate, const char *rate_name, const char *rate_type,
-             Int_t scan, Int_t scan_type, Int_t bc) {
-  char *file_name = new char[kg_string_size];
+void GetRate(Double_t* rate, const char* rate_name, const char* rate_type,
+             Int_t scan, Int_t scan_type, Int_t bc)
+{
+  char* file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(file_name, "../Fill-%d/%sRate_%s_x_Scan_%d.root", g_vdm_Fill,
             rate_type, rate_name, scan);
   if (scan_type == 2)
     sprintf(file_name, "../Fill-%d/%sRate_%s_y_Scan_%d.root", g_vdm_Fill,
             rate_type, rate_name, scan);
-  TFile *rate_file = new TFile(file_name);
-  TTree *rate_tree = (TTree *)rate_file->Get("Rate");
+  TFile* rate_file = new TFile(file_name);
+  TTree* rate_tree = (TTree*)rate_file->Get("Rate");
   rate_tree->ResetBranchAddresses();
   rate_tree->SetBranchAddress("rate", rate);
   rate_tree->GetEntry(bc);
@@ -29,7 +30,7 @@ void GetRate(Double_t *rate, const char *rate_name, const char *rate_type,
 // Note that it uses fBCT corrected rates.
 //-------------------------------------------------------
 
-void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
+void QA_corr_vs_sep(Int_t Fill, const char* rate_name, Int_t scan,
                     Int_t scan_type, Int_t bc)
 // scan_type: 1 => x-scan; 2 => y-scan
 {
@@ -39,10 +40,10 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
 
   // reserve space for rated
   Int_t n_sep = FindNumberSeparations(scan_type, scan);
-  Double_t *raw = new Double_t[n_sep];
-  Double_t *bkgd = new Double_t[n_sep];
-  Double_t *pu = new Double_t[n_sep];
-  Double_t *all = new Double_t[n_sep];
+  Double_t* raw = new Double_t[n_sep];
+  Double_t* bkgd = new Double_t[n_sep];
+  Double_t* pu = new Double_t[n_sep];
+  Double_t* all = new Double_t[n_sep];
 
   // get the rates
   GetRate(raw, rate_name, "Raw", scan, scan_type, bc);
@@ -53,14 +54,14 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
   // GetRate(all,rate_name,"IntensityCorrFBCT",scan,scan_type,bc);
 
   // get the separations
-  char *file_name = new char[kg_string_size];
+  char* file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill, scan);
   if (scan_type == 2)
     sprintf(file_name, "../Fill-%d/NomSep_y_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *sep_file = new TFile(file_name);
-  TTree *sep_tree = (TTree *)sep_file->Get("Separations");
-  Double_t *sep = new Double_t[n_sep];
+  TFile* sep_file = new TFile(file_name);
+  TTree* sep_tree = (TTree*)sep_file->Get("Separations");
+  Double_t* sep = new Double_t[n_sep];
   sep_tree->ResetBranchAddresses();
   sep_tree->SetBranchAddress("separation", sep);
   sep_tree->GetEntry(bc);
@@ -70,9 +71,9 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
   // " << bkgd[i]<< " " << pu[i]<< " " << all [i] << endl;
 
   // make ratios
-  Double_t *raw_bkgd = new Double_t[n_sep];
-  Double_t *bkgd_pu = new Double_t[n_sep];
-  Double_t *pu_all = new Double_t[n_sep];
+  Double_t* raw_bkgd = new Double_t[n_sep];
+  Double_t* bkgd_pu = new Double_t[n_sep];
+  Double_t* pu_all = new Double_t[n_sep];
   for (Int_t i = 0; i < n_sep; i++) {
     if (raw[i] > 0 && bkgd[i] > 0)
       raw_bkgd[i] = bkgd[i] / raw[i];
@@ -121,13 +122,13 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
   ratio_min *= 0.8;
 
   // make graphs
-  TGraph *gr_raw_bkgd = new TGraph(n_sep, sep, raw_bkgd);
+  TGraph* gr_raw_bkgd = new TGraph(n_sep, sep, raw_bkgd);
   gr_raw_bkgd->SetMarkerStyle(20);
   gr_raw_bkgd->SetMarkerColor(1);
-  TGraph *gr_bkgd_pu = new TGraph(n_sep, sep, bkgd_pu);
+  TGraph* gr_bkgd_pu = new TGraph(n_sep, sep, bkgd_pu);
   gr_bkgd_pu->SetMarkerStyle(24);
   gr_bkgd_pu->SetMarkerColor(2);
-  TGraph *gr_pu_all = new TGraph(n_sep, sep, pu_all);
+  TGraph* gr_pu_all = new TGraph(n_sep, sep, pu_all);
   gr_pu_all->SetMarkerStyle(24);
   gr_pu_all->SetMarkerColor(4);
 
@@ -152,9 +153,9 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
 
   // Plot for public note, June 25
   gStyle->SetOptStat(0);
-  TCanvas *c1 = new TCanvas("c1_corr", "", 800, 900);
+  TCanvas* c1 = new TCanvas("c1_corr", "", 800, 900);
   c1->cd();
-  TH1F *H1 = new TH1F("H1frame", ";Separation [mm];Ratio",
+  TH1F* H1 = new TH1F("H1frame", ";Separation [mm];Ratio",
                       (sep_max - sep_min) * 2, sep_min, sep_max);
   /*
   H1->SetTitle(Form("Fill %i, %s, scan %i, bunch pair index %i",
@@ -183,14 +184,14 @@ void QA_corr_vs_sep(Int_t Fill, const char *rate_name, Int_t scan,
   gr_pu_all->SetMarkerColor(4);
   gr_pu_all->Draw("p,e1,same");
 
-  TLegend *L1 = new TLegend(0.165, 0.75, 0.40, 0.85);
+  TLegend* L1 = new TLegend(0.165, 0.75, 0.40, 0.85);
   L1->SetMargin(0);
   L1->SetBorderSize(0);
-  L1->AddEntry((TObject *)0, "ALICE", "");
-  L1->AddEntry((TObject *)0, "pp #sqrt{s} = 13 TeV", "");
+  L1->AddEntry((TObject*)0, "ALICE", "");
+  L1->AddEntry((TObject*)0, "pp #sqrt{s} = 13 TeV", "");
   L1->Draw();
 
-  TLegend *L2 = new TLegend(0.35, 0.2, 0.65, 0.4);
+  TLegend* L2 = new TLegend(0.35, 0.2, 0.65, 0.4);
   L2->SetMargin(0.3);
   L2->SetBorderSize(0);
   L2->AddEntry(gr_raw_bkgd, "R_{BB} / R_{Raw}", "p");

@@ -89,7 +89,8 @@ Double_t GetHxHyerr(Double_t Ax, Double_t Axe, Double_t Ay, Double_t Aye,
 // Set global pointers to input files and trees
 //-------------------------------------------------------
 
-void Set_pointers_to_input_files_and_trees() {
+void Set_pointers_to_input_files_and_trees()
+{
   // set pointers to files
   g_vdm_File = new TFile(g_Input_vdm_File);
   g_vdm_DDL2_File = new TFile(g_Input_vdm_DDL2_File);
@@ -97,11 +98,11 @@ void Set_pointers_to_input_files_and_trees() {
 
   // set pointers to trees
   if (g_vdm_File)
-    g_vdm_Tree = (TTree *)g_vdm_File->Get("VdM");
+    g_vdm_Tree = (TTree*)g_vdm_File->Get("VdM");
   if (g_vdm_File)
-    g_vdm_DDL2_Tree = (TTree *)g_vdm_DDL2_File->Get("DDL2");
+    g_vdm_DDL2_Tree = (TTree*)g_vdm_DDL2_File->Get("DDL2");
   if (g_vdm_File)
-    g_vdm_BPTX_Tree = (TTree *)g_vdm_BPTX_File->Get("VdM-BPTX");
+    g_vdm_BPTX_Tree = (TTree*)g_vdm_BPTX_File->Get("VdM-BPTX");
 
   // add trees as friends of main tree
   g_vdm_Tree->AddFriend(g_vdm_BPTX_Tree);
@@ -112,7 +113,8 @@ void Set_pointers_to_input_files_and_trees() {
 // Find start and end of x and y scans
 //-------------------------------------------------------
 
-void Find_start_and_end_of_scans() {
+void Find_start_and_end_of_scans()
+{
   // cout << " Finding start and end of scans. It will take a moment."<< endl;
 
   // set  branches
@@ -127,7 +129,7 @@ void Find_start_and_end_of_scans() {
   g_Idx_End_Scan_y = new Int_t[g_n_Scans_in_Fill];
   for (Int_t i = 0; i < g_n_Scans_in_Fill; i++)
     g_Idx_Start_Scan_x[i] = g_Idx_Start_Scan_y[i] = g_Idx_End_Scan_x[i] =
-        g_Idx_End_Scan_y[i] = -1;
+      g_Idx_End_Scan_y[i] = -1;
 
   // loop over tree to find x-scans
   Int_t n_vdm = g_vdm_Tree->GetEntries();
@@ -199,31 +201,32 @@ void Find_start_and_end_of_scans() {
 // Find indices of start and end of scan
 //-------------------------------------------------------
 
-void FindIdicesOfScanStartEnd(Int_t scan, Int_t *indices) {
+void FindIdicesOfScanStartEnd(Int_t scan, Int_t* indices)
+{
   // get separation files
   char file_name[kg_string_size];
   sprintf(file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *ScanFileX = new TFile(file_name);
+  TFile* ScanFileX = new TFile(file_name);
   if (ScanFileX == NULL) {
     cout << " file " << file_name << " not found " << endl;
     exit(-103);
   }
   sprintf(file_name, "../Fill-%d/NomSep_y_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *ScanFileY = new TFile(file_name);
+  TFile* ScanFileY = new TFile(file_name);
   if (ScanFileY == NULL) {
     cout << " file " << file_name << " not found " << endl;
     exit(-103);
   }
 
   // find first index of x scan
-  TTree *scan_tree_x = (TTree *)ScanFileX->Get("SepInfo");
+  TTree* scan_tree_x = (TTree*)ScanFileX->Get("SepInfo");
   Int_t idx_separation_start = -1;
   scan_tree_x->ResetBranchAddresses();
   scan_tree_x->SetBranchAddress("idx_separation_start", &idx_separation_start);
   scan_tree_x->GetEntry(0); // get first entry
 
   // find last index of y scan
-  TTree *scan_tree_y = (TTree *)ScanFileY->Get("SepInfo");
+  TTree* scan_tree_y = (TTree*)ScanFileY->Get("SepInfo");
   Int_t n_separations_y = scan_tree_y->GetEntries();
   Int_t idx_separation_end = -1;
   scan_tree_y->ResetBranchAddresses();
@@ -239,24 +242,25 @@ void FindIdicesOfScanStartEnd(Int_t scan, Int_t *indices) {
 // Find index between x and y scan
 //-------------------------------------------------------
 
-Int_t FindIdxBetweenScans(Int_t scan) {
+Int_t FindIdxBetweenScans(Int_t scan)
+{
   // get separation files
   char file_name[kg_string_size];
   sprintf(file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *ScanFileX = new TFile(file_name);
+  TFile* ScanFileX = new TFile(file_name);
   if (ScanFileX == NULL) {
     cout << " file " << file_name << " not found " << endl;
     exit(-103);
   }
   sprintf(file_name, "../Fill-%d/NomSep_y_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *ScanFileY = new TFile(file_name);
+  TFile* ScanFileY = new TFile(file_name);
   if (ScanFileY == NULL) {
     cout << " file " << file_name << " not found " << endl;
     exit(-103);
   }
 
   // find last index of x scan
-  TTree *scan_tree_x = (TTree *)ScanFileX->Get("SepInfo");
+  TTree* scan_tree_x = (TTree*)ScanFileX->Get("SepInfo");
   Int_t n_separations_x = scan_tree_x->GetEntries();
   Int_t idx_separation_end = -1;
   scan_tree_x->ResetBranchAddresses();
@@ -264,7 +268,7 @@ Int_t FindIdxBetweenScans(Int_t scan) {
   scan_tree_x->GetEntry(n_separations_x - 1); // get last entry
 
   // find first index of y scan
-  TTree *scan_tree_y = (TTree *)ScanFileY->Get("SepInfo");
+  TTree* scan_tree_y = (TTree*)ScanFileY->Get("SepInfo");
   Int_t idx_separation_start = -1;
   scan_tree_y->ResetBranchAddresses();
   scan_tree_y->SetBranchAddress("idx_separation_start", &idx_separation_start);
@@ -289,13 +293,13 @@ Int_t FindNumberSeparations(Int_t scan_type, Int_t scan)
     sprintf(file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill, scan);
   if (scan_type == 2)
     sprintf(file_name, "../Fill-%d/NomSep_y_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *ScanFile = new TFile(file_name);
+  TFile* ScanFile = new TFile(file_name);
   if (ScanFile == NULL) {
     cout << " file " << file_name << " not found " << endl;
     exit(-103);
   }
 
-  TTree *scan_tree = (TTree *)ScanFile->Get("SepInfo");
+  TTree* scan_tree = (TTree*)ScanFile->Get("SepInfo");
   Int_t n_separations = scan_tree->GetEntries();
   return n_separations;
 }
@@ -305,7 +309,7 @@ Int_t FindNumberSeparations(Int_t scan_type, Int_t scan)
 //-------------------------------------------------------
 
 void FindStepStartAndEnd(Int_t scan_type, Int_t scan, Int_t n_separations,
-                         Int_t *idx_start, Int_t *idx_end)
+                         Int_t* idx_start, Int_t* idx_end)
 // scan_type: 1 => x-scan; 2 => y-scan
 {
   // get correct separation file
@@ -314,7 +318,7 @@ void FindStepStartAndEnd(Int_t scan_type, Int_t scan, Int_t n_separations,
     sprintf(file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill, scan);
   if (scan_type == 2)
     sprintf(file_name, "../Fill-%d/NomSep_y_Scan_%d.root", g_vdm_Fill, scan);
-  TFile *ScanFile = new TFile(file_name);
+  TFile* ScanFile = new TFile(file_name);
   if (ScanFile == NULL) {
     cout << " file " << file_name << " not found " << endl;
     exit(-103);
@@ -322,7 +326,7 @@ void FindStepStartAndEnd(Int_t scan_type, Int_t scan, Int_t n_separations,
   // set up separation tree
   Int_t idx_separation_start;
   Int_t idx_separation_end;
-  TTree *scan_tree = (TTree *)ScanFile->Get("SepInfo");
+  TTree* scan_tree = (TTree*)ScanFile->Get("SepInfo");
   scan_tree->ResetBranchAddresses();
   scan_tree->SetBranchAddress("idx_separation_start", &idx_separation_start);
   scan_tree->SetBranchAddress("idx_separation_end", &idx_separation_end);
@@ -340,7 +344,8 @@ void FindStepStartAndEnd(Int_t scan_type, Int_t scan, Int_t n_separations,
 // (used to match DCCT histogram index to relative time in tree
 //-------------------------------------------------------
 
-Int_t GetHistogramIndex(TH1 *histo, Double_t time) {
+Int_t GetHistogramIndex(TH1* histo, Double_t time)
+{
   Double_t diff = 1000000.0; // large number
   Int_t nbx = histo->GetNbinsX();
   Int_t idx = -1;
@@ -409,7 +414,8 @@ Double_t BkgdCorrectedRateError(Double_t r, Double_t re, Double_t f,
 
 // this function defines the relationship between ratePerBC and mu
 // Code by Martino
-Double_t GetPileUp(Double_t *x, Double_t *par) {
+Double_t GetPileUp(Double_t* x, Double_t* par)
+{
 
   // printf("using %f and %f\n",par[0],par[1]);
 
@@ -423,7 +429,8 @@ Double_t GetPileUp(Double_t *x, Double_t *par) {
 // this function is called to invert numerically the GetPileUp function
 // Code by Martino
 
-Double_t trova(Double_t y, TF1 *fun) {
+Double_t trova(Double_t y, TF1* fun)
+{
   //
   Double_t xmin = fun->GetXmin();
   Double_t xmax = fun->GetXmax();
@@ -444,14 +451,15 @@ Double_t trova(Double_t y, TF1 *fun) {
 // this function should be called once per rate measurement, to get the
 // corrected mu value. It takes as argument the total  counts divided by the LHC
 // frequency Code by Martino
-Double_t CorrectRateForPileUp(Double_t ratePerBC, TF1 *fPU) {
+Double_t CorrectRateForPileUp(Double_t ratePerBC, TF1* fPU)
+{
   Double_t Prob = trova(ratePerBC, fPU);
   return Prob;
 }
 
 //-------------------------------------------------------
 
-Double_t RatePileUp(Double_t r, TF1 *fPU)
+Double_t RatePileUp(Double_t r, TF1* fPU)
 // compute pile-up rate
 // r = rate
 {
@@ -461,7 +469,7 @@ Double_t RatePileUp(Double_t r, TF1 *fPU)
 
 //-------------------------------------------------------
 
-Double_t RatePileUpErr(Double_t r, Double_t re, TF1 *fPU)
+Double_t RatePileUpErr(Double_t r, Double_t re, TF1* fPU)
 // compute error on pile-up rate
 // r = rate, re = rate error
 {
@@ -475,21 +483,23 @@ Double_t RatePileUpErr(Double_t r, Double_t re, TF1 *fPU)
 // get bunch crossing information
 //-------------------------------------------------------
 
-Int_t GetNumberInteractingBunchCrossings() {
-  TTree *Tree = (TTree *)g_vdm_File->Get("BCinteracting");
+Int_t GetNumberInteractingBunchCrossings()
+{
+  TTree* Tree = (TTree*)g_vdm_File->Get("BCinteracting");
   return Tree->GetEntries();
 }
 
 //-------------------------------------------------------
-void GetBucketInfo(Int_t *BucketA, Int_t *BucketC) {
+void GetBucketInfo(Int_t* BucketA, Int_t* BucketC)
+{
   // get tree and set branches
   Int_t lhca;
   Int_t lhcc;
-  TTree *Tree = (TTree *)g_vdm_File->Get("BCinteracting");
+  TTree* Tree = (TTree*)g_vdm_File->Get("BCinteracting");
 
-  TBranch *Branch2 = Tree->GetBranch("lhcA");
+  TBranch* Branch2 = Tree->GetBranch("lhcA");
   Branch2->SetAddress(&lhca);
-  TBranch *Branch3 = Tree->GetBranch("lhcC");
+  TBranch* Branch3 = Tree->GetBranch("lhcC");
   Branch3->SetAddress(&lhcc);
 
   // loop over tree to fill in info
@@ -502,11 +512,12 @@ void GetBucketInfo(Int_t *BucketA, Int_t *BucketC) {
 }
 
 //-------------------------------------------------------
-void GetBunchIndices(Int_t *bunches) {
+void GetBunchIndices(Int_t* bunches)
+{
   // get tree and set branches
   Int_t bc;
-  TTree *Tree = (TTree *)g_vdm_File->Get("BCinteracting");
-  TBranch *Branch = Tree->GetBranch("BC");
+  TTree* Tree = (TTree*)g_vdm_File->Get("BCinteracting");
+  TBranch* Branch = Tree->GetBranch("BC");
   Branch->SetAddress(&bc);
 
   // loop over tree to fill in info
@@ -521,8 +532,9 @@ void GetBunchIndices(Int_t *bunches) {
 //-------------------------------------------------------
 // new code from Ingrid
 
-Int_t GetNumberOfUsedInteractingBunchCrossings() {
-  TTree *Tree = (TTree *)g_vdm_File->Get("BCinteracting");
+Int_t GetNumberOfUsedInteractingBunchCrossings()
+{
+  TTree* Tree = (TTree*)g_vdm_File->Get("BCinteracting");
   if (!(g_vdm_Fill == 6012))
     return Tree->GetEntries();
   else
@@ -531,7 +543,8 @@ Int_t GetNumberOfUsedInteractingBunchCrossings() {
 
 //-------------------------------------------------------
 // new code from Ingrid
-Bool_t UseBunchCrossing(Int_t i) {
+Bool_t UseBunchCrossing(Int_t i)
+{
   if (!(g_vdm_Fill == 6012))
     return kTRUE;
 
@@ -551,7 +564,8 @@ Bool_t UseBunchCrossing(Int_t i) {
 //-------------------------------------------------------
 // Mask out bad bunch crossings, Fill by Fill
 
-void SetBCBlacklists(bool Verbose = false) {
+void SetBCBlacklists(bool Verbose = false)
+{
   vector<int> Fills = {4937, 6012, 6864}; // Add fill number here
 
   // Assign index to a Fill: automated - don't touch
@@ -583,7 +597,8 @@ void SetBCBlacklists(bool Verbose = false) {
   return;
 }
 
-bool OnBCBlacklist(int Fill, int bc, bool Verbose = false) {
+bool OnBCBlacklist(int Fill, int bc, bool Verbose = false)
+{
   const int FillIndex = FillToI[Fill];
   if (bcBlacklist[FillIndex].find(bc) != bcBlacklist[FillIndex].end()) {
     if (Verbose)

@@ -25,7 +25,7 @@ void Find_separations(Int_t scan_type, Int_t scan_num, Int_t IdxStart,
   Int_t idx_separation_end;
   Long_t time_separation_start;
   Long_t time_separation_end;
-  TTree *sep_info_tree = new TTree("SepInfo", "SepInfo");
+  TTree* sep_info_tree = new TTree("SepInfo", "SepInfo");
   sep_info_tree->Branch("idx_separation_start", &idx_separation_start,
                         "idx_separation_start/I");
   sep_info_tree->Branch("time_separation_start", &time_separation_start,
@@ -40,7 +40,7 @@ void Find_separations(Int_t scan_type, Int_t scan_num, Int_t IdxStart,
   Double_t nsep_old = 0;
   Double_t small = 1e-6;
   Int_t counter = 0;                       // internal use only
-  Double_t *sep_array = new Double_t[100]; // internal use only
+  Double_t* sep_array = new Double_t[100]; // internal use only
   Double_t slope_change = 0;               // internal use only
 
   for (Int_t j = IdxStart; j < IdxEnd; j++) {
@@ -91,17 +91,17 @@ void Find_separations(Int_t scan_type, Int_t scan_num, Int_t IdxStart,
   }   // end loop over data
 
   // create file name
-  char *file_name = new char[kg_string_size];
+  char* file_name = new char[kg_string_size];
   if (scan_type == 1)
     sprintf(file_name, "../Fill-%d/NomSep_x_Scan_%d.root", g_vdm_Fill,
             scan_num);
   if (scan_type == 2)
     sprintf(file_name, "../Fill-%d/NomSep_y_Scan_%d.root", g_vdm_Fill,
             scan_num);
-  TFile *ScanFile = new TFile(file_name, "recreate");
+  TFile* ScanFile = new TFile(file_name, "recreate");
   // create tree with separations
-  TTree *sep_tree = new TTree("Separations", "Separations");
-  char *txt_tmp = new char[kg_string_size];
+  TTree* sep_tree = new TTree("Separations", "Separations");
+  char* txt_tmp = new char[kg_string_size];
   sprintf(txt_tmp, "separation[%d]/D", counter - 1);
   sep_tree->Branch("separation", sep_array, txt_tmp);
 
@@ -131,7 +131,8 @@ void Find_separations(Int_t scan_type, Int_t scan_num, Int_t IdxStart,
 // Create root files with the information of the nominal separations
 //------------------------------------------------------------------
 
-void Create_nominal_separation_file(Int_t Fill) {
+void Create_nominal_separation_file(Int_t Fill)
+{
   // get name of files and set pointers to trees
   Set_input_file_names(Fill);
   Set_pointers_to_input_files_and_trees();

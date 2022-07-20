@@ -15,7 +15,7 @@ void Create_beam_normalisation_tree(Int_t Fill, Int_t opt)
   Set_pointers_to_input_files_and_trees();
 
   // create tree for the output
-  char *file_name = new char[kg_string_size];
+  char* file_name = new char[kg_string_size];
   if (opt == 0)
     sprintf(file_name, "../Fill-%d/FBCT_norm.root", g_vdm_Fill);
   else if (opt == 1)
@@ -25,8 +25,8 @@ void Create_beam_normalisation_tree(Int_t Fill, Int_t opt)
     return;
   }
 
-  TFile *NormFile = new TFile(file_name, "recreate");
-  TTree *norm_tree = new TTree("Beam_Normalisation", "Beam_Normalisation");
+  TFile* NormFile = new TFile(file_name, "recreate");
+  TTree* norm_tree = new TTree("Beam_Normalisation", "Beam_Normalisation");
   Double_t cf_dcct_1a = 0;
   Double_t cf_dcct_2a = 0;
   Double_t cf_dcct_1b = 0;
@@ -43,12 +43,12 @@ void Create_beam_normalisation_tree(Int_t Fill, Int_t opt)
   // get the branches with intensity information
   g_vdm_Tree->ResetBranchAddresses();
   Double_t timerel;
-  Double_t *bunch1 = new Double_t[3564];
-  Double_t *bunch2 = new Double_t[3564];
+  Double_t* bunch1 = new Double_t[3564];
+  Double_t* bunch2 = new Double_t[3564];
   g_vdm_Tree->SetBranchAddress("timerel", &timerel);
   if (opt == 0) {
     g_vdm_Tree->SetBranchAddress(
-        "bunch1", bunch1); // kimc: this must be the FBCT intensity
+      "bunch1", bunch1); // kimc: this must be the FBCT intensity
     g_vdm_Tree->SetBranchAddress("bunch2", bunch2);
   } else if (opt == 1) {
     g_vdm_Tree->SetBranchAddress("bptx1", bunch1);
@@ -56,10 +56,10 @@ void Create_beam_normalisation_tree(Int_t Fill, Int_t opt)
   }
 
   // get the histograms with DCCT information, two devices: A and B
-  TH1D *DCCT1AH = (TH1D *)g_vdm_File->Get("Beam1A");
-  TH1D *DCCT2AH = (TH1D *)g_vdm_File->Get("Beam2A");
-  TH1D *DCCT1BH = (TH1D *)g_vdm_File->Get("Beam1B");
-  TH1D *DCCT2BH = (TH1D *)g_vdm_File->Get("Beam2B");
+  TH1D* DCCT1AH = (TH1D*)g_vdm_File->Get("Beam1A");
+  TH1D* DCCT2AH = (TH1D*)g_vdm_File->Get("Beam2A");
+  TH1D* DCCT1BH = (TH1D*)g_vdm_File->Get("Beam1B");
+  TH1D* DCCT2BH = (TH1D*)g_vdm_File->Get("Beam2B");
 
   // loop over tree to normalise each timerel
   Int_t nEntries = g_vdm_Tree->GetEntries();

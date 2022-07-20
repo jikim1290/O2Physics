@@ -9,14 +9,14 @@
 //-------------------------------------------------------
 
 void Create_one_pileup_corrected_rate_file(Int_t scan_type, Int_t scan,
-                                           const char *rate_name,
+                                           const char* rate_name,
                                            Double_t ratioA, Double_t ratioC)
 // scan_type: 1 => x-scan; 2 => y-scan
 // ratioA/ratioC -> parameters for the pileup correction
 {
   // create names for files
-  char *file_name_rate = new char[kg_string_size];
-  char *file_name_new_rate = new char[kg_string_size];
+  char* file_name_rate = new char[kg_string_size];
+  char* file_name_new_rate = new char[kg_string_size];
 
   if (scan_type == 1) {
     sprintf(file_name_rate, "../Fill-%d/BkgdCorrRate_%s_x_Scan_%d.root",
@@ -32,26 +32,26 @@ void Create_one_pileup_corrected_rate_file(Int_t scan_type, Int_t scan,
   }
 
   // open file and get tree
-  TFile *RateFile = new TFile(file_name_rate);
-  TTree *rate_tree = (TTree *)RateFile->Get("Rate");
+  TFile* RateFile = new TFile(file_name_rate);
+  TTree* rate_tree = (TTree*)RateFile->Get("Rate");
 
   // set branch adresses
   Int_t n_separations = FindNumberSeparations(scan_type, scan);
-  Double_t *rate = new Double_t[n_separations];
-  Double_t *rate_error = new Double_t[n_separations];
+  Double_t* rate = new Double_t[n_separations];
+  Double_t* rate_error = new Double_t[n_separations];
   rate_tree->SetBranchAddress("rate", rate);
   rate_tree->SetBranchAddress("rate_error", rate_error);
 
   // prepare new tree
-  TFile *NewRateFile = new TFile(file_name_new_rate, "recreate");
-  TTree *ratio_tree = new TTree("Ratio", "Ratio");
+  TFile* NewRateFile = new TFile(file_name_new_rate, "recreate");
+  TTree* ratio_tree = new TTree("Ratio", "Ratio");
   ratio_tree->Branch("ratioA", &ratioA, "ratioA/D");
   ratio_tree->Branch("ratioC", &ratioC, "ratioC/D");
   ratio_tree->Fill(); // save parameters used in the correction
-  TTree *new_rate_tree = new TTree("Rate", "Rate");
-  Double_t *new_rate = new Double_t[n_separations];
-  Double_t *new_rate_error = new Double_t[n_separations];
-  char *txt_tmp = new char[kg_string_size];
+  TTree* new_rate_tree = new TTree("Rate", "Rate");
+  Double_t* new_rate = new Double_t[n_separations];
+  Double_t* new_rate_error = new Double_t[n_separations];
+  char* txt_tmp = new char[kg_string_size];
   sprintf(txt_tmp, "rate[%d]/D", n_separations);
   new_rate_tree->Branch("rate", new_rate, txt_tmp);
   sprintf(txt_tmp, "rate_error[%d]/D", n_separations);
@@ -59,7 +59,7 @@ void Create_one_pileup_corrected_rate_file(Int_t scan_type, Int_t scan,
 
   // create a function to compute pileup
   // procedure and code from Martino
-  TF1 *fPileUp = new TF1("fPileUp", GetPileUp, 0., 4., 2);
+  TF1* fPileUp = new TF1("fPileUp", GetPileUp, 0., 4., 2);
   fPileUp->SetParameter(0, ratioA);
   fPileUp->SetParameter(1, ratioC);
 
@@ -103,8 +103,9 @@ void Create_one_pileup_corrected_rate_file(Int_t scan_type, Int_t scan,
 // Create pileup corrected  rate files
 //-------------------------------------------------------
 
-void Create_pileup_corrected_rate_file(Int_t Fill, const char *rate_name,
-                                       Double_t ratioA, Double_t ratioC) {
+void Create_pileup_corrected_rate_file(Int_t Fill, const char* rate_name,
+                                       Double_t ratioA, Double_t ratioC)
+{
   cout << " This will take a while, be patient " << endl;
 
   // get name of files and set pointers to trees

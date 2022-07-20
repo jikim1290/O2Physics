@@ -14,10 +14,10 @@ Int_t g_n_Scans_in_Fill = -1;
 //-------------------------------------------------------
 // indices at start and end of scans and steps
 //-------------------------------------------------------
-Int_t *g_Idx_Start_Scan_x = NULL;
-Int_t *g_Idx_Start_Scan_y = NULL;
-Int_t *g_Idx_End_Scan_x = NULL;
-Int_t *g_Idx_End_Scan_y = NULL;
+Int_t* g_Idx_Start_Scan_x = NULL;
+Int_t* g_Idx_Start_Scan_y = NULL;
+Int_t* g_Idx_End_Scan_x = NULL;
+Int_t* g_Idx_End_Scan_y = NULL;
 
 //-------------------------------------------------------
 // To store names of input files
@@ -29,13 +29,13 @@ char g_Input_vdm_BPTX_File[kg_string_size];
 //-------------------------------------------------------
 // pointers to trees and files
 
-TFile *g_vdm_File = NULL;
-TFile *g_vdm_DDL2_File = NULL;
-TFile *g_vdm_BPTX_File = NULL;
+TFile* g_vdm_File = NULL;
+TFile* g_vdm_DDL2_File = NULL;
+TFile* g_vdm_BPTX_File = NULL;
 
-TTree *g_vdm_Tree = NULL;
-TTree *g_vdm_DDL2_Tree = NULL;
-TTree *g_vdm_BPTX_Tree = NULL;
+TTree* g_vdm_Tree = NULL;
+TTree* g_vdm_DDL2_Tree = NULL;
+TTree* g_vdm_BPTX_Tree = NULL;
 
 //-------------------------------------------------------
 // LHC frequency
@@ -66,5 +66,5 @@ set<int> bcBlacklist[20]; // Each index corresponds to a Fill: increase maximum
 //-------------------------------------------------------
 // File format of the plots being printed out: kimc, June 18, 2021
 
-const char *FFormat = "eps"; // png, eps, pdf, etc...
+const char* FFormat = "eps"; // png, eps, pdf, etc...
 #endif

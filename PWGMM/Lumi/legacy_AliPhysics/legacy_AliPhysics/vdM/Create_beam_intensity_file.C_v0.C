@@ -6,7 +6,8 @@
 //-------------------------------------------------------
 // get indices between x and y scans
 //-------------------------------------------------------
-void GetIndices(Int_t *idx) {
+void GetIndices(Int_t* idx)
+{
   for (Int_t i = 0; i < g_n_Scans_in_Fill; i++) {
     idx[i] = FindIdxBetweenScans(i);
   }
@@ -24,11 +25,11 @@ void Create_single_beam_intensity_file(Int_t scan, Int_t opt)
 {
   // get the branches with intensity information
   // (also, set the name of the output file)
-  char *file_name = new char[kg_string_size];
-  TTree *tree = g_vdm_Tree;
+  char* file_name = new char[kg_string_size];
+  TTree* tree = g_vdm_Tree;
   g_vdm_Tree->ResetBranchAddresses();
-  Double_t *bunch1 = new Double_t[3564];
-  Double_t *bunch2 = new Double_t[3564];
+  Double_t* bunch1 = new Double_t[3564];
+  Double_t* bunch2 = new Double_t[3564];
   Double_t timerel;
   g_vdm_Tree->SetBranchAddress("timerel", &timerel);
   if (opt == 0) {
@@ -44,10 +45,10 @@ void Create_single_beam_intensity_file(Int_t scan, Int_t opt)
 
   // get the histograms with DCCT information
   // two devices: A and B
-  TH1D *DCCT1AH = (TH1D *)g_vdm_File->Get("Beam1A");
-  TH1D *DCCT2AH = (TH1D *)g_vdm_File->Get("Beam2A");
-  TH1D *DCCT1BH = (TH1D *)g_vdm_File->Get("Beam1B");
-  TH1D *DCCT2BH = (TH1D *)g_vdm_File->Get("Beam2B");
+  TH1D* DCCT1AH = (TH1D*)g_vdm_File->Get("Beam1A");
+  TH1D* DCCT2AH = (TH1D*)g_vdm_File->Get("Beam2A");
+  TH1D* DCCT1BH = (TH1D*)g_vdm_File->Get("Beam1B");
+  TH1D* DCCT2BH = (TH1D*)g_vdm_File->Get("Beam2B");
 
   // varaibles to store correction factors
   Double_t cf_dcct_1a = 0;
@@ -97,18 +98,18 @@ void Create_single_beam_intensity_file(Int_t scan, Int_t opt)
   // -- number of bc
   Int_t nIBC = GetNumberInteractingBunchCrossings();
   // -- bucket info
-  Int_t *BucketA = new Int_t[nIBC];
-  Int_t *BucketC = new Int_t[nIBC];
+  Int_t* BucketA = new Int_t[nIBC];
+  Int_t* BucketC = new Int_t[nIBC];
   GetBucketInfo(BucketA, BucketC);
 
   // set up output tree for rates
-  TFile *IntensityFile = new TFile(file_name, "recreate");
-  TTree *intensity_tree = new TTree("Bunch_Intensity", "Bunch_Intensity");
-  Double_t *bunch_intensity_1 = new Double_t[nIBC];
-  Double_t *bunch_intensity_2 = new Double_t[nIBC];
+  TFile* IntensityFile = new TFile(file_name, "recreate");
+  TTree* intensity_tree = new TTree("Bunch_Intensity", "Bunch_Intensity");
+  Double_t* bunch_intensity_1 = new Double_t[nIBC];
+  Double_t* bunch_intensity_2 = new Double_t[nIBC];
   for (Int_t i = 0; i < nIBC; i++)
     bunch_intensity_1[i] = bunch_intensity_2[i] = 0.0;
-  char *txt_tmp = new char[kg_string_size];
+  char* txt_tmp = new char[kg_string_size];
   sprintf(txt_tmp, "bunch_intensity_1[%d]/D", nIBC);
   intensity_tree->Branch("bunch_intensity_1", bunch_intensity_1, txt_tmp);
   sprintf(txt_tmp, "bunch_intensity_2[%d]/D", nIBC);
