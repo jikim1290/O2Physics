@@ -15,17 +15,18 @@
 // o2-analysis-trackselection -b --isRun3 <0, 1> | o2-analysis-mm-lumi -b
 // --configuration json://./config.json
 
-void DrawVtx_PbPb() {
+void DrawVtx_PbPb()
+{
   const char fname[1000] = {"upd_full_trk"};
   // org, upd
 
-  TFile *ftot =
-      new TFile(Form("../data/PbPb_Run2conv/AnalysisResults_%s.root", fname),
-                "read"); // change me
-  TH2F *hTime_VtxX = (TH2F *)ftot->Get("lumi/vertexx_Refitted_timestamp");
-  TH2F *hTime_VtxY = (TH2F *)ftot->Get("lumi/vertexy_Refitted_timestamp");
+  TFile* ftot =
+    new TFile(Form("../data/PbPb_Run2conv/AnalysisResults_%s.root", fname),
+              "read"); // change me
+  TH2F* hTime_VtxX = (TH2F*)ftot->Get("lumi/vertexx_Refitted_timestamp");
+  TH2F* hTime_VtxY = (TH2F*)ftot->Get("lumi/vertexy_Refitted_timestamp");
 
-  TCanvas *c = new TCanvas("c", "c", 800, 600);
+  TCanvas* c = new TCanvas("c", "c", 800, 600);
   gPad->SetLeftMargin(0.13);
   gPad->SetBottomMargin(0.13);
   gPad->SetRightMargin(0.03);
@@ -40,8 +41,8 @@ void DrawVtx_PbPb() {
   hTime_VtxX->Draw("colz");
   gPad->Update();
 
-  TPaletteAxis *paletteX =
-      (TPaletteAxis *)hTime_VtxX->GetListOfFunctions()->FindObject("palette");
+  TPaletteAxis* paletteX =
+    (TPaletteAxis*)hTime_VtxX->GetListOfFunctions()->FindObject("palette");
   paletteX->SetY1NDC(0.2);
   c->Update();
   hTime_VtxX->Draw("colz");
@@ -59,8 +60,8 @@ void DrawVtx_PbPb() {
                                  {1160, 1260, 1340, -1, -1, -1},
                                  {1440, 1540, 1640, 1720, -1, -1}};
 
-  TLine *line_xl_1st[3][6];
-  TLine *line_xu_1st[3][6];
+  TLine* line_xl_1st[3][6];
+  TLine* line_xu_1st[3][6];
 
   for (int s = 0; s < nstage; s++) {
     if (s == 0) {
@@ -90,7 +91,7 @@ void DrawVtx_PbPb() {
       line_xu_1st[s][i]->Draw("same");
     }
     c->SaveAs(
-        Form("../figures_%s/vertexX_297325_full_zoom%d.pdf", fname, s + 1));
+      Form("../figures_%s/vertexX_297325_full_zoom%d.pdf", fname, s + 1));
   }
 
   //////////
@@ -103,8 +104,8 @@ void DrawVtx_PbPb() {
   hTime_VtxY->Draw("colz");
   gPad->Update();
 
-  TPaletteAxis *paletteY =
-      (TPaletteAxis *)hTime_VtxY->GetListOfFunctions()->FindObject("palette");
+  TPaletteAxis* paletteY =
+    (TPaletteAxis*)hTime_VtxY->GetListOfFunctions()->FindObject("palette");
   paletteY->SetY1NDC(0.2);
   c->Update();
   hTime_VtxY->Draw("colz");
@@ -117,8 +118,8 @@ void DrawVtx_PbPb() {
                                  {2400, 2500, 2580, -1, -1, -1},
                                  {2680, 2780, 2880, 2960, -1, -1}};
 
-  TLine *line_yl_1st[3][6];
-  TLine *line_yu_1st[3][6];
+  TLine* line_yl_1st[3][6];
+  TLine* line_yu_1st[3][6];
 
   for (int s = 0; s < nstage; s++) {
     if (s == 0) {
@@ -149,54 +150,54 @@ void DrawVtx_PbPb() {
       line_yu_1st[s][i]->Draw("same");
     }
     c->SaveAs(
-        Form("../figures_%s/vertexY_297325_full_zoom%d.pdf", fname, s + 1));
+      Form("../figures_%s/vertexY_297325_full_zoom%d.pdf", fname, s + 1));
   }
 
   //////////////////
 
-  TH1D *hVtxX_projected[3][6];
-  TH1D *hVtxY_projected[3][6];
+  TH1D* hVtxX_projected[3][6];
+  TH1D* hVtxY_projected[3][6];
 
   double MeanXCntl[3][6];
   double MeanXStat[3][6];
   double MeanYCntl[3][6];
   double MeanYStat[3][6];
 
-  TF1 *f1 = new TF1("f1", "gaus", -10, 10);
+  TF1* f1 = new TF1("f1", "gaus", -10, 10);
 
   for (int s = 0; s < nstage; s++) {
     for (int i = 0; i < nsteps[s]; i++) {
-      hVtxX_projected[s][i] = (TH1D *)hTime_VtxX->ProjectionY(
-          Form("hVtxX_projected_%d_%d", s, i),
-          hTime_VtxX->GetXaxis()->FindBin(trange_lower_x[s][i] * 1e3),
-          hTime_VtxX->GetXaxis()->FindBin(trange_upper_x[s][i] * 1e3), "s");
+      hVtxX_projected[s][i] = (TH1D*)hTime_VtxX->ProjectionY(
+        Form("hVtxX_projected_%d_%d", s, i),
+        hTime_VtxX->GetXaxis()->FindBin(trange_lower_x[s][i] * 1e3),
+        hTime_VtxX->GetXaxis()->FindBin(trange_upper_x[s][i] * 1e3), "s");
       hVtxX_projected[s][i]->Rebin(4);
 
       hVtxX_projected[s][i]->Fit(
-          f1, "", "",
-          hVtxX_projected[s][i]->GetMean() - hVtxX_projected[s][i]->GetRMS(),
-          hVtxX_projected[s][i]->GetMean() + hVtxX_projected[s][i]->GetRMS());
+        f1, "", "",
+        hVtxX_projected[s][i]->GetMean() - hVtxX_projected[s][i]->GetRMS(),
+        hVtxX_projected[s][i]->GetMean() + hVtxX_projected[s][i]->GetRMS());
 
       MeanXCntl[s][i] = f1->GetParameter(1);
       MeanXStat[s][i] = f1->GetParError(1);
 
-      hVtxY_projected[s][i] = (TH1D *)hTime_VtxY->ProjectionY(
-          Form("hVtxY_projected_%d_%d", s, i),
-          hTime_VtxY->GetXaxis()->FindBin(trange_lower_y[s][i] * 1e3),
-          hTime_VtxY->GetXaxis()->FindBin(trange_upper_y[s][i] * 1e3), "s");
+      hVtxY_projected[s][i] = (TH1D*)hTime_VtxY->ProjectionY(
+        Form("hVtxY_projected_%d_%d", s, i),
+        hTime_VtxY->GetXaxis()->FindBin(trange_lower_y[s][i] * 1e3),
+        hTime_VtxY->GetXaxis()->FindBin(trange_upper_y[s][i] * 1e3), "s");
       hVtxY_projected[s][i]->Rebin(4);
 
       hVtxY_projected[s][i]->Fit(
-          f1, "", "",
-          hVtxY_projected[s][i]->GetMean() - hVtxY_projected[s][i]->GetRMS(),
-          hVtxY_projected[s][i]->GetMean() + hVtxY_projected[s][i]->GetRMS());
+        f1, "", "",
+        hVtxY_projected[s][i]->GetMean() - hVtxY_projected[s][i]->GetRMS(),
+        hVtxY_projected[s][i]->GetMean() + hVtxY_projected[s][i]->GetRMS());
 
       MeanYCntl[s][i] = f1->GetParameter(1);
       MeanYStat[s][i] = f1->GetParError(1);
     }
   }
 
-  TLegend *legMoving = new TLegend(0.7, 0.5, 0.93, 0.93);
+  TLegend* legMoving = new TLegend(0.7, 0.5, 0.93, 0.93);
   legMoving->SetLineWidth(0.0);
   legMoving->SetFillColorAlpha(0, 0);
   gPad->SetLogy();
@@ -232,18 +233,18 @@ void DrawVtx_PbPb() {
     legMoving->Clear();
   }
 
-  TF1 *flinear = new TF1("f1", "pol1", -1, 1);
+  TF1* flinear = new TF1("f1", "pol1", -1, 1);
 
-  TGraphErrors *gX[nstage];
-  TGraphErrors *gY[nstage];
+  TGraphErrors* gX[nstage];
+  TGraphErrors* gY[nstage];
 
   gPad->SetLogy(0);
 
-  TLegend *legx = new TLegend(0.150, 0.549, 0.526, 0.888);
+  TLegend* legx = new TLegend(0.150, 0.549, 0.526, 0.888);
   legx->SetFillColorAlpha(0, 0);
   legx->SetLineWidth(0.0);
 
-  TLegend *legy = new TLegend(0.50, 0.549, 0.876, 0.888);
+  TLegend* legy = new TLegend(0.50, 0.549, 0.876, 0.888);
   legy->SetFillColorAlpha(0, 0);
   legy->SetLineWidth(0.0);
 
@@ -272,14 +273,14 @@ void DrawVtx_PbPb() {
     gX[s]->Fit(flinear);
     legx->AddEntry(gX[s], "Data", "pl");
     legx->AddEntry(
-        flinear,
-        Form("p_{0} + p_{1}*x, #chi^{2} = %.1lf", flinear->GetChisquare()),
-        "l");
-    legx->AddEntry((TObject *)0,
+      flinear,
+      Form("p_{0} + p_{1}*x, #chi^{2} = %.1lf", flinear->GetChisquare()),
+      "l");
+    legx->AddEntry((TObject*)0,
                    Form("p_{0} = %.3lf #pm %.3lf", flinear->GetParameter(0),
                         flinear->GetParError(0)),
                    "");
-    legx->AddEntry((TObject *)0,
+    legx->AddEntry((TObject*)0,
                    Form("p_{1} = %.3lf #pm %.3lf", flinear->GetParameter(1),
                         flinear->GetParError(1)),
                    "");
@@ -292,14 +293,14 @@ void DrawVtx_PbPb() {
     gY[s]->Fit(flinear);
     legy->AddEntry(gY[s], "Data", "pl");
     legy->AddEntry(
-        flinear,
-        Form("p_{0} + p_{1}*x, #chi^{2} = %.1lf", flinear->GetChisquare()),
-        "l");
-    legy->AddEntry((TObject *)0,
+      flinear,
+      Form("p_{0} + p_{1}*x, #chi^{2} = %.1lf", flinear->GetChisquare()),
+      "l");
+    legy->AddEntry((TObject*)0,
                    Form("p_{0} = %.3lf #pm %.3lf", flinear->GetParameter(0),
                         flinear->GetParError(0)),
                    "");
-    legy->AddEntry((TObject *)0,
+    legy->AddEntry((TObject*)0,
                    Form("p_{1} = %.3lf #pm %.3lf", flinear->GetParameter(1),
                         flinear->GetParError(1)),
                    "");
@@ -309,7 +310,7 @@ void DrawVtx_PbPb() {
     c->SaveAs(Form("../figures_%s/linearY_%dstg.pdf", fname, s + 1));
     legy->Clear();
   }
-  TFile *fout = new TFile(Form("figOut_%s.root", fname), "recreate");
+  TFile* fout = new TFile(Form("figOut_%s.root", fname), "recreate");
   for (int s = 0; s < nstage; s++) {
     gX[s]->SetName(Form("gX_%s_%d", fname, s));
     gY[s]->SetName(Form("gY_%s_%d", fname, s));
@@ -318,9 +319,9 @@ void DrawVtx_PbPb() {
     gY[s]->Write();
     for (int i = 0; i < nsteps[s]; i++) {
       hVtxX_projected[s][i]->SetName(
-          Form("hVtxX_projected_%s_%d_%d", fname, s, i));
+        Form("hVtxX_projected_%s_%d_%d", fname, s, i));
       hVtxY_projected[s][i]->SetName(
-          Form("hVtxY_projected_%s_%d_%d", fname, s, i));
+        Form("hVtxY_projected_%s_%d_%d", fname, s, i));
 
       hVtxX_projected[s][i]->Write();
       hVtxY_projected[s][i]->Write();
