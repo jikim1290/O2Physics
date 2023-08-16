@@ -76,7 +76,6 @@ struct f0980analysis {
     "cfgUseTOF", false,
     "Flag for the usage of TOF for PID"};
 
-
   void init(o2::framework::InitContext&)
   {
     std::vector<double> ptBinning = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8,
@@ -102,7 +101,7 @@ struct f0980analysis {
     histos.add("QA/Nsigma_TOF", "", {HistType::kTH2F, {pTqaAxis, PIDqaAxis}});
     histos.add("QA/TPC_TOF", "", {HistType::kTH2F, {PIDqaAxis, PIDqaAxis}});
 
-	AxisSpec NTracksAxis = {10, 0, 10};
+    AxisSpec NTracksAxis = {10, 0, 10};
 
     if (doprocessMCLight) {
       histos.add("MCL/hpT_f0980_GEN", "generated f0 signals", HistType::kTH1F,
@@ -110,8 +109,8 @@ struct f0980analysis {
       histos.add("MCL/hpT_f0980_REC", "reconstructed f0 signals",
                  HistType::kTH3F, {massAxis, pTqaAxis, centAxis});
 
-	  histos.add("MCL/ntracks", "", HistType::kTH1F,
-				{NTracksAxis});
+      histos.add("MCL/ntracks", "", HistType::kTH1F,
+                 {NTracksAxis});
     }
 
     histos.print();
@@ -144,7 +143,8 @@ struct f0980analysis {
   bool SelPion(const TrackType track)
   {
     if ((track.tofPIDselectionFlag() & aod::resodaughter::kHasTOF) !=
-        aod::resodaughter::kHasTOF || !cfgUseTOF) {
+          aod::resodaughter::kHasTOF ||
+        !cfgUseTOF) {
       if (std::fabs(track.tpcNSigmaPi()) > cfgMaxTPCStandalone) {
         return false;
       }
