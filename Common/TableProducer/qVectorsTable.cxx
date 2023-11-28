@@ -80,12 +80,12 @@ struct qVectorsTable {
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
-    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., "Correction constants for positive TPC tracks"};
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.}, "Correction constants for positive TPC tracks"};
   Configurable<std::vector<float>> cfgBNegCorr{"cfgBNegCorr", std::vector<float>{
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
     0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
-    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., "Correction constants for negative TPC tracks"};
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.}, "Correction constants for negative TPC tracks"};
 
   Configurable<float> cfgMinPtOnTPC{"cfgMinPtOnTPC", 0.15, "minimum transverse momentum selection for TPC tracks participating in Q-vector reconstruction"};
   Configurable<float> cfgMaxPtOnTPC{"cfgMaxPtOnTPC", 5., "maximum transverse momentum selection for TPC tracks participating in Q-vector reconstruction"};
