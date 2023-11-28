@@ -71,9 +71,21 @@ struct qVectorsTable {
   // but the Q-vectors are calculated only for some of them.
   // FIXME: 6 correction factors for each centrality and 8 centrality intervals are hard-coded.
 
-  Configurable<std::vector<float>> cfgCorr{"cfgCorr", std::vector<float>{0.0}, "Correction constants for detector"};
-  Configurable<std::vector<float>> cfgBPosCorr{"cfgBPosCorr", std::vector<float>{0.0}, "Correction constants for positive TPC tracks"};
-  Configurable<std::vector<float>> cfgBNegCorr{"cfgBNegCorr", std::vector<float>{0.0}, "Correction constants for negative TPC tracks"};
+  Configurable<std::vector<float>> cfgCorr{"cfgCorr", std::vector<float>{
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.}, "Correction constants for detector"};
+  Configurable<std::vector<float>> cfgBPosCorr{"cfgBPosCorr", std::vector<float>{
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., "Correction constants for positive TPC tracks"};
+  Configurable<std::vector<float>> cfgBNegCorr{"cfgBNegCorr", std::vector<float>{
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+    0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., "Correction constants for negative TPC tracks"};
 
   Configurable<float> cfgMinPtOnTPC{"cfgMinPtOnTPC", 0.15, "minimum transverse momentum selection for TPC tracks participating in Q-vector reconstruction"};
   Configurable<float> cfgMaxPtOnTPC{"cfgMaxPtOnTPC", 5., "maximum transverse momentum selection for TPC tracks participating in Q-vector reconstruction"};
