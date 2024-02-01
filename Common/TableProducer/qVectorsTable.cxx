@@ -149,9 +149,9 @@ struct qVectorsTable {
       LOGF(fatal, "Could not get the alignment parameters for FV0.");
     }
 
-    if (cfgCCDBConst==1) {
-      if (!(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0C",cfgCcdbParam.nolaterthan.value))->empty()) {
-        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0C",cfgCcdbParam.nolaterthan.value)));
+    if (cfgCCDBConst == 1) {
+      if (!(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0C", cfgCcdbParam.nolaterthan.value))->empty()) {
+        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0C", cfgCcdbParam.nolaterthan.value)));
       } else {
         if (cfgFT0CCorr->size() < 48) {
           LOGF(fatal, "No proper correction factor assigned for FT0C");
@@ -169,7 +169,7 @@ struct qVectorsTable {
         }
       }
       if (!(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0M",cfgCcdbParam.nolaterthan.value))->empty()) {
-        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0M",cfgCcdbParam.nolaterthan.value)));
+        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0M", cfgCcdbParam.nolaterthan.value)));
       } else {
         if (cfgFT0MCorr->size() < 48) {
           LOGF(fatal, "No proper correction factor assigned for FT0M");
@@ -178,7 +178,7 @@ struct qVectorsTable {
         }
       }
       if (!(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0C",cfgCcdbParam.nolaterthan.value))->empty()) {
-        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0C",cfgCcdbParam.nolaterthan.value)));
+        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/FT0C", cfgCcdbParam.nolaterthan.value)));
       } else {
         if (cfgFV0ACorr->size() < 48) {
           LOGF(fatal, "No proper correction factor assigned for FV0A");
@@ -187,7 +187,7 @@ struct qVectorsTable {
         }
       } // no FV0A
       if (!(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/BPos",cfgCcdbParam.nolaterthan.value))->empty()) {
-        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/BPos",cfgCcdbParam.nolaterthan.value)));
+        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/BPos", cfgCcdbParam.nolaterthan.value)));
       } else {
         if (cfgBPosCorr->size() < 48) {
           LOGF(fatal, "No proper correction factor assigned for BPos");
@@ -196,7 +196,7 @@ struct qVectorsTable {
         }
       }
       if (!(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/BNeg",cfgCcdbParam.nolaterthan.value))->empty()) {
-        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/BNeg",cfgCcdbParam.nolaterthan.value)));
+        cfgCorr.push_back(*(ccdb->getForTimeStamp<std::vector<float>>("Analysis/EventPlane/QVecCorrections/BNeg", cfgCcdbParam.nolaterthan.value)));
       } else {
         if (cfgBNegCorr->size() < 48) {
           LOGF(fatal, "No proper correction factor assigned for BNeg");
@@ -204,7 +204,7 @@ struct qVectorsTable {
           cfgCorr.push_back(cfgBNegCorr);
         }
       }
-    } else if (cfgCCDBConst==2) {
+    } else if (cfgCCDBConst == 2) {
       if (cfgFT0CCorr->size() < 48) {
         LOGF(fatal, "No proper correction factor assigned for FT0C");
       }
