@@ -251,8 +251,8 @@ struct qVectorsTable {
     AxisSpec axisEta = {32, -0.8, 0.8};
     AxisSpec axisPhi = {32, -TMath::Pi(), TMath::Pi()};
     AxisSpec axixCent = {20, 0, 100};
-    AxisSpec axisFITamp = {1000,0,10000};
-    AxisSpec axisChID = {220,0,220};
+    AxisSpec axisFITamp = {1000, 0, 10000};
+    AxisSpec axisChID = {220, 0, 220};
 
     histosQA.add("ChTracks", "", {HistType::kTHnSparseF, {axisPt, axisEta, axisPhi, axixCent}});
     histosQA.add("FITAmp", "", {HistType::kTH2F, {axisFITamp, axisChID}});
