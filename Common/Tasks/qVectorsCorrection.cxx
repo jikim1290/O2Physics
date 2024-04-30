@@ -201,12 +201,11 @@ struct qVectorsCorrection {
   void process(MyCollisions::iterator const& qVec)
   {
     histosQA.fill(HIST("histCentFull"), qVec.cent());
-    if( cfgAddEvtSel && (
-        !qVec.selection_bit(aod::evsel::kNoTimeFrameBorder) ||
-        !qVec.selection_bit(aod::evsel::kNoTimeFrameBorder) ||
-        !qVec.selection_bit(aod::evsel::kNoITSROFrameBorder) ||
-        !qVec.selection_bit(aod::evsel::kNoITSROFrameBorder) )){
-       return;
+    if (cfgAddEvtSel && (!qVec.selection_bit(aod::evsel::kNoTimeFrameBorder) ||
+                         !qVec.selection_bit(aod::evsel::kNoTimeFrameBorder) ||
+                         !qVec.selection_bit(aod::evsel::kNoITSROFrameBorder) ||
+                         !qVec.selection_bit(aod::evsel::kNoITSROFrameBorder))) {
+      return;
     }
     fillHistosQvec(qVec);
   } // End void process(...)
