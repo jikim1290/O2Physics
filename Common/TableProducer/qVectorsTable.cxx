@@ -443,19 +443,19 @@ struct qVectorsTable {
     if (cent < 80) {
       for (auto i{0u}; i < 6; i++) {
         helperEP.DoRecenter(qvecRe[i * 4 + 1], qvecIm[i * 4 + 1],
-          objQvec->GetBinContent(static_cast<int>(cent)+1, 1, i+1), objQvec->GetBinContent(static_cast<int>(cent)+1, 2, i+1));
+                            objQvec->GetBinContent(static_cast<int>(cent) + 1, 1, i + 1), objQvec->GetBinContent(static_cast<int>(cent) + 1, 2, i + 1));
 
         helperEP.DoRecenter(qvecRe[i * 4 + 2], qvecIm[i * 4 + 2],
-          objQvec->GetBinContent(static_cast<int>(cent)+1, 1, i+1), objQvec->GetBinContent(static_cast<int>(cent)+1, 2, i+1));
+                            objQvec->GetBinContent(static_cast<int>(cent) + 1, 1, i + 1), objQvec->GetBinContent(static_cast<int>(cent) + 1, 2, i + 1));
         helperEP.DoTwist(qvecRe[i * 4 + 2], qvecIm[i * 4 + 2],
-          objQvec->GetBinContent(static_cast<int>(cent)+1, 3, i+1), objQvec->GetBinContent(static_cast<int>(cent)+1, 4, i+1));
+                         objQvec->GetBinContent(static_cast<int>(cent) + 1, 3, i + 1), objQvec->GetBinContent(static_cast<int>(cent) + 1, 4, i + 1));
 
         helperEP.DoRecenter(qvecRe[i * 4 + 3], qvecIm[i * 4 + 3],
-          objQvec->GetBinContent(static_cast<int>(cent)+1, 1, i+1), objQvec->GetBinContent(static_cast<int>(cent)+1, 2, i+1));
+                            objQvec->GetBinContent(static_cast<int>(cent) + 1, 1, i + 1), objQvec->GetBinContent(static_cast<int>(cent) + 1, 2, i + 1));
         helperEP.DoTwist(qvecRe[i * 4 + 3], qvecIm[i * 4 + 3],
-          objQvec->GetBinContent(static_cast<int>(cent)+1, 3, i+1), objQvec->GetBinContent(static_cast<int>(cent)+1, 4, i+1));
+                         objQvec->GetBinContent(static_cast<int>(cent) + 1, 3, i + 1), objQvec->GetBinContent(static_cast<int>(cent) + 1, 4, i + 1));
         helperEP.DoRescale(qvecRe[i * 4 + 3], qvecIm[i * 4 + 3],
-          objQvec->GetBinContent(static_cast<int>(cent)+1, 5, i+1), objQvec->GetBinContent(static_cast<int>(cent)+1, 6, i+1));
+                           objQvec->GetBinContent(static_cast<int>(cent) + 1, 5, i + 1), objQvec->GetBinContent(static_cast<int>(cent) + 1, 6, i + 1));
       }
     }
 
