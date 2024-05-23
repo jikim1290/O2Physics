@@ -196,7 +196,7 @@ struct lambdapolarization {
     if (pid == 0 && std::abs(track.tpcNSigmaPr()) > cfgDaughPIDCutsTPCPr)
       return false;
     if (pid == 1 && std::abs(track.tpcNSigmaPi()) > cfgDaughPIDCutsTPCPi)
-      return false; 
+      return false;
     if (track.eta() > cfgDaughEtaMax)
       return false;
     if (track.eta() < cfgDaughEtaMin)
