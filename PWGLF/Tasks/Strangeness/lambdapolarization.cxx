@@ -423,6 +423,7 @@ struct lambdapolarization {
     if (!eventSelected(collision)) {
       return;
     }
+    histos.fill(HIST("QA/CentDist"), centrality, 1.0);
     if (cfgCentEst == 1) {
       centrality = collision.centFT0C();
     }
