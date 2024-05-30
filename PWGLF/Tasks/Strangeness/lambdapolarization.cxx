@@ -444,7 +444,7 @@ struct lambdapolarization {
 
           histos.fill(HIST("ShiftFIT"), centrality, 2.5, ishift - 0.5, TMath::Sin(ishift * static_cast<float>(i) * TMath::ATan2(collision.qvecIm()[QvecRefAInd], collision.qvecRe()[QvecRefAInd]) / static_cast<float>(i)));
           histos.fill(HIST("ShiftFIT"), centrality, 3.5, ishift - 0.5, TMath::Cos(ishift * static_cast<float>(i) * TMath::ATan2(collision.qvecIm()[QvecRefAInd], collision.qvecRe()[QvecRefAInd]) / static_cast<float>(i)));
-    
+
           histos.fill(HIST("ShiftFIT"), centrality, 4.5, ishift - 0.5, TMath::Sin(ishift * static_cast<float>(i) * TMath::ATan2(collision.qvecIm()[QvecRefBInd], collision.qvecRe()[QvecRefBInd]) / static_cast<float>(i)));
           histos.fill(HIST("ShiftFIT"), centrality, 5.5, ishift - 0.5, TMath::Cos(ishift * static_cast<float>(i) * TMath::ATan2(collision.qvecIm()[QvecRefBInd], collision.qvecRe()[QvecRefBInd]) / static_cast<float>(i)));
         } // FIXME: need to fill different histograms for different harmonic
