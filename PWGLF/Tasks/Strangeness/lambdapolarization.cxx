@@ -431,9 +431,9 @@ struct lambdapolarization {
       centrality = collision.centFT0M();
     }
     for (auto i = 2; i < cfgnMods + 2; i++) {
-    int QvecDetInd;
-    int QvecRefAInd;
-    int QvecRefBInd;
+    int QvecDetIn = 0;
+    int QvecRefAInd = 4;
+    int QvecRefBInd = 5;
 
     if (cfgShiftCorrDef) {
       QvecDetInd = DetId * 4 + 3 + (i - 2) * 24;
