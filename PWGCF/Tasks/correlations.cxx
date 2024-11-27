@@ -107,7 +107,7 @@ struct CorrelationTask {
   // This filter is applied to AOD and derived data (column names are identical)
   Filter collisionZVtxFilter = nabs(aod::collision::posZ) < cfgCutVertex;
   // This filter is only applied to AOD
-  Filter collisionVertexTypeFilter = (aod::collision::flags & static_cast<uint16_t>aod::collision::CollisionFlagsRun2::Run2VertexerTracks) == static_cast<uint16_t>aod::collision::CollisionFlagsRun2::Run2VertexerTracks;
+  Filter collisionVertexTypeFilter = (aod::collision::flags & static_cast<uint16_t> aod::collision::CollisionFlagsRun2::Run2VertexerTracks) == static_cast<uint16_t> aod::collision::CollisionFlagsRun2::Run2VertexerTracks;
 
   // Track filters
   Filter trackFilter = (nabs(aod::track::eta) < cfgCutEta) && (aod::track::pt > cfgCutPt) && ((requireGlobalTrackInFilter()) || (aod::track::isGlobalTrackSDD == (uint8_t) true));
@@ -247,7 +247,7 @@ struct CorrelationTask {
     for (auto& track1 : tracks1) {
       if constexpr (std::experimental::is_detected<hasInvMass, typename TTracks1::iterator>::value) {
         if constexpr (std::experimental::is_detected<hasDecay, typename TTracks1::iterator>::value) {
-          if (cfgDecayParticleMask != 0 && (cfgDecayParticleMask & (1u << static_cast<uint32_t>track1.decay())) == 0u)
+          if (cfgDecayParticleMask != 0 && (cfgDecayParticleMask & (1u << static_cast<uint32_t> track1.decay())) == 0u)
             continue;
         }
         registry.fill(HIST("invMass"), track1.invMass(), track1.pt(), multiplicity);
@@ -329,7 +329,7 @@ struct CorrelationTask {
       }
 
       if constexpr (std::experimental::is_detected<hasDecay, typename TTracks1::iterator>::value) {
-        if (cfgDecayParticleMask != 0 && (cfgDecayParticleMask & (1u << static_cast<uint32_t>track1.decay())) == 0u)
+        if (cfgDecayParticleMask != 0 && (cfgDecayParticleMask & (1u << static_cast<uint32_t> track1.decay())) == 0u)
           continue;
       }
 
@@ -394,7 +394,7 @@ struct CorrelationTask {
         }
 
         if constexpr (std::experimental::is_detected<hasDecay, typename TTracks2::iterator>::value) {
-          if (cfgDecayParticleMask != 0 && (cfgDecayParticleMask & (1u << static_cast<uint32_t>track2.decay())) == 0u)
+          if (cfgDecayParticleMask != 0 && (cfgDecayParticleMask & (1u << static_cast<uint32_t> track2.decay())) == 0u)
             continue;
         }
 
@@ -610,7 +610,6 @@ struct CorrelationTask {
   }
   PROCESS_SWITCH(CorrelationTask, processSame2ProngDerived, "Process same event on derived data", false);
 
-
   void processSame2Prong2Prong(derivedCollisions::iterator const& collision, soa::Filtered<aod::CF2ProngTracks> const& p2tracks)
   {
     BinningTypeDerived configurableBinningDerived{{axisVertex, axisMultiplicity}, true}; // true is for 'ignore overflows' (true by default). Underflows and overflows will have bin -1.
@@ -634,7 +633,6 @@ struct CorrelationTask {
     }
   }
   PROCESS_SWITCH(CorrelationTask, processSame2Prong2Prong, "Process same event on derived data", false);
-
 
   using BinningTypeAOD = ColumnBinningPolicy<aod::collision::PosZ, aod::cent::CentRun2V0M>;
   void processMixedAOD(aodCollisions& collisions, aodTracks const& tracks, aod::BCsWithTimestamps const&)
