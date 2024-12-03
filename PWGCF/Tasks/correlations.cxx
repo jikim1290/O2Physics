@@ -258,7 +258,7 @@ struct CorrelationTask {
         }
         registry.fill(HIST("invMass"), track1.invMass(), track1.pt(), multiplicity);
         for (auto& track2 : tracks2) {
-	  if constexpr (std::experimental::is_detected<hasInvMass, typename TTracks2::iterator>::value && std::experimental::is_detected<hasDecay, typename TTracks2::iterator>::value) {
+          if constexpr (std::experimental::is_detected<hasInvMass, typename TTracks2::iterator>::value && std::experimental::is_detected<hasDecay, typename TTracks2::iterator>::value) {
             if (doprocessSame2Prong2Prong) {
               registry.fill(HIST("invMassTwoPart"), track1.invMass(), track2.invMass(), track2.pt(), multiplicity);
             }
