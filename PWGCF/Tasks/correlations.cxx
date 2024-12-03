@@ -147,10 +147,13 @@ struct CorrelationTask {
   {
     registry.add("yields", "multiplicity/centrality vs pT vs eta", {HistType::kTH3F, {{100, 0, 100, "/multiplicity/centrality"}, {40, 0, 20, "p_{T}"}, {100, -2, 2, "#eta"}}});
     registry.add("etaphi", "multiplicity/centrality vs eta vs phi", {HistType::kTH3F, {{100, 0, 100, "multiplicity/centrality"}, {100, -2, 2, "#eta"}, {200, 0, 2 * M_PI, "#varphi"}}});
-    if (doprocessSame2ProngDerived || doprocessMixed2ProngDerived) {
+    if (doprocessSame2ProngDerived || doprocessMixed2ProngDerived || doprocessSame2Prong2Prong) {
       registry.add("yieldsTrigger", "multiplicity/centrality vs pT vs eta (triggers)", {HistType::kTH3F, {{100, 0, 100, "/multiplicity/centrality"}, {40, 0, 20, "p_{T}"}, {100, -2, 2, "#eta"}}});
       registry.add("etaphiTrigger", "multiplicity/centrality vs eta vs phi (triggers)", {HistType::kTH3F, {{100, 0, 100, "multiplicity/centrality"}, {100, -2, 2, "#eta"}, {200, 0, 2 * M_PI, "#varphi"}}});
       registry.add("invMass", "2-prong invariant mass (GeV/c^2)", {HistType::kTH3F, {axisInvMassHistogram, axisPtTrigger, axisMultiplicity}});
+      if (doprocessSame2Prong2Prong) {
+        registry.add("invMassTwoPart", "2D 2-prong invariant mass (GeV/c^2)", {HistType::kTHnSparseF, {axisInvMassHistogram, axisInvMassHistogram, axisPtAssoc, axisMultiplicity}});
+      }
     }
     registry.add("multiplicity", "event multiplicity", {HistType::kTH1F, {{1000, 0, 100, "/multiplicity/centrality"}}});
 
@@ -185,13 +188,17 @@ struct CorrelationTask {
                                      {axisPtEfficiency, "p_{T} (GeV/c)"},
                                      {axisVertexEfficiency, "z-vtx (cm)"}};
     std::vector<AxisSpec> userAxis;
-    if (cfgMassAxis != 0)
+    std::vector<AxisSpec> userMixingAxis;
+
+    if (cfgMassAxis != 0) {
       userAxis.emplace_back(axisInvMass, "m (GeV/c^2)");
+      userMixingAxis.emplace_back(axisInvMass, "m (GeV/c^2)");
+    }
     if (doprocessSame2Prong2Prong)
       userAxis.emplace_back(axisInvMass, "m (GeV/c^2)");
 
     same.setObject(new CorrelationContainer("sameEvent", "sameEvent", corrAxis, effAxis, userAxis));
-    mixed.setObject(new CorrelationContainer("mixedEvent", "mixedEvent", corrAxis, effAxis, userAxis));
+    mixed.setObject(new CorrelationContainer("mixedEvent", "mixedEvent", corrAxis, effAxis, userMixingAxis));
 
     same->setTrackEtaCut(cfgCutEta);
     mixed->setTrackEtaCut(cfgCutEta);
@@ -250,6 +257,13 @@ struct CorrelationTask {
             continue;
         }
         registry.fill(HIST("invMass"), track1.invMass(), track1.pt(), multiplicity);
+        for (auto& track2 : tracks2) {
+	  if constexpr (std::experimental::is_detected<hasInvMass, typename TTracks2::iterator>::value && std::experimental::is_detected<hasDecay, typename TTracks2::iterator>::value) {
+            if (doprocessSame2Prong2Prong) {
+              registry.fill(HIST("invMassTwoPart"), track1.invMass(), track2.invMass(), track2.pt(), multiplicity);
+            }
+          }
+        }
       }
       if constexpr (std::experimental::is_detected<hasPDGCode, typename TTracks1::iterator>::value) {
         if (!cfgMcTriggerPDGs->empty() && std::find(cfgMcTriggerPDGs->begin(), cfgMcTriggerPDGs->end(), track1->pdgCode()) == cfgMcTriggerPDGs->end())
