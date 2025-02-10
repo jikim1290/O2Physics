@@ -67,7 +67,7 @@ struct Filter2Prong {
         continue;
       if (cfgYMax >= 0.0f && std::abs(hfHelper.yD0(c)) > cfgYMax)
         continue;
-      if (c.isSelD0() > 0){
+      if (c.isSelD0() > 0) {
         output2ProngTracks(cfcollisions.begin().globalIndex(),
                            prongCFId[0], prongCFId[1], c.pt(), c.eta(), c.phi(), hfHelper.invMassD0ToPiK(c), aod::cf2prongtrack::D0ToPiK);
         for (float val : c.mlProbD0()) {
@@ -77,9 +77,9 @@ struct Filter2Prong {
           mlvecdbar.push_back(val);
         }
         output2ProngTrackmls(cfcollisions.begin().globalIndex(),
-                           prongCFId[0], prongCFId[1], c.pt(), c.eta(), c.phi(), hfHelper.invMassD0ToPiK(c), aod::cf2prongtrack::D0ToPiK, mlvecd, mlvecdbar);
+                             prongCFId[0], prongCFId[1], c.pt(), c.eta(), c.phi(), hfHelper.invMassD0ToPiK(c), aod::cf2prongtrack::D0ToPiK, mlvecd, mlvecdbar);
       }
-      if (c.isSelD0bar() > 0){
+      if (c.isSelD0bar() > 0) {
         output2ProngTracks(cfcollisions.begin().globalIndex(),
                            prongCFId[0], prongCFId[1], c.pt(), c.eta(), c.phi(), hfHelper.invMassD0barToKPi(c), aod::cf2prongtrack::D0barToKPi);
         for (float val : c.mlProbD0()) {
@@ -89,7 +89,7 @@ struct Filter2Prong {
           mlvecdbar.push_back(val);
         }
         output2ProngTrackmls(cfcollisions.begin().globalIndex(),
-                           prongCFId[0], prongCFId[1], c.pt(), c.eta(), c.phi(), hfHelper.invMassD0barToKPi(c), aod::cf2prongtrack::D0barToKPi, mlvecd, mlvecdbar);
+                             prongCFId[0], prongCFId[1], c.pt(), c.eta(), c.phi(), hfHelper.invMassD0barToKPi(c), aod::cf2prongtrack::D0barToKPi, mlvecd, mlvecdbar);
       }
     }
   }

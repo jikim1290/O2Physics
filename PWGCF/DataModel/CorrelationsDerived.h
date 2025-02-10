@@ -121,8 +121,8 @@ using CF2ProngTrack = CF2ProngTracks::iterator;
 
 namespace cf2prongtrackml
 {
-DECLARE_SOA_COLUMN(MlProbD0, mlProbD0, std::vector<float>);                       //!
-DECLARE_SOA_COLUMN(MlProbD0bar, mlProbD0bar, std::vector<float>);                 //!
+DECLARE_SOA_COLUMN(MlProbD0, mlProbD0, std::vector<float>);       //!
+DECLARE_SOA_COLUMN(MlProbD0bar, mlProbD0bar, std::vector<float>); //!
 enum ParticleDecay {
   D0ToPiK,
   D0barToKPi,
