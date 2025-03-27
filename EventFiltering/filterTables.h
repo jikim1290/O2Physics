@@ -159,6 +159,9 @@ DECLARE_SOA_COLUMN(TriggerEventF1Proton, triggereventf1proton, bool); //! F1 - p
 // Double Phi
 DECLARE_SOA_COLUMN(TriggerEventDoublePhi, triggereventdoublephi, bool); //! Double Phi trigger event
 
+// LambdaLambda
+DECLARE_SOA_COLUMN(TriggerEventLambdaLambda, triggereventlambdalambda, bool);
+
 // multiplicity
 DECLARE_SOA_COLUMN(HighTrackMult, hasHighTrackMult, bool);     //! high trk muliplicity
 DECLARE_SOA_COLUMN(HighMultFv0, hasHighMultFv0, bool);         //! high FV0 muliplicity
@@ -301,6 +304,11 @@ using F1ProtonFilter = F1ProtonFilters::iterator;
 DECLARE_SOA_TABLE(DoublePhiFilters, "AOD", "DoublePhiFilters", //!
                   filtering::TriggerEventDoublePhi);
 using DoublePhiFilter = DoublePhiFilters::iterator;
+
+// LambdaLambda
+DECLARE_SOA_TABLE(LambdaLambdaFilters, "AOD", "LambdaLambdaFilters", //!
+                  filtering::TriggerEventLambdaLambda);
+using LambdaLambdaFilter = LambdaLambdaFilters::iterator;
 
 // multiplicity
 DECLARE_SOA_TABLE(MultFilters, "AOD", "MultFilters", //!

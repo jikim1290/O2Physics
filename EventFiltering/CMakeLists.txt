@@ -112,8 +112,8 @@ o2physics_add_dpl_workflow(lf-f1proton-filter
     PUBLIC_LINK_LIBRARIES O2Physics::AnalysisCore O2::DetectorsBase
     COMPONENT_NAME Analysis)
 
- o2physics_add_dpl_workflow(lf-doublephi-filter
-    SOURCES PWGLF/filterdoublephi.cxx
+o2physics_add_dpl_workflow(lf-lambdalambda-filter
+    SOURCES PWGLF/filterlambdalambda.cxx
     PUBLIC_LINK_LIBRARIES O2Physics::AnalysisCore O2::DetectorsBase
     COMPONENT_NAME Analysis)
 
