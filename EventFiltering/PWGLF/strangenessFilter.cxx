@@ -139,6 +139,7 @@ struct strangenessFilter {
   Configurable<float> cfgV0LifeTime{"cfgV0LifeTime", 30., "maximum lambda lifetime"};
 
   // Selection criteria for lambdalambda
+  Configurable<bool> cfgEnableLLFilter{"cfgEnableLLFilter", true, "flag for LL filter"};
   Configurable<float> cfgHypMassWindow{"cfgHypMassWindow", 0.02, "single lambda mass selection"};
   Configurable<float> cfgV0V0RapMax{"cfgV0V0RapMax", 0.5, "rapidity selection for V0V0"};
 
@@ -452,7 +453,7 @@ struct strangenessFilter {
   }
 
   template <typename TCollision, typename V0>
-  bool SelectionV0(TCollision const& collision, V0 const& candidate)
+  bool SelectionV0(V0 const& candidate)
   {
     if (candidate.v0radius() < cfgv0radiusMin)
       return false;
@@ -471,6 +472,76 @@ struct strangenessFilter {
     if (candidate.yLambda() > cfgV0RapMax)
       return false;
     if (candidate.distovertotmom(collision.posX(), collision.posY(), collision.posZ()) * massLambda > cfgV0LifeTime)
+      return false;
+
+    return true;
+  }
+
+  template <typename V01, typename V02>
+  float getDCAofV0V0(V01 const& v01, V02 const& v02)
+  {
+    ROOT::Math::XYZVector v01pos, v02pos, v01mom, v02mom;
+    v01pos.SetXYZ(v01.x(), v01.y(), v01.z());
+    v02pos.SetXYZ(v02.x(), v02.y(), v02.z());
+    v01mom.SetXYZ(v01.px(), v01.py(), v01.pz());
+    v02mom.SetXYZ(v02.px(), v02.py(), v02.pz());
+
+    ROOT::Math::XYZVector posdiff = v02pos - v01pos;
+    ROOT::Math::XYZVector cross = v01mom.Cross(v02mom);
+    ROOT::Math::XYZVector dcaVec = (posdiff.Dot(cross) / cross.Mag2()) * cross;
+    return std::sqrt(dcaVec.Mag2());
+  }
+
+  template <typename V01, typename V02>
+  float getCPA(V01 const& v01, V02 const& v02)
+  {
+    ROOT::Math::XYZVector v01mom, v02mom;
+    v01mom.SetXYZ(v01.px() / v01.p(), v01.py() / v01.p(), v01.pz() / v01.p());
+    v02mom.SetXYZ(v02.px() / v02.p(), v02.py() / v02.p(), v02.pz() / v02.p());
+    return v01mom.Dot(v02mom);
+  }
+
+  template <typename V01, typename V02>
+  float getDistance(V01 const& v01, V02 const& v02)
+  {
+    ROOT::Math::XYZVector v01pos, v02pos;
+    v01pos.SetXYZ(v01.x(), v01.y(), v01.z());
+    v02pos.SetXYZ(v02.x(), v02.y(), v02.z());
+    ROOT::Math::XYZVector posdiff = v02pos - v01pos;
+    return std::sqrt(posdiff.Mag2());
+  }
+
+  template <typename V01, typename V02>
+  float getRadius(V01 const& v01, V02 const& v02)
+  {
+    ROOT::Math::XYZVector v01pos, v02pos, v01mom, v02mom;
+    v01pos.SetXYZ(v01.x(), v01.y(), v01.z());
+    v02pos.SetXYZ(v02.x(), v02.y(), v02.z());
+    v01mom.SetXYZ(v01.px() / v01.p(), v01.py() / v01.p(), v01.pz() / v01.p());
+    v02mom.SetXYZ(v02.px() / v02.p(), v02.py() / v02.p(), v02.pz() / v02.p());
+    ROOT::Math::XYZVector posdiff = v02pos - v01pos;
+
+    float d = 1. - TMath::Power(v01mom.Dot(v02mom), 2);
+    if (d < 1e-5)
+      return 999;
+    float t = posdiff.Dot(v01mom - v01mom.Dot(v02mom) * v02mom) / d;
+    float s = -posdiff.Dot(v02mom - v01mom.Dot(v02mom) * v01mom) / d;
+    ROOT::Math::XYZVector dca = v01pos + v02pos + t * v01mom + s * v02mom;
+    dca /= 2.;
+    return std::sqrt(dca.Mag2());
+  }
+
+  template <typename V01, typename V02>
+  bool isSelectedV0V0(V01 const& v01, V02 const& v02)
+  {
+      return false;
+    if (getDCAofV0V0(v01, v02) > cfgV0V0DCA)
+      return false;
+    if (getCPA(v01, v02) < cfgV0V0CPA)
+      return false;
+    if (getDistance(v01, v02) > cfgV0V0Distance)
+      return false;
+    if (getRadius(v01, v02) > cfgV0V0Radius)
       return false;
 
     return true;
@@ -531,81 +602,83 @@ struct strangenessFilter {
     int triggcounterAllEv = 0;
     int triggcounterForEstimates = 0;
 
-    for (auto& v01 : v0s) {
-      auto postrack_v01 = v01.template posTrack_as<TrackCandidates>();
-      auto negtrack_v01 = v01.template negTrack_as<TrackCandidates>();
+    if (cfgEnableLLFilter) {
+      for (auto& v01 : v0s) {
+        auto postrack_v01 = v01.template posTrack_as<TrackCandidates>();
+        auto negtrack_v01 = v01.template negTrack_as<TrackCandidates>();
 
-      int LambdaTag = 0;
-      int aLambdaTag = 0;
+        int LambdaTag = 0;
+        int aLambdaTag = 0;
 
-      if (selectionV0Daughter(postrack_v01, 0) && selectionV0Daughter(negtrack_v01, 1)) {
-        LambdaTag = 1;
-      }
-      if (selectionV0Daughter(negtrack_v01, 0) && selectionV0Daughter(postrack_v01, 1)) {
-        aLambdaTag = 1;
-      }
-
-      if (LambdaTag == aLambdaTag)
-        continue;
-
-      if (!selectionV0(v01))
-        continue;
-
-      if (LambdaTag) {
-        if (std::abs(massLambda - v01.mLambda()) > cfgHypMassWindow)
-          continue;
-        RecoV01 = ROOT::Math::PxPyPzMVector(v01.px(), v01.py(), v01.pz(), v01.mLambda());
-      } else if (aLambdaTag) {
-        if (std::abs(massLambda - v01.mAntiLambda()) > cfgHypMassWindow)
-          continue;
-        RecoV01 = ROOT::Math::PxPyPzMVector(v01.px(), v01.py(), v01.pz(), v01.mAntiLambda());
-      }
-
-      for (auto& v02 : v0s) {
-        if (v01.v0Id() <= v02.v0Id())
-          continue;
-        auto postrack_v02 = v02.template posTrack_as<TrackCandidates>();
-        auto negtrack_v02 = v02.template negTrack_as<TrackCandidates>();
-  
-        LambdaTag = 0;
-        aLambdaTag = 0;
-        int V02Tag = -2;
-  
-        if (isSelectedV0Daughter(postrack_v02, 0) && isSelectedV0Daughter(negtrack_v02, 1)) {
+        if (selectionV0Daughter(postrack_v01, 0) && selectionV0Daughter(negtrack_v01, 1)) {
           LambdaTag = 1;
-          V02Tag = 0;
-        }   
-        if (isSelectedV0Daughter(negtrack_v02, 0) && isSelectedV0Daughter(postrack_v02, 1)) {
+        }
+        if (selectionV0Daughter(negtrack_v01, 0) && selectionV0Daughter(postrack_v01, 1)) {
           aLambdaTag = 1;
-          V02Tag = 1;
         }
 
         if (LambdaTag == aLambdaTag)
           continue;
 
-        if (!SelectionV0(v02))
+        if (!SelectionV0(v01))
           continue;
-
-        if (postrack_v01.globalIndex() == postrack_v02.globalIndex() || postrack_v01.globalIndex() == negtrack_v02.globalIndex() || negtrack_v01.globalIndex() == postrack_v02.globalIndex() || negtrack_v01.globalIndex() == negtrack_v02.globalIndex())
-          continue; // no shared decay products
 
         if (LambdaTag) {
-          if (std::abs(massLambda - v02.mLambda()) > cfgHypMassWindow)
+          if (std::abs(massLambda - v01.mLambda()) > cfgHypMassWindow)
             continue;
-          RecoV02 = ROOT::Math::PxPyPzMVector(v02.px(), v02.py(), v02.pz(), v02.mLambda());
+          RecoV01 = ROOT::Math::PxPyPzMVector(v01.px(), v01.py(), v01.pz(), v01.mLambda());
         } else if (aLambdaTag) {
-          if (std::abs(massLambda - v02.mAntiLambda()) > cfgHypMassWindow)
+          if (std::abs(massLambda - v01.mAntiLambda()) > cfgHypMassWindow)
             continue;
-          RecoV02 = ROOT::Math::PxPyPzMVector(v02.px(), v02.py(), v02.pz(), v02.mAntiLambda());
+          RecoV01 = ROOT::Math::PxPyPzMVector(v01.px(), v01.py(), v01.pz(), v01.mAntiLambda());
         }
 
-        RecoV0V0 = RecoV01 + RecoV02;
+        for (auto& v02 : v0s) {
+          if (v01.v0Id() <= v02.v0Id())
+            continue;
+          auto postrack_v02 = v02.template posTrack_as<TrackCandidates>();
+          auto negtrack_v02 = v02.template negTrack_as<TrackCandidates>();
+  
+          LambdaTag = 0;
+          aLambdaTag = 0;
+          int V02Tag = -2;
+  
+          if (selectionV0Daughter(postrack_v02, 0) && selectionV0Daughter(negtrack_v02, 1)) {
+            LambdaTag = 1;
+            V02Tag = 0;
+          }   
+          if (selectionV0Daughter(negtrack_v02, 0) && selectionV0Daughter(postrack_v02, 1)) {
+            aLambdaTag = 1;
+            V02Tag = 1;
+          }
 
-        if (std::abs(RecoV0V0.Rapidity()) > cfgV0V0RapMax)
-          continue;
+          if (LambdaTag == aLambdaTag)
+            continue;
 
-        if (isSelectedV0V0(v01, v02))
-          keepEvent[12] = true;
+          if (!SelectionV0(v02))
+            continue;
+
+          if (postrack_v01.globalIndex() == postrack_v02.globalIndex() || postrack_v01.globalIndex() == negtrack_v02.globalIndex() || negtrack_v01.globalIndex() == postrack_v02.globalIndex() || negtrack_v01.globalIndex() == negtrack_v02.globalIndex())
+            continue; // no shared decay products
+
+          if (LambdaTag) {
+            if (std::abs(massLambda - v02.mLambda()) > cfgHypMassWindow)
+              continue;
+            RecoV02 = ROOT::Math::PxPyPzMVector(v02.px(), v02.py(), v02.pz(), v02.mLambda());
+          } else if (aLambdaTag) {
+            if (std::abs(massLambda - v02.mAntiLambda()) > cfgHypMassWindow)
+              continue;
+            RecoV02 = ROOT::Math::PxPyPzMVector(v02.px(), v02.py(), v02.pz(), v02.mAntiLambda());
+          }
+
+          RecoV0V0 = RecoV01 + RecoV02;
+
+          if (std::abs(RecoV0V0.Rapidity()) > cfgV0V0RapMax)
+            continue;
+
+          if (isSelectedV0V0(v01, v02))
+            keepEvent[12] = true;
+        }
       }
     } // lambdalambda
 
