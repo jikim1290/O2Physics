@@ -134,8 +134,8 @@ struct strangenessFilter {
   Configurable<float> cfgv0CosPA{"cfgv0CosPA", 0.995, "minimum v0 cosine"};
   Configurable<float> cfgDCAV0Dau{"cfgDCAV0Dau", 1.0, "maximum DCA between daughters"};
   Configurable<float> cfgV0PtMin{"cfgV0PtMin", 0, "minimum pT for lambda"};
-  Configurable<float> cfgV0EtaMin{"cfgV0EtaMin", -0.5, "maximum rapidity"};
-  Configurable<float> cfgV0EtaMax{"cfgV0EtaMax", 0.5, "maximum rapidity"};
+  Configurable<float> cfgV0RapMin{"cfgV0RapMin", -0.5, "maximum rapidity"};
+  Configurable<float> cfgV0RapMax{"cfgV0RapMax", 0.5, "maximum rapidity"};
   Configurable<float> cfgV0LifeTime{"cfgV0LifeTime", 30., "maximum lambda lifetime"};
 
   // Selection criteria for lambdalambda
@@ -427,7 +427,7 @@ struct strangenessFilter {
 
   void fillTriggerTable(bool keepEvent[])
   {
-    strgtable(keepEvent[0], keepEvent[1], keepEvent[2], keepEvent[3], keepEvent[4], keepEvent[5], keepEvent[6], keepEvent[7], keepEvent[8], keepEvent[9], keepEvent[10], keepEvent[11]);
+    strgtable(keepEvent[0], keepEvent[1], keepEvent[2], keepEvent[3], keepEvent[4], keepEvent[5], keepEvent[6], keepEvent[7], keepEvent[8], keepEvent[9], keepEvent[10], keepEvent[11], keepEvent[12]);
   }
 
   double massLambda = o2::constants::physics::MassLambda;
@@ -466,9 +466,9 @@ struct strangenessFilter {
       return false;
     if (candidate.pt() < cfgV0PtMin)
       return false;
-    if (candidate.yLambda() < cfgV0EtaMin)
+    if (candidate.yLambda() < cfgV0RapMin)
       return false;
-    if (candidate.yLambda() > cfgV0EtaMax)
+    if (candidate.yLambda() > cfgV0RapMax)
       return false;
     if (candidate.distovertotmom(collision.posX(), collision.posY(), collision.posZ()) * massLambda > cfgV0LifeTime)
       return false;
@@ -481,7 +481,7 @@ struct strangenessFilter {
   {
     // Is event good? [0] = Omega, [1] = high-pT hadron + Omega, [2] = 2Xi, [3] = 3Xi, [4] = 4Xi, [5] single-Xi, [6] Omega with high radius
     // [7] tracked Xi, [8] tracked Omega, [9] Omega + high mult event
-    bool keepEvent[12]{}; // explicitly zero-initialised
+    bool keepEvent[13]{}; // explicitly zero-initialised
     std::vector<std::array<int, 2>> v0sFromOmegaID;
     std::vector<std::array<int, 2>> v0sFromXiID;
 
@@ -583,7 +583,7 @@ struct strangenessFilter {
         if (LambdaTag == aLambdaTag)
           continue;
 
-        if (!SelectionV0(c2, v02))
+        if (!SelectionV0(v02))
           continue;
 
         if (postrack_v01.globalIndex() == postrack_v02.globalIndex() || postrack_v01.globalIndex() == negtrack_v02.globalIndex() || negtrack_v01.globalIndex() == postrack_v02.globalIndex() || negtrack_v01.globalIndex() == negtrack_v02.globalIndex())
@@ -605,7 +605,7 @@ struct strangenessFilter {
           continue;
 
         if (isSelectedV0V0(v01, v02))
-          IsTriggered = true
+          keepEvent[12] = true;
       }
     } // lambdalambda
 
