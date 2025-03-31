@@ -68,7 +68,7 @@ struct strangenessFilter {
   HistogramRegistry QAHistosTriggerParticles{"QAHistosTriggerParticles", {}, OutputObjHandlingPolicy::AnalysisObject, false, true};
   HistogramRegistry QAHistosStrangenessTracking{"QAHistosStrangenessTracking", {}, OutputObjHandlingPolicy::AnalysisObject, false, true};
   HistogramRegistry EventsvsMultiplicity{"EventsvsMultiplicity", {}, OutputObjHandlingPolicy::AnalysisObject, true, true};
-  OutputObj<TH1D> hProcessedEvents{TH1D("hProcessedEvents", "Strangeness - event filtered;; Number of events", 16, -1., 15.)};
+  OutputObj<TH1D> hProcessedEvents{TH1D("hProcessedEvents", "Strangeness - event filtered;; Number of events", 17, -1., 16.)};
   OutputObj<TH1F> hCandidate{TH1F("hCandidate", "; Candidate pass selection; Number of events", 30, 0., 30.)};
   OutputObj<TH1F> hEvtvshMinPt{TH1F("hEvtvshMinPt", " Number of h-Omega events with pT_h higher than thrd; min p_{T, trigg} (GeV/c); Number of events", 11, 0., 11.)};
   OutputObj<TH1F> hhXiPairsvsPt{TH1F("hhXiPairsvsPt", "pt distributions of Xi in events with a trigger particle; #it{p}_{T} (GeV/c); Number of Xi", 100, 0., 10.)};
@@ -220,6 +220,7 @@ struct strangenessFilter {
     hProcessedEvents->GetXaxis()->SetBinLabel(14, aod::filtering::OmegaHighMult::columnLabel());
     hProcessedEvents->GetXaxis()->SetBinLabel(15, aod::filtering::DoubleOmega::columnLabel());
     hProcessedEvents->GetXaxis()->SetBinLabel(16, aod::filtering::OmegaXi::columnLabel());
+    hProcessedEvents->GetXaxis()->SetBinLabel(17, "LL");
 
     hCandidate->GetXaxis()->SetBinLabel(1, "All");
     hCandidate->GetXaxis()->SetBinLabel(2, "Has_V0");
@@ -252,6 +253,8 @@ struct strangenessFilter {
     AxisSpec etaAxis = {200, -2.0f, 2.0f, "#eta"};
     AxisSpec phiAxis = {100, -TMath::Pi() / 2, 3. * TMath::Pi() / 2, "#varphi"};
     AxisSpec ptTriggAxis = {150, 0.0f, 15.0f, "#it{p}_{T} (GeV/#it{c})"};
+    AxisSpec lambdamassAxis = {200, 1.1f, 1.13f};
+    AxisSpec llmassAxis = {800, 2.2f, 2.3f};
 
     // general QA histograms
     QAHistos.add("hVtxZ", "Z-Vertex distribution after selection;Z (cm)", HistType::kTH1F, {{100, -50, 50}});
@@ -263,6 +266,11 @@ struct strangenessFilter {
     QAHistos.add("hPtOmega", "pt distribution of selected Omega candidates", HistType::kTH1F, {ptAxis});
     QAHistos.add("hEtaXi", "eta distribution of selected Xi candidates", HistType::kTH1F, {etaAxis});
     QAHistos.add("hEtaOmega", "eta distribution of selected Omega candidates", HistType::kTH1F, {etaAxis});
+    QAHistos.add("hMassLambda", "", HistType::kTH2F, {lambdamassAxis, ptAxis});
+    QAHistos.add("hMassLambdaforLL", "", HistType::kTH2F, {lambdamassAxis, ptAxis});
+    QAHistos.add("hV0V0DCALL", "", HistType::kTH2F, {llmassAxis, {300, 0, 0.1}});
+    QAHistos.add("hV0V0CPALL", "", HistType::kTH2F, {llmassAxis, {300, 0.95, 1.01}});
+
 
     // topological variables distributions
     QAHistosTopologicalVariables.add("hCascCosPAXi", "hCascCosPAXi", HistType::kTH1F, {{350, 0.65f, 1.0f}});
@@ -534,7 +542,6 @@ struct strangenessFilter {
   template <typename V01, typename V02>
   bool isSelectedV0V0(V01 const& v01, V02 const& v02)
   {
-      return false;
     if (getDCAofV0V0(v01, v02) > cfgV0V0DCA)
       return false;
     if (getCPA(v01, v02) < cfgV0V0CPA)
@@ -551,7 +558,7 @@ struct strangenessFilter {
                aod::AssignedTrackedCascades const& trackedCascades, aod::Cascades const& /*cascades*/, aod::AssignedTrackedV0s const& /*trackedV0s*/, aod::AssignedTracked3Bodys const& /*tracked3Bodys*/, aod::V0s const&, aod::BCsWithTimestamps const&)
   {
     // Is event good? [0] = Omega, [1] = high-pT hadron + Omega, [2] = 2Xi, [3] = 3Xi, [4] = 4Xi, [5] single-Xi, [6] Omega with high radius
-    // [7] tracked Xi, [8] tracked Omega, [9] Omega + high mult event
+    // [7] tracked Xi, [8] tracked Omega, [9] Omega + high mult event, [10] double Omega, [11] Omega + Xi, [12] Double Lambda
     bool keepEvent[13]{}; // explicitly zero-initialised
     std::vector<std::array<int, 2>> v0sFromOmegaID;
     std::vector<std::array<int, 2>> v0sFromXiID;
@@ -633,6 +640,8 @@ struct strangenessFilter {
           RecoV01 = ROOT::Math::PxPyPzMVector(v01.px(), v01.py(), v01.pz(), v01.mAntiLambda());
         }
 
+        QAHistos.fill(HIST("hMassLambda"), RecoV01.M(), RecoV01.Pt());
+
         for (auto& v02 : v0s) {
           if (v01.v0Id() <= v02.v0Id())
             continue;
@@ -671,10 +680,15 @@ struct strangenessFilter {
             RecoV02 = ROOT::Math::PxPyPzMVector(v02.px(), v02.py(), v02.pz(), v02.mAntiLambda());
           }
 
+          QAHistos.fill(HIST("hMassLambdaforLL"), RecoV02.M(), RecoV02.Pt());
+
           RecoV0V0 = RecoV01 + RecoV02;
 
           if (std::abs(RecoV0V0.Rapidity()) > cfgV0V0RapMax)
             continue;
+
+          QAHistos.fill(HIST("hV0V0DCALL"), RecoV0V0.M(), getDCAofV0V0(v01, v02));
+          QAHistos.fill(HIST("hV0V0CPALL"), RecoV0V0.M(), getCPA(v01, v02));
 
           if (isSelectedV0V0(v01, v02))
             keepEvent[12] = true;
@@ -1292,7 +1306,9 @@ struct strangenessFilter {
     if (keepEvent[11]) {
       hProcessedEvents->Fill(14.5);
     }
-
+    if (keepEvent[12]) {
+      hProcessedEvents->Fill(15.5);
+    }
     // Filling the table
     fillTriggerTable(keepEvent);
   }
