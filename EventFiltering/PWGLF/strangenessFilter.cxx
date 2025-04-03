@@ -15,6 +15,9 @@
 /// \since June 1, 2021
 
 #include <cmath>
+#include <Math/Vector3D.h>
+#include <Math/Vector4D.h>
+#include <TMath.h>
 #include "CCDB/BasicCCDBManager.h"
 #include "DataFormatsParameters/GRPMagField.h"
 #include "DataFormatsParameters/GRPObject.h"
@@ -142,6 +145,10 @@ struct strangenessFilter {
   Configurable<bool> cfgEnableLLFilter{"cfgEnableLLFilter", true, "flag for LL filter"};
   Configurable<float> cfgHypMassWindow{"cfgHypMassWindow", 0.02, "single lambda mass selection"};
   Configurable<float> cfgV0V0RapMax{"cfgV0V0RapMax", 0.5, "rapidity selection for V0V0"};
+  Configurable<float> cfgV0V0Radius{"cfgV0V0Radius", 10.0, "maximum radius of v0v0"};
+  Configurable<float> cfgV0V0CPA{"cfgV0V0CPA", 0.96, "minimum CPA of v0v0"};
+  Configurable<float> cfgV0V0Distance{"cfgV0V0Distance", 10, "minimum distance of v0v0"};
+  Configurable<float> cfgV0V0DCA{"cfgV0V0DCA", 0.1, "maximum DCA of v0v0"};
 
   // Settings for strangeness tracking filter
   Configurable<std::string> ccdbUrl{"ccdbUrl", "http://alice-ccdb.cern.ch", "url of the ccdb repository"};
@@ -460,7 +467,7 @@ struct strangenessFilter {
     return true;
   }
 
-  template <typename TCollision, typename V0>
+  template <typename V0>
   bool SelectionV0(V0 const& candidate)
   {
     if (candidate.v0radius() < cfgv0radiusMin)
@@ -478,8 +485,6 @@ struct strangenessFilter {
     if (candidate.yLambda() < cfgV0RapMin)
       return false;
     if (candidate.yLambda() > cfgV0RapMax)
-      return false;
-    if (candidate.distovertotmom(collision.posX(), collision.posY(), collision.posZ()) * massLambda > cfgV0LifeTime)
       return false;
 
     return true;
@@ -610,9 +615,10 @@ struct strangenessFilter {
     int triggcounterForEstimates = 0;
 
     if (cfgEnableLLFilter) {
+      ROOT::Math::PxPyPzMVector RecoV01, RecoV02, RecoV0V0;
       for (auto& v01 : v0s) {
-        auto postrack_v01 = v01.template posTrack_as<TrackCandidates>();
-        auto negtrack_v01 = v01.template negTrack_as<TrackCandidates>();
+        auto postrack_v01 = v01.template posTrack_as<DaughterTracks>();
+        auto negtrack_v01 = v01.template negTrack_as<DaughterTracks>();
 
         int LambdaTag = 0;
         int aLambdaTag = 0;
@@ -645,20 +651,17 @@ struct strangenessFilter {
         for (auto& v02 : v0s) {
           if (v01.v0Id() <= v02.v0Id())
             continue;
-          auto postrack_v02 = v02.template posTrack_as<TrackCandidates>();
-          auto negtrack_v02 = v02.template negTrack_as<TrackCandidates>();
+          auto postrack_v02 = v02.template posTrack_as<DaughterTracks>();
+          auto negtrack_v02 = v02.template negTrack_as<DaughterTracks>();
   
           LambdaTag = 0;
           aLambdaTag = 0;
-          int V02Tag = -2;
   
           if (selectionV0Daughter(postrack_v02, 0) && selectionV0Daughter(negtrack_v02, 1)) {
             LambdaTag = 1;
-            V02Tag = 0;
           }   
           if (selectionV0Daughter(negtrack_v02, 0) && selectionV0Daughter(postrack_v02, 1)) {
             aLambdaTag = 1;
-            V02Tag = 1;
           }
 
           if (LambdaTag == aLambdaTag)
