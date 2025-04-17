@@ -210,8 +210,8 @@ struct strangenessFilter {
   float getV0V0Radius(TVector3 v01pos, TVector3 v01mom, TVector3 v02pos, TVector3 v02mom)
   {
     TVector3 posdiff = v02pos - v01pos;
-    v01mom *= 1./v01mom.Mag();
-    v02mom *= 1./v02mom.Mag();
+    v01mom *= 1. / v01mom.Mag();
+    v02mom *= 1. / v02mom.Mag();
     float dd = 1. - TMath::Power(v01mom.Dot(v02mom), 2);
     if (dd < 1e-5)
       return 999;
@@ -631,7 +631,7 @@ struct strangenessFilter {
 
     std::vector<int> v0sLambdaSel;
     for (auto& v00 : v0Base) { // loop over v0 for pre selection
-      hCandidate->Fill(0.5); // All candidates
+      hCandidate->Fill(0.5);   // All candidates
 
       const auto posTrack0 = v00.posTrack_as<TrackCandidates>();
       const auto negTrack0 = v00.negTrack_as<TrackCandidates>();
@@ -664,7 +664,7 @@ struct strangenessFilter {
     }
 
     for (auto& v00 : v0Base) { // loop over lambda using previous selection
-      if (std::find(v0sLambdaSel.begin(), v0sLambdaSel.end(), v00.globalIndex()) == v0sLambdaSel.end() ) {
+      if (std::find(v0sLambdaSel.begin(), v0sLambdaSel.end(), v00.globalIndex()) == v0sLambdaSel.end()) {
         continue;
       }
 
@@ -682,7 +682,7 @@ struct strangenessFilter {
       TVector3 v00mom(mStraHelper.v0.momentum[0], mStraHelper.v0.momentum[1], mStraHelper.v0.momentum[2]);
 
       for (auto& v01 : v0Base) {
-        if (std::find(v0sLambdaSel.begin(), v0sLambdaSel.end(), v01.globalIndex()) == v0sLambdaSel.end() ) {
+        if (std::find(v0sLambdaSel.begin(), v0sLambdaSel.end(), v01.globalIndex()) == v0sLambdaSel.end()) {
           continue;
         }
         if (v00.globalIndex() <= v01.globalIndex()) {
