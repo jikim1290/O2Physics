@@ -82,6 +82,9 @@ struct qVectorsTable {
   Configurable<std::vector<int>> cfgnMods{"cfgnMods", {2, 3}, "Modulation of interest"};
   Configurable<float> cfgMaxCentrality{"cfgMaxCentrality", 100.f, "max. centrality for Q vector calibration"};
 
+  Configurable<float> cfgEtaMin{"cfgEtaMin", -0.8, "Minimum pseudorapidity"};
+  Configurable<float> cfgEtaMax{"cfgEtaMax", 0.8, "Minimum pseudorapidity"};
+
   Configurable<bool> useCorrectionForRun{"useCorrectionForRun", true, "Get Qvector corrections based on run number instead of timestamp"};
   Configurable<std::string> cfgGainEqPath{"cfgGainEqPath", "Users/j/junlee/Qvector/GainEq", "CCDB path for gain equalization constants"};
   Configurable<std::string> cfgQvecCalibPath{"cfgQvecCalibPath", "Analysis/EventPlane/QVecCorrections", "CCDB pasth for Q-vecteor calibration constants"};
@@ -437,7 +440,10 @@ struct qVectorsTable {
         continue;
       }
       histosQA.fill(HIST("ChTracks"), trk.pt(), trk.eta(), trk.phi(), cent);
-      if (std::abs(trk.eta()) > 0.8) {
+      if (trk.eta() > cfgEtaMax) {
+        continue;
+      }
+      if (trk.eta() < cfgEtaMin) {
         continue;
       }
       qVectTPCall[0] += trk.pt() * std::cos(trk.phi() * nmode);
