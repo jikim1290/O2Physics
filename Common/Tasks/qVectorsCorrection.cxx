@@ -740,7 +740,7 @@ struct qVectorsCorrection {
         fillHistosFlow(qVec, tracks, cfgnMods->at(i));
       }
     }
-  } 
+  }
   PROCESS_SWITCH(qVectorsCorrection, process, "default process", true);
 
   void processWithSC(MyCollisionsWithSC::iterator const& qVec, MyTracks const& tracks)
@@ -750,7 +750,7 @@ struct qVectorsCorrection {
                          !qVec.selection_bit(aod::evsel::kIsGoodZvtxFT0vsPV) ||
                          !qVec.selection_bit(aod::evsel::kNoSameBunchPileup))) {
       return;
-    } 
+    }
     if (cfgAddEvtSel && (qVec.trackOccupancyInTimeRange() > cfgMaxOccupancy || qVec.trackOccupancyInTimeRange() < cfgMinOccupancy)) {
       return;
     }
@@ -759,7 +759,7 @@ struct qVectorsCorrection {
     }
 
     for (uint i = 0; i < cfgnMods->size(); i++) {
-      fillHistosQvecWithSC(qVec, cfgnMods->at(i)); 
+      fillHistosQvecWithSC(qVec, cfgnMods->at(i));
       if (cfgQAFlowStudy) {
         fillHistosFlowWithSC(qVec, tracks, cfgnMods->at(i));
       }
