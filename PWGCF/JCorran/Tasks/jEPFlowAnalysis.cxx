@@ -149,7 +149,7 @@ struct jEPFlowAnalysis {
           auto coeffshiftxRefA = shiftprofile.at(i - 2)->GetBinContent(shiftprofile.at(i - 2)->FindBin(centrality, 2.5, ishift - 0.5));
           auto coeffshiftyRefA = shiftprofile.at(i - 2)->GetBinContent(shiftprofile.at(i - 2)->FindBin(centrality, 3.5, ishift - 0.5));
           auto coeffshiftxRefB = shiftprofile.at(i - 2)->GetBinContent(shiftprofile.at(i - 2)->FindBin(centrality, 4.5, ishift - 0.5));
-          auto coeffshiftyRefB = shiftprofile.at(i - 2)->GetBinContent(shiftprofile.at(i - 2)->FindBin(centrality, 5.5, ishift - 0.5)); //currently only FT0C/TPCpos/TPCneg
+          auto coeffshiftyRefB = shiftprofile.at(i - 2)->GetBinContent(shiftprofile.at(i - 2)->FindBin(centrality, 5.5, ishift - 0.5)); // currently only FT0C/TPCpos/TPCneg
 
           deltapsiDet += ((1 / (1.0 * ishift)) * (-coeffshiftxDet * TMath::Cos(ishift * static_cast<float>(i) * EPs[0]) + coeffshiftyDet * TMath::Sin(ishift * static_cast<float>(i) * EPs[0])));
           deltapsiRefA += ((1 / (1.0 * ishift)) * (-coeffshiftxRefA * TMath::Cos(ishift * static_cast<float>(i) * EPs[1]) + coeffshiftyRefA * TMath::Sin(ishift * static_cast<float>(i) * EPs[1])));
@@ -161,7 +161,8 @@ struct jEPFlowAnalysis {
         EPs[2] += deltapsiRefB;
       }
 
-      if (cfgSPmethod) weight *= sqrt(pow(coll.qvecRe()[DetId + harmInd], 2) + pow(coll.qvecIm()[DetId + harmInd], 2));
+      if (cfgSPmethod)
+        weight *= sqrt(pow(coll.qvecRe()[DetId + harmInd], 2) + pow(coll.qvecIm()[DetId + harmInd], 2));
 
       Float_t resNumA = helperEP.GetResolution(EPs[0], EPs[1], i);
       Float_t resNumB = helperEP.GetResolution(EPs[0], EPs[2], i);
