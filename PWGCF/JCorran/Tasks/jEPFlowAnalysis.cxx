@@ -148,7 +148,7 @@ struct JepFlowAnalysis {
       }
     }
 
-    for (int i = initflow; i < initflow + cfgNmode; i++) {                  // loop over different harmonic orders
+    for (int i = initflow; i < initflow + cfgNmode; i++) {        // loop over different harmonic orders
       harmInd = cfgnTotalSystem * nqvec * (i - initflow) + nstep; // harmonic index to access corresponding Q-vector as all Q-vectors are in same vector
       eps[0] = helperEP.GetEventPlane(coll.qvecRe()[detId + harmInd], coll.qvecIm()[detId + harmInd], i);
       eps[1] = helperEP.GetEventPlane(coll.qvecRe()[refAId + harmInd], coll.qvecIm()[refAId + harmInd], i);
