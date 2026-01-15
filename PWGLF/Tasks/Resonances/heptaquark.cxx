@@ -202,15 +202,15 @@ struct heptaquark {
     double cosHel = hqlambda_boost.Vect().Dot(hqphipair_boost.Vect()) / (hqlambda_boost.Vect().Mag() * hqphipair_boost.Vect().Mag());
     if (std::abs(cosHel) > cfgCollinear)
       selection += 4;
-/*
-    ROOT::Math::XYZVector rPV(col.posX(), col.posY(), col.posZ());
-    ROOT::Math::XYZVector rSV(hq3.hqx(), hq3.hqy(), hq3.hqz());
-    ROOT::Math::XYZVector L = rSV - rPV;
-    ROOT::Math::XYZVector exMom(ex.Px(), ex.Py(), ex.Pz());
-    double cosPoint = L.Dot(exMom) / (L.R() * pEx.R() + 1e-9);
-    if (cosPoint < cfgCosPoint)
-      return 8;
-*/
+    /*
+        ROOT::Math::XYZVector rPV(col.posX(), col.posY(), col.posZ());
+        ROOT::Math::XYZVector rSV(hq3.hqx(), hq3.hqy(), hq3.hqz());
+        ROOT::Math::XYZVector L = rSV - rPV;
+        ROOT::Math::XYZVector exMom(ex.Px(), ex.Py(), ex.Pz());
+        double cosPoint = L.Dot(exMom) / (L.R() * pEx.R() + 1e-9);
+        if (cosPoint < cfgCosPoint)
+          return 8;
+    */
     return selection;
   }
 
