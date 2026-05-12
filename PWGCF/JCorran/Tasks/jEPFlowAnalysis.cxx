@@ -35,13 +35,13 @@
 #include <Framework/HistogramRegistry.h>
 #include <Framework/HistogramSpec.h>
 #include <Framework/InitContext.h>
+#include <Framework/O2DatabasePDGPlugin.h>
 #include <Framework/OutputObjHeader.h>
 #include <Framework/runDataProcessing.h>
-#include <Framework/O2DatabasePDGPlugin.h>
 
 #include <THn.h>
-#include <TProfile3D.h>
 #include <TPDGCode.h>
+#include <TProfile3D.h>
 
 #include <RtypesCore.h>
 
