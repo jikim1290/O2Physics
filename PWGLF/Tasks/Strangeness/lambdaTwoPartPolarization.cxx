@@ -368,7 +368,7 @@ struct lambdaTwoPartPolarization {
         ROOT::Math::Boost boost1{LambdaVec1.BoostToCM()};
         ProtonBoostedVec1 = boost1(ProtonVec1);
 
-        costhetastar1 = ProtonBoostedVec1.Pz() / ProtonBoostedVec1.P(); 
+        costhetastar1 = ProtonBoostedVec1.Pz() / ProtonBoostedVec1.P();
         dphi = RecoDecay::constrainAngle(v01.phi() - trk.phi(), -constants::math::PI * 0.5);
 
         weight = 1.0;
@@ -488,8 +488,8 @@ struct lambdaTwoPartPolarization {
   }
 
   void processDataSameHadron(EventCandidates::iterator const& collision,
-                       TrackCandidates const& tracks, aod::V0Datas const& V0s,
-                       aod::BCsWithTimestamps const&)
+                             TrackCandidates const& tracks, aod::V0Datas const& V0s,
+                             aod::BCsWithTimestamps const&)
   {
     if (cfgCentEst == 1) {
       centrality = collision.centFT0C();
@@ -511,7 +511,7 @@ struct lambdaTwoPartPolarization {
       AccMap = ccdb->getForTimeStamp<TProfile2D>(cfgAccCorPath.value, bc.timestamp());
     }
 
-//    FillHistograms(collision, collision, V0s, V0s);
+    //    FillHistograms(collision, collision, V0s, V0s);
     FillHistogramsRef(tracks, tracks);
     FillHistogramsLH(collision, V0s, tracks);
   }
