@@ -52,6 +52,7 @@
 #include <RtypesCore.h>
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cmath>
 #include <cstddef>
@@ -59,7 +60,6 @@
 #include <iterator>
 #include <string>
 #include <vector>
-#include <array>
 
 using namespace o2;
 using namespace o2::framework;
